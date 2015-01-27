@@ -1,0 +1,91 @@
+\documentclass[twoside,a4,danish,english,report]{memoir}
+
+% Math
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% Font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\usepackage{pxfonts}
+\usepackage{microtype}
+
+% Citations
+\usepackage{natbib}
+
+% Graphics
+\usepackage{graphicx}
+
+% Date
+\usepackage{datetime}
+
+\begin{document}
+
+\frontmatter{}
+
+\begin{titlingpage}
+  \vspace*{\fill}
+
+  \noindent{\rule{\linewidth}{1mm}\\[4ex]
+    {\Huge\sffamily Something about Computer Science}\\[2ex]
+    {\huge\sffamily Torben Muldvang Andersen, 20093713}\\[2ex]
+    \rule{\linewidth}{1mm}\\[4ex]
+    {\Large\sffamily
+      Master's Thesis, Computer Science\\[1ex]
+      \monthname\ \the\year\\[1ex]
+      Advisor: Christian N. S. Pedersen\\[15ex]}\\[\fill]
+    \includegraphics{logo}
+  }
+\end{titlingpage}
+
+\chapter{Abstract}
+\label{cha:abstract}
+
+in English\dots
+
+\selectlanguage{danish}
+\chapter{Resumé}
+\label{cha:resume}
+
+in Danish\dots
+\selectlanguage{english}
+
+\chapter{Acknowledgements}
+\label{cha:acknowledgements}
+
+\vspace{2ex}
+\begin{flushright}
+  \emph{Torben Muldvang Andersen,}\\
+  \emph{Aarhus, \today.}
+\end{flushright}
+
+\cleardoublepage{}
+
+\tableofcontents
+
+\mainmatter{}
+
+\chapter{Introduction}
+\label{cha:introduction}
+
+\chapter{Conclusion}
+\label{cha:conclusion}
+
+\appendix{}
+
+\chapter{Some Appendix}
+\label{cha:some-appendix}
+
+\backmatter{}
+
+\bibliography{}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
