@@ -17,6 +17,28 @@
 
 % Graphics
 \usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.colorbrewer}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz/,mode=list and make]
+\pgfplotsset{%
+  colorbrewer cycle list=Set1,
+  legend style={at={(1,0.5)},anchor=west,draw=none},
+  % legend columns=5,
+  % /tikz/column 2/.style={
+  % column sep=10pt,
+  % },
+  %   /tikz/column 4/.style={
+  %   column sep=10pt,
+  % },
+  %   /tikz/column 6/.style={
+  %   column sep=10pt,
+  % },
+  %   /tikz/column 8/.style={
+  %   column sep=10pt,
+  % }
+}
 
 % Date
 \usepackage{datetime}
@@ -69,6 +91,13 @@ in Danish\dots
 
 \chapter{Introduction}
 \label{cha:introduction}
+
+\begin{figure}
+  \centering
+  \input{tikz/speedup_vs_complexity.tex}
+  \caption{Running time vs.\ sequence complexity.}
+  \label{fig:speedup_vs_complexity}
+\end{figure}
 
 \chapter{Conclusion}
 \label{cha:conclusion}

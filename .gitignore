@@ -1,4 +1,7 @@
 master.pdf
+master.figlist
+master.makefile
+tikz/master*
 
 ### https://raw.github.com/github/gitignore/master/TeX.gitignore
 
