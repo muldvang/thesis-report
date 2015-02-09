@@ -17,6 +17,7 @@
 
 % Graphics
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{pgfplots.colorbrewer}
@@ -96,24 +97,75 @@ in Danish\dots
 \chapter{Introduction}
 \label{cha:introduction}
 
+\section{Assymptotic Running Times}
+\label{sec:assymp-runn-times}
+
+\subsection{Sequence Length $n$}
+\label{sec:sequence-length-n}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_n}
+  \caption{zipHMMlib running time for varying sequence lengths.}
+  \label{fig:assymptotic_viterbi_n}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_path_n}
+  \caption{zipHMMlib Path running time for varying sequence lengths.}
+  \label{fig:assymptotic_viterbi_path_n}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_backtrack_n}
+  \caption{zipHMMlib Path backtracking time for varying sequence lengths.}
+  \label{fig:assymptotic_viterbi_backtrack_n}
+\end{figure}
+
+\subsection{Model Size $k$}
+\label{sec:model-size-k}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_k}
+  \caption{zipHMMlib running time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_k}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_path_k}
+  \caption{zipHMMlib Path running time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_path_k}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_backtrack_k}
+  \caption{zipHMMlib Path backtracking time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_backtrack_k}
+\end{figure}
+
 \section{Comparing zipHMMlib to the original Viterbi algorithm.}
 \label{sec:comp-ziphmml-orig}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \input{figures/speedup_vs_complexity.tex}
   \caption{Running time vs.\ sequence complexity using sequences of length $10^6$.}
   \label{fig:speedup_vs_complexity}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \input{figures/speedup_vs_k.tex}
   \caption{Running time vs.\ model size.}
   \label{fig:speedup_vs_k}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \input{figures/speedup_vs_sequence_length.tex}
   \caption{Running time vs.\ sequence length using a HMM with 32 states.}

@@ -1,0 +1,16 @@
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    xlabel=Model size $k$,
+    ylabel=Running time,
+    xmode=log,
+    ]
+    \addplot[only marks, color=colorbrewer1]
+    table[x=k, y=zipHMMlib_path_backtrack_time]
+    {plot_data/model_transformed.data};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

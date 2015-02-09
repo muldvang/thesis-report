@@ -23,6 +23,9 @@ df['zipHMMlib_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_total_time
 df['zipHMMlib_path_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_path_total_time']
 df['zipHMMlib_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_running_time']
 df['zipHMMlib_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_path_running_time']
+df['zipHMMlib_running_time/k^3'] = df['zipHMMlib_running_time'] / df['k'] ** 3
+df['zipHMMlib_path_running_time/k^3'] = df['zipHMMlib_path_running_time'] / df['k'] ** 3
+df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']
 
 file_name, file_extension = os.path.splitext(path)
 
