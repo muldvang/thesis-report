@@ -1,0 +1,30 @@
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    xlabel=Sequence length,
+    ylabel=Speedup factor,
+    xmode=log,
+    ]
+    \addplot[only marks, color=colorbrewer1]
+    table[x=n, y=zipHMMlib_total_ratio]
+    {plot_data/sequence_transformed.data};
+
+    \addplot[only marks, color=colorbrewer2]
+    table[x=n, y=zipHMMlib_path_total_ratio]
+    {plot_data/sequence_transformed.data};
+
+    \addplot[only marks, color=colorbrewer3]
+    table[x=n, y=zipHMMlib_running_ratio]
+    {plot_data/sequence_transformed.data};
+
+    \addplot[only marks, color=colorbrewer4]
+    table[x=n, y=zipHMMlib_path_running_ratio]
+    {plot_data/sequence_transformed.data};
+
+    \legend{zipHMMlib w/ preprocessing, zipHMMlib Path w/ preprocessing, zipHMMlib wo/ preprocessing, zipHMMlib Path wo/ preprocessing}
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

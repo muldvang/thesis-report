@@ -1,4 +1,4 @@
-\documentclass[twoside,a4,danish,english,report]{memoir}
+\documentclass[oneside,a4,danish,english,report]{memoir}
 
 % Math
 \usepackage{amssymb}
@@ -25,6 +25,7 @@
 \pgfplotsset{%
   colorbrewer cycle list=Set1,
   legend style={at={(1,0.5)},anchor=west,draw=none},
+  legend cell align=left
   % legend columns=5,
   % /tikz/column 2/.style={
   % column sep=10pt,
@@ -42,6 +43,9 @@
 
 % Date
 \usepackage{datetime}
+
+% Captions
+\usepackage[hang,bf]{caption}
 
 \begin{document}
 
@@ -92,11 +96,28 @@ in Danish\dots
 \chapter{Introduction}
 \label{cha:introduction}
 
+\section{Comparing zipHMMlib to the original Viterbi algorithm.}
+\label{sec:comp-ziphmml-orig}
+
 \begin{figure}
   \centering
   \input{figures/speedup_vs_complexity.tex}
-  \caption{Running time vs.\ sequence complexity.}
+  \caption{Running time vs.\ sequence complexity using sequences of length $10^6$.}
   \label{fig:speedup_vs_complexity}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \input{figures/speedup_vs_k.tex}
+  \caption{Running time vs.\ model size.}
+  \label{fig:speedup_vs_k}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \input{figures/speedup_vs_sequence_length.tex}
+  \caption{Running time vs.\ sequence length using a HMM with 32 states.}
+  \label{fig:speedup_vs_sequence_length}
 \end{figure}
 
 \chapter{Conclusion}
