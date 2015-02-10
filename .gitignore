@@ -1,7 +1,7 @@
 master.pdf
 master.figlist
 master.makefile
-tikz/master*
+tikz/
 master.lox
 
 ### https://raw.github.com/github/gitignore/master/TeX.gitignore
