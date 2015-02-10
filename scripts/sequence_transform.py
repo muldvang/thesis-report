@@ -33,7 +33,15 @@ grouped = df.groupby(['n'])
 df2 = pd.DataFrame()
 for name, group in grouped:
     # Average the measurements.
-    for m in ['time', 'time/n']:
+    for m in ["simple_pre_time", "simple_running_time", "simple_total_time",
+              "zipHMMlib_pre_time", "zipHMMlib_running_time",
+              "zipHMMlib_total_time", "zipHMMlib_path_pre_time",
+              "zipHMMlib_path_running_time", "zipHMMlib_path_total_time",
+              "zipHMMlib_total_ratio", "zipHMMlib_path_total_ratio",
+              "zipHMMlib_running_ratio", "zipHMMlib_path_running_ratio",
+              'zipHMMlib_running_time/n', "zipHMMlib_path_running_time/n",
+              "zipHMMlib_path_running_time/n",
+              "zipHMMlib_path_backtrack_time/n", "zipHMMlib_pre_time/n"]:
         group.loc[:, m + '_std'] = group.loc[:, m].std()
         group.loc[:, m] = group.loc[:, m].mean()
 
@@ -44,7 +52,6 @@ for name, group in grouped:
     df2 = df2.append(group)
 
 df = df2
-
 
 file_name, file_extension = os.path.splitext(path)
 
