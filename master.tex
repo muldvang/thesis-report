@@ -214,6 +214,42 @@ recursion
 The space consumption of this algorithm is the size of $\omega$ which is $O(N
 T)$. The time required to fill out a cell, the algorithm maximizes over all
 cells in the previous column yielding a running time of $O(N^2 T)$.
+
+\section{Viterbi as Linear Algebra}
+\label{sec:algorithm-as-linear}
+
+The above algorithm can be reformulated into a number of matrix
+multiplications. This is what \citet{sand2013ziphmmlib} and
+\citet{lifshits2009speeding} use too. First, let $B_{o_i}$ be the diagonal
+matrix, having the emission probabilities of $o_i$ of the diagonal:
+\begin{align*}
+  B_{o_i} =
+  \begin{bmatrix}
+    b_{1, o_i} &            &        &            \\
+               & b_{2, o_i} &        &            \\
+               &            & \cdots &            \\
+               &            &        & b_{N, o_i} \\
+  \end{bmatrix}
+\end{align*}
+and let
+\begin{align*}
+  C_{o_i} &= B_{o_i} A^* \\
+  C_1 &= B_{y_1} \pi,
+\end{align*}
+where $A^*$ is the transpose of $A$.
+
+Now $\omega_t$ can be computed using $C_{y_t}$ and $\omega_{t - 1}$ as
+\begin{align*}
+  \omega_t = C_{y_t} \odot \omega_{t - 1} = C_{y_t} \odot C_{y_{t-1}} \odot
+  \dots \odot C_1,
+\end{align*}
+where $\odot$ is the max-times matrix multiplication defined as ${(A \odot
+  B)}_{ij} = \max_k A_{ik} \cdot B_{kj}$.
+
+The classical Viterbi algorithm corresponds to computing this from right to
+left, but since max-times matrix multiplication is associative the product may
+be computed in any order.
+
 \chapter{Method}
 \label{cha:method}
 
