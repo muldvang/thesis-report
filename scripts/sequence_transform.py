@@ -26,6 +26,25 @@ df['zipHMMlib_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_p
 df['zipHMMlib_running_time/n'] = df['zipHMMlib_running_time'] / df['n']
 df['zipHMMlib_path_running_time/n'] = df['zipHMMlib_path_running_time'] / df['n']
 df['zipHMMlib_path_backtrack_time/n'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['n']
+df['zipHMMlib_pre_time/n'] = df['zipHMMlib_pre_time'] / df['n']
+
+# Compute mean and std.
+grouped = df.groupby(['n'])
+df2 = pd.DataFrame()
+for name, group in grouped:
+    # Average the measurements.
+    for m in ['time', 'time/n']:
+        group.loc[:, m + '_std'] = group.loc[:, m].std()
+        group.loc[:, m] = group.loc[:, m].mean()
+
+    # Remove duplicates
+    group = group.drop_duplicates()
+
+    group.reset_index()
+    df2 = df2.append(group)
+
+df = df2
+
 
 file_name, file_extension = os.path.splitext(path)
 
