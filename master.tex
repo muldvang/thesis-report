@@ -14,6 +14,7 @@
 
 % Citations
 \usepackage{natbib}
+\bibliographystyle{plain}
 
 % Graphics
 \usepackage{graphicx}
@@ -104,6 +105,33 @@ in Danish\dots
 
 \chapter{Background and Related Work}
 \label{cha:backgr-relat-work}
+
+\begin{itemize}
+\item Something about HMMs in general.
+\item Something about \citet{lifshits2009speeding}.
+  \begin{itemize}
+  \item Speeding up by exploiting repetitions: four russians, lempel-ziv,
+    byte-pair etc.
+  \item Limited experiments section.
+  \item No code available.
+  \end{itemize}
+\item Something about \citet{sand2013ziphmmlib}.
+  \begin{itemize}
+  \item Use both repeated substrings and
+    parallelization. (\citet{lifshits2009speeding} does this too.)
+  \item Introduction of data structure to save the preprocessing for later
+    reuse. Claim that it cannot be reused with Viterbi. (I think it can.)
+  \item Theory to make computations numerically stable.
+  \item Accessible library.
+  \end{itemize}
+\item Something about my work.
+  \begin{itemize}
+  \item Accessiable extension of the zipHMM library.
+  \item Theory to make Viterbi numerically stable.
+  \item More extensive experiments section.
+  \item Faster implementation.
+  \end{itemize}
+\end{itemize}
 
 \chapter{Method}
 \label{cha:method}
