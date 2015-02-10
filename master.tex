@@ -56,6 +56,10 @@
 % Fixme
 \usepackage[draft]{fixme}
 
+% User defined macros
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
 \begin{document}
 
 \frontmatter{}
@@ -168,19 +172,48 @@ Formally a HMM can be defined as
 \item $\mathcal{H} = {h_1, h_2, \dots, h_N}$, a finite alphabet of hidden
   states;
 \item $\mathcal{O} = {o_1, o_2, \dots, o_M}$, a finite alphabet of observables;
-\item a vector $pi = {(\pi_i)}_{1 \le i \le N}$, where $\pi_i = \text{Pr}(x_1 =
+\item a vector $Pi = {(\pi_i)}_{1 \le i \le N}$, where $\pi_i = \Pr(x_1 =
   h_i)$ is the probablity of the model starting in hidden state $h_i$;
-\item a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$, where $a_{ij} = \text{Pr}(x_t
+\item a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$, where $a_{ij} = \Pr(x_t
   = h_j \mid x_{t - 1} = h_i)$ is the probability of a transition from state
   $h_i$ to state $h_j$;
 \item a matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$, where
-  $b_{ij} = \text{Pr}(y_t = o_j \mid x_t = h_i)$ is the probability of state
+  $b_{ij} = \Pr(y_t = o_j \mid x_t = h_i)$ is the probability of state
   $h_i$ emitting $o_j$.
 \end{itemize}
 
 An HMM is parameterised by $\pi$, $A$, and $B$, which is denoted by $\lambda =
 (\pi, A, B)$.
 
+\section{The Classical Viterbi Algorithm}
+\label{sec:class-viterbi-algor}
+
+The Viterbi algorithm finds the probability of the most likely sequence of
+hidden states given a model $\lambda$ and an observed sequence $Y_{1:T}$ by
+maximizing the probability of the observed and hidden sequences for all
+possible hidden sequences: $\Pr(Y_{1:T} \mid \lambda) = \max_{x_{1:T}}
+\Pr(Y_{1:T}, X_{1:T} = x_{1:T} \mid \lambda)$. This may be computed efficiently
+by filling out a table, $\omega$, with entries $\omega_t(x_t) = \Pr(Y_{1:T},
+X_t = x_t \mid \lambda) = \max_{x_{1:t-1}} \Pr(Y_{1:t}, X_{1:t} = x_{1:t} \mid
+\lambda)$ column by column from left to right, using the recursion
+\begin{align*}
+  \omega_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
+  \omega_t(x_t) &= b_{x_t, y_t} \max_{x_{t - 1}} \omega_{t - 1}(x_{t - 1})
+                  a_{x_{t - 1}, x_t}.
+\end{align*}
+After filling out $\omega$, $\Pr(Y_{1:T} \mid \lambda)$ can be computed as
+$\Pr(Y_{1:T} \mid \lambda) = \max_{x_T} \omega_T(x_T)$.
+
+To obtain the sequence of hidden states $\omega$ is backtracked using the
+recursion
+\begin{align*}
+  X_T &= \argmax_{x_T} \omega_T(x_T) \\
+  X_{t} &= \argmax_{x_{t}} b_{X_{t + 1}, y_{t + 1}} \omega_{t}(x_t) a_{x_t, X_{t + 1}}.
+\end{align*}
+
+The space consumption of this algorithm is the size of $\omega$ which is $O(N
+T)$. The time required to fill out a cell, the algorithm maximizes over all
+cells in the previous column yielding a running time of $O(N^2 T)$.
 \chapter{Method}
 \label{cha:method}
 
