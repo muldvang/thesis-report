@@ -30,6 +30,23 @@ df['zipHMMlib_path_running_time/k^3'] = df['zipHMMlib_path_running_time'] / df['
 df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']
 df['zipHMMlib_pre_time/k^3'] = df['zipHMMlib_pre_time'] / df['k'] ** 3
 
+# Compute mean and std.
+grouped = df.groupby(['n'])
+df2 = pd.DataFrame()
+for name, group in grouped:
+    # Average the measurements.
+    for m in df.columns:
+        group.loc[:, m + '_std'] = group.loc[:, m].std()
+        group.loc[:, m] = group.loc[:, m].mean()
+
+    # Remove duplicates
+    group = group.drop_duplicates()
+
+    group.reset_index()
+    df2 = df2.append(group)
+
+df = df2
+
 file_name, file_extension = os.path.splitext(path)
 
 df.to_csv(file_name + "_transformed" + file_extension, sep='\t', index=False)
