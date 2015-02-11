@@ -138,8 +138,7 @@ quite limited.
 \citet{sand2013ziphmmlib} present zipHMMlib, a highly optimized HMM library for
 speeding up the forward algorithm. Much of the theory in this paper rely on
 \cite{lifshits2009speeding}, but it is extended to make the computations
-numerically stable. They also introduce the idea of saving the preprocessing to
-the disk for later use. Furthermore, the code is available as an open source
+numerically stable. Furthermore, the code is available as an open source
 library with bindings for both Python and R.
 
 This thesis extends the work made by \citet{sand2013ziphmmlib} to also include
@@ -226,7 +225,7 @@ The above classical Viterbi algorithm can be reformulated into a number of
 matrix multiplications. This is what \citet{sand2013ziphmmlib} and
 \citet{lifshits2009speeding} use too. First, let $B_{o_i}$ be the diagonal
 matrix, having the emission probabilities of $o_i$ of the diagonal:
-\begin{align*}
+\begin{equation*}
   B_{o_i} =
   \begin{bmatrix}
     b_{1, o_i} &            &        &            \\
@@ -234,7 +233,7 @@ matrix, having the emission probabilities of $o_i$ of the diagonal:
                &            & \cdots &            \\
                &            &        & b_{N, o_i} \\
   \end{bmatrix}
-\end{align*}
+\end{equation*}
 and let
 \begin{align*}
   C_{o_i} &= B_{o_i} A^* \\
@@ -243,11 +242,11 @@ and let
 where $A^*$ is the transpose of $A$.
 
 Now $\omega_t$ can be computed using $C_{y_t}$ and $\omega_{t - 1}$ as
-\begin{align}
+\begin{equation}
   \label{eq:2}
   \omega_t = C_{y_t} \odot \omega_{t - 1} = C_{y_t} \odot C_{y_{t-1}} \odot
   \dots \odot C_1,
-\end{align}
+\end{equation}
 where $\odot$ is the max-times matrix multiplication defined as ${(A \odot
   B)}_{ij} = \max_k A_{ik} \cdot B_{kj}$.
 
@@ -306,12 +305,79 @@ occurences. $o_i o_j$ is substituded by a new symbol $o_{M + 1}$ and the length
 of $Y_{1:T}$ is thereby reduced by $n_{o_i o_j}$. All $n_{o_i o_j}$ occurences
 of $C_{o_i} \odot C_{o_j}$ in equation~\eqref{eq:2} may be replaced by the new
 matrix
-\begin{align*}
+\begin{equation}
   C_{o_{M + 1}} = C_{o_i} \odot C_{o_j}.
-\end{align*}
+\end{equation}
 Hence, the number of matrix multiplications is reduced by $n_{o_i o_j}$. The
 byte-pair encoding continues until $n_{o_i o_j}$ becomes too small to give a
-speed up. \fxwarning{When is this?}
+speed up. \fxwarning{When is this?} The result of this is a new sequence
+$Y_{1:T'}'$ over the new alphabet
+$\mathcal{O}' = \{o_1, o_2, \dots, o_M, o_{M + 1} = (l_1, r_1), o_{M + 2} =
+(l_2, r_2), \dots, o_{M'} = (l_{M' - M}, r_{M' - M}) \}$,
+where $l_i, r_i \in \{ o_1, o_2, \dots, o_{i - 1} \}$.
+
+This method can be split up into two. First the preprocessing consisting the of
+encoding the sequence as just discussed is done. As the encoding of the
+sequence is independent of the HMM the encoded sequence may be saved to the
+disk for later use. The second part consist of the actual Viterbi algorithm
+and can be split into two stages. The first stage is the computation of
+$C_{o_i}$ for $i = 1, \dots, M$ and then $C_{o_i}$ for increasing
+$i = M + 1, \dots, M'$ by $C_{o_i} = C_{l_i} \odot C_{l_r}$. In the second
+stage $\omega_T$ is computed by
+\begin{equation}
+  \label{eq:3}
+  \omega_T = C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot C_{y'_2} \odot C_1.
+\end{equation}
+
+\subsubsection{Saving Computed Stuff}
+\label{sec:saving-comp-stuff}
+\fxwarning{Better title.}
+
+As mentioned the sequence encoding is independent of the HMM and may be saved
+for use with different HMMs. \citet{lifshits2009speeding} also suggests
+constructing the substitution table offline based on a set of representative
+sequences. Then the $C_{o_i}$ matrices could be computed beforehand and also
+saved to the disk.
+
+\subsection{Numerical Stability}
+\label{sec:numerical-stability}
+
+All matrices contain probabilities, i.e.\ the are in range between 0 and
+1. Multiplying them together results in even smaller numbers. Since the value
+is stored as a IEEE 754 floating point format there is a limited precission,
+and the computations will quickly underflow. \citet{sand2013ziphmmlib}
+describes how to avoid underflow in terms to the forward algorithm. It turns
+out that it is easier to avoid for the Viterbi algorithm.
+
+To circumvent underflow in the classical Viterbi algorithm all probabilities
+are converted to log-space. So, instead of computing $\omega_T$,
+$\log \omega_T$ is computed. By using the rules of logarithms the
+multiplications are turned into additions using the rule
+$\log(AB) = \log A + \log B$. \fxnote{Insert some reference and elaborate a
+  bit.}
+
+The same idea can be used for the matrix based approach, where
+equation~\eqref{eq:3} is rewritten as
+\begin{align*}
+  \log \omega_T &= \log (C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot
+                  C_{y'_2} \odot C_1) \\
+                &= \log C_{y'_{T'}} \oplus \log C_{y'_{T'-1}} \oplus \dots \oplus
+                  \log C_{y'_2} \oplus \log C_1,
+\end{align*}
+and the $C$ matrices are rewritten as
+\begin{align*}
+  C_1 &= \log B_{y_1} \pi, \\
+  C_{o_i} &= \log B_{o_i} A^*, \quad \text{for }1 \le i \le M\\
+  C_{o_{M + i}} &= C_{l_i} \oplus C_{r_i} , \quad \text{for }1 \le i \le M' - M
+\end{align*}
+where $\oplus$ is defined as
+${(A \oplus B)}_{ij} = \max_k \log A_{ik} + \log B_{kj}$.
+
+
+\subsection{Compression Stopping Criterion}
+\label{sec:compr-stopp-crit}
+
+\fxnote{This is exactly as in \citet{sand2013ziphmmlib}.}
 
 \chapter{Implementation}
 \label{cha:implementation}
