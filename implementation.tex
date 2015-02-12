@@ -1,6 +1,19 @@
 \chapter{Implementation}
 \label{cha:implementation}
 
+This chapter describes the important aspects of the implementation. As this
+thesis is intended as being an extension of the work made by
+\citet{sand2013ziphmmlib} the code itself is also an extension of the zipHMM
+library.
+
+The library is written in C++ with bindings for R and Python. By the work made
+in this thesis the library has been extended to include a more efficient
+Viterbi implementation as well as bindings for R and Python.
+
+\fxnote{The only difference to the original implementation is that the data
+  structure constructed in the Forwarder class is moved to its own class DS.\@ The
+  Forwarder class as well as the new Viterbi class both aggregate a DS.}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
