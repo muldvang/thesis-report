@@ -1,0 +1,35 @@
+\chapter{Background and Related Work}
+\label{cha:backgr-relat-work}
+
+\fxfatal{Something about HMMs in general.}
+
+\citet{lifshits2009speeding} present a method for speeding up the dynamic
+programming algorithms used with HMMs, namely the forward-backward algorithms
+and the Viterbi algorithm. The approach is based on finding repeated substrings
+in the observed input sequence. These substrings are found using five different
+algorithms: Four Russians method, run length encoding, Lempel-Ziv parsing,
+grammer-based compression and byte pair encoding. The forward-backward and the
+Viterbi algorithms are the reformulated into series of matrix
+multiplications. The overall idea is that the repeated substrings correspond to
+repeated matrix multiplications and by finding the repeated substrings the
+multiplications can be avoided. Unfortunately, the code has not been made
+public available and the number of experiments and the quality of these is
+quite limited.
+
+\citet{sand2013ziphmmlib} present zipHMMlib, a highly optimized HMM library for
+speeding up the forward algorithm. Much of the theory in this paper rely on
+\cite{lifshits2009speeding}, but it is extended to make the computations
+numerically stable. Furthermore, the code is available as an open source
+library with bindings for both Python and R.
+
+This thesis extends the work made by \citet{sand2013ziphmmlib} to also include
+a highly efficient Viterbi algorithm based on the theory developed by
+\citet{lifshits2009speeding}, but as \citet{sand2013ziphmmlib} the theory will
+also be extended a bit to make the computation numerically stable. Furthermore,
+the experiments will be more extensive, thus exploiting some cases in which
+the original formulation of the algorithm will be more efficient.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "master"
+%%% End:
