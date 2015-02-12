@@ -154,7 +154,10 @@ change this since the $C$ matrices are of similar size. The table used for
 backtracking has decreased to size $O(N T')$ yielding a total space consumption
 of $O(M' N^2 + N T')$.
 
-With similar arguments the running time has changed to $O(M' N^3 +N^2 T')$.
+With similar arguments the running time of computing the likelihood has changed
+to $O(M' N^3 +N^2 T')$. Using the the $\omega$ table and the $R$ matrices the
+Viterbi path can be obtained in $O(T)$ time. Hence, the running time with
+backtracking enabled is $O(M' N^3 +N^2 T' + T)$.
 
 \subsubsection{Saving Computed Stuff}
 \label{sec:saving-comp-stuff}
