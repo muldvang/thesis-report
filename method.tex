@@ -144,8 +144,8 @@ $\log(AB) = \log A + \log B$. \fxnote{Insert some reference and elaborate a
 The same idea can be used for the matrix based approach, where
 equation~\eqref{eq:3} is rewritten as
 \begin{align*}
-  \log \omega_T &= \log (C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot
-                  C_{y'_2} \odot C_1) \\
+  \log \omega_T &= \log \left(C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot
+                  C_{y'_2} \odot C_1 \right) \\
                 &= \log C_{y'_{T'}} \oplus \log C_{y'_{T'-1}} \oplus \dots \oplus
                   \log C_{y'_2} \oplus \log C_1,
 \end{align*}
@@ -156,7 +156,8 @@ and the $C$ matrices are rewritten as
   C_{o_{M + i}} &= C_{l_i} \oplus C_{r_i} , \quad \text{for }1 \le i \le M' - M
 \end{align*}
 where $\oplus$ is defined as
-${(A \oplus B)}_{ij} = \max_k \log A_{ik} + \log B_{kj}$.
+${ \left( A \oplus B \right)}_{ij} = \max_k \left( \log A_{ik} + \log B_{kj}
+\right)$.
 
 
 \subsection{Compression Stopping Criterion}
