@@ -1,3 +1,4 @@
+% chktex-file -1
 \chapter{Method}
 \label{cha:method}
 
@@ -37,7 +38,8 @@ The classical Viterbi algorithm corresponds to computing this from right to
 left, but since matrix multiplication and max-times matrix multiplication is
 associative the product may be computed in any order.
 
-\fxerror{How to backtrack?}
+Backtracking is achieved in the same way as for the classical Viterbi algorithm
+as described in section~\ref{sec:class-viterbi-algor}.
 
 The space consumption and running time of this algorithm has changed, compared
 to the classical Viterbi algorithm. For each symbol $o_i$ in the alphabet of
@@ -113,6 +115,7 @@ stage $\omega_T$ is computed by
 \end{equation}
 
 \fxerror{Running time.}
+\fxerror{Backtracking.}
 
 \subsubsection{Saving Computed Stuff}
 \label{sec:saving-comp-stuff}
