@@ -144,7 +144,17 @@ obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
 or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
 recursively.
 
-\fxerror{Running time.}
+\subsubsection{Running Time}
+\label{sec:running-time}
+
+The space consumption is comparable to the Viterbi algorithm without
+compression enabled. The number of $C$ matrices has changed from $M$ to $M'$
+thus requiring $O(M' N^2)$ space. The introduction of the $R$ matrices does not
+change this since the $C$ matrices are of similar size. The table used for
+backtracking has decreased to size $O(N T')$ yielding a total space consumption
+of $O(M' N^2 + N T')$.
+
+With similar arguments the running time has changed to $O(M' N^3 +N^2 T')$.
 
 \subsubsection{Saving Computed Stuff}
 \label{sec:saving-comp-stuff}
