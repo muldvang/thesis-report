@@ -114,8 +114,37 @@ stage $\omega_T$ is computed by
   \omega_T = C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot C_{y'_2} \odot C_1.
 \end{equation}
 
+\subsubsection{Backtracking}
+\label{sec:backtracking}
+
+Obtaining the Viterbi path $S = s_1, s_2, \dots, s_T$ of $Y_{1:T}$ is no longer
+as simple as for the classical Viterbi algorithm. If the entire $\omega$ table
+is stored, only the optimal Viterbi path $S' = s_1', s_2', \dots, s_{T'}'$ of
+the compressed sequence $Y'_{1:T'}$ may be found using backtracking. However,
+it turns out that $S$ can be inferred from $S'$ since $S'$ is a subset of $S$
+as described by \citet{lifshits2009speeding}. To do this a set of matrices
+$R_{o_i}$ is kept along the $C_{o_i}$ matrices for each of the new symbols
+$o_{M + 1}, \dots, o_{M' - M}$ defined as
+\begin{equation*}
+  R_{o_{M + i}}(\text{row}, \text{col}) = \argmax_k
+  \left(
+    C_{l_i}(\text{row}, k) \odot C_{r_i}(k, \text{col})
+  \right).
+\end{equation*}
+This is looks like the definition of the $C_{o_i}$ matrices, but instead of
+storing the maximum value, the state that results in the maximum value is
+stored.
+
+Now, for each occurence of a new symbol $o_{M + i} = (l_i, r_i)$ where
+$l_i, r_i \in \mathcal{O}$ in $Y_{1:T'}'$ we know the start state $s_l$ and the
+end state $s_r$ from $S'$, such that $s_l$ is the state immediatly before $l_i$
+was emitted and $s_r$ is the state after $r_i$ was emitted. Hence, we need to
+find the most likely state where $l_i$ is emitted. This state is easily
+obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
+or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
+recursively.
+
 \fxerror{Running time.}
-\fxerror{Backtracking.}
 
 \subsubsection{Saving Computed Stuff}
 \label{sec:saving-comp-stuff}

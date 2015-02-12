@@ -55,24 +55,22 @@ X_t = x_t \mid \lambda) = \max_{x_{1:t-1}} \Pr(Y_{1:t}, X_{1:t} = x_{1:t} \mid
 After filling out $\omega$, $\Pr(Y_{1:T} \mid \lambda)$ can be computed as
 $\Pr(Y_{1:T} \mid \lambda) = \max_{x_T} \omega_T(x_T)$.
 
-To obtain the sequence of hidden states $\omega$ is backtracked using the
-recursion
-\begin{align}
-  \label{eq:4}
-  X_T &= \argmax_{x_T} \omega_T(x_T) \\
-  X_{t} &= \argmax_{x_{t}} b_{X_{t + 1}, y_{t + 1}} \omega_{t}(x_t) a_{x_t, X_{t + 1}}.
-\end{align}
+To obtain the sequence of hidden states $s_1, s_2, \dots, s_T$, also known as
+the \emph{Viterbi path}, another table of the same size as $\omega$ is stored
+keeping the maximizing argument instead of value from the recursion above.
 
 Note that if only the likelihood of the most likely sequence is needed, only
 the last filled out column of $\omega$ needs to be stored, since the recursion
 in equation~\eqref{eq:1} only needs the previous column to compute the new
-one. However, if backtracking is needed the entire table needs to be keps in
-memory as seen in equation~\eqref{eq:4}. \fxnote{Tricks exist to only keep
-  parts of the table in memory.}
+one. However, if backtracking is needed the entire table of maximizing
+arguments is kept in memory as seen in equation~\eqref{eq:4}. \fxnote{Tricks
+  exist to only keep parts of the table in memory.}
 
 The space consumption of this algorithm is the size of $\omega$ which is $O(N
 T)$. The time required to fill out a cell, the algorithm maximizes over all
-cells in the previous column yielding a running time of $O(N^2 T)$.
+cells in the previous column yielding a running time of $O(N^2
+T)$. Backtracking in done in $O(T)$ time using the table of maximizing
+arguments.
 
 %%% Local Variables:
 %%% mode: latex
