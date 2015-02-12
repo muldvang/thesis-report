@@ -12,22 +12,24 @@ grammer-based compression and byte pair encoding. The forward-backward and the
 Viterbi algorithms are the reformulated into series of matrix
 multiplications. The overall idea is that the repeated substrings correspond to
 repeated matrix multiplications and by finding the repeated substrings the
-multiplications can be avoided. Unfortunately, the code has not been made
-public available and the number of experiments and the quality of these is
-quite limited.
+multiplications can be avoided. The article is primarily theoretical. A single
+experiment have been performed on some DNA sequences showing a speed up of the
+Viterbi algorithm when using an improved Lempel-Ziv parsing without
+backtracking. No experiments have been made for the other algorithms and no
+code has been made available.
 
 \citet{sand2013ziphmmlib} present zipHMMlib, a highly optimized HMM library for
-speeding up the forward algorithm. Much of the theory in this paper rely on
+speeding up the forward algorithm. The speed up is achieved by finding repeated
+substrings using byte pair encoding. Much of the theory in this paper rely on
 \cite{lifshits2009speeding}, but it is extended to make the computations
 numerically stable. Furthermore, the code is available as an open source
 library with bindings for both Python and R.
 
 This thesis extends the work made by \citet{sand2013ziphmmlib} to also include
-a highly efficient Viterbi algorithm based on the theory developed by
-\citet{lifshits2009speeding}, but as \citet{sand2013ziphmmlib} the theory will
-also be extended a bit to make the computation numerically stable. Furthermore,
-the experiments will be more extensive, thus exploiting some cases in which
-the original formulation of the algorithm will be more efficient.
+a highly efficient Viterbi algorithm based on byte pair encoding as developed
+theoretically by \citet{lifshits2009speeding}. The theory will also be extended
+a bit to make the computation numerically stable and the experiments will be
+more extensive.
 
 %%% Local Variables:
 %%% mode: latex
