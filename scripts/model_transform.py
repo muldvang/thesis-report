@@ -31,7 +31,7 @@ df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zi
 df['zipHMMlib_pre_time/k^3'] = df['zipHMMlib_pre_time'] / df['k'] ** 3
 
 # Compute mean and std.
-grouped = df.groupby(['n'])
+grouped = df.groupby(['k'])
 df2 = pd.DataFrame()
 for name, group in grouped:
     # Average the measurements.
