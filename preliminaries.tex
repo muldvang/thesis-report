@@ -63,8 +63,8 @@ Note that if only the likelihood of the most likely sequence is needed, only
 the last filled out column of $\omega$ needs to be stored, since the recursion
 in equation~\eqref{eq:1} only needs the previous column to compute the new
 one. However, if backtracking is needed the entire table of maximizing
-arguments is kept in memory as seen in equation~\eqref{eq:4}. \fxnote{Tricks
-  exist to only keep parts of the table in memory.}
+arguments is kept in memory. \fxnote{Tricks exist to only keep parts of the
+  table in memory.}
 
 The space consumption of this algorithm is the size of $\omega$ which is $O(N
 T)$. The time required to fill out a cell, the algorithm maximizes over all
