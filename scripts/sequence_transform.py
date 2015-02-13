@@ -36,7 +36,9 @@ df.columns = ["n",
               "zipHMMlib_path_pre_time",
               "zipHMMlib_path_stage1_time",
               "zipHMMlib_path_stage2_time",
-              "zipHMMlib_path_running_time" ]
+              "zipHMMlib_path_running_time",
+
+              "garbage"]
 
 # Preprocessing
 df['zipHMMlib_pre_time/n'] = df['zipHMMlib_pre_time'] / df['n']
