@@ -1,0 +1,14 @@
+* Experiments
+- Compute the running time of the different stages to see how the running time
+  behave as well as see where to optimize.
+- Make an experiment using the new Viterbi implementation but without
+  compressing the sequence. I guess this is faster than the simple
+  Viterbi. Hopefully it is slower than the compressed one. Test with both
+  backtracking enabled and disabled.
+
+* Report
+- Discuss when to use Viterbi without backtracking. Make reference to the
+  thesis Storm was censor at.
+
+* Code
+- Seems to segfault sometimes.
