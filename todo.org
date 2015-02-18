@@ -9,6 +9,8 @@
 * Report
 - Discuss when to use Viterbi without backtracking. Make reference to the
   thesis Storm was censor at.
+- Remember to argue that N << T. Hence, the N^3 factor is not that bad compared
+  to the typical very large T.
 
 * Code
 - Seems to segfault sometimes.
