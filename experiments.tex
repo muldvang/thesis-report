@@ -2,10 +2,13 @@
 \chapter{Experiments}
 \label{cha:experiments}
 
-\section{Assymptotic Running Times}
+\section{Viterbi}
+\label{sec:viterbi}
+
+\subsection{Assymptotic Running Times}
 \label{sec:assymp-runn-times}
 
-\subsection{Sequence Length $n$}
+\subsubsection{Sequence Length $n$}
 \label{sec:sequence-length-n}
 
 \begin{figure}[H]
@@ -36,7 +39,7 @@
   \label{fig:assymptotic_viterbi_backtrack_n}
 \end{figure}
 
-\subsection{Model Size $k$}
+\subsubsection{Model Size $k$}
 \label{sec:model-size-k}
 
 \begin{figure}[H]
@@ -67,7 +70,7 @@
 %   \label{fig:assymptotic_viterbi_backtrack_k}
 % \end{figure}
 
-\section{Comparing zipHMMlib to the original Viterbi algorithm.}
+\subsection{Comparing zipHMMlib to the original Viterbi algorithm.}
 \label{sec:comp-ziphmml-orig}
 
 \begin{figure}[H]
@@ -98,6 +101,47 @@
   \caption{The speed up factor of the running time excluding preprocessing for
     sequences of varying lengths using a HMM with 16 states.}
   \label{fig:speedup_vs_sequence_length2}
+\end{figure}
+
+\section{Posterior Decoding}
+\label{sec:posterior-decoding}
+
+\subsection{Assymptotic Running Time}
+\label{sec:assympt-runn-time}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_posterior_n.tex}
+  \caption{The running time of posterior decoding is linear in the size of the
+    input sequence.}
+  \label{fig:posterior_n}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_posterior_k.tex}
+  \caption{The running time of posterior decoding is quadratic in the number of
+    states.}
+  \label{fig:posterior_k}
+\end{figure}
+
+\subsection{Comparison to the Naive Algorithm}
+\label{sec:comp-naive-algor}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/posterior_speedup_vs_k.tex}
+  \caption{The speed up factor as function of the model size using a sequence
+    of length 100000.}
+  \label{fig:posterior_speedup_vs_k}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/posterior_speedup_vs_sequence_length.tex}
+  \caption{The speed up factor for sequences of varying lengths using a HMM
+    with 16 states.}
+  \label{fig:posterior_speedup_vs_sequence_length}
 \end{figure}
 
 %%% Local Variables:
