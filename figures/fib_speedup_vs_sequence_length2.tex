@@ -2,6 +2,8 @@
   \begin{axis}[
     xlabel=Sequence length,
     ylabel=Speedup factor,
+    % TODO: Delete xmin and fix it in the data instead.
+    xmin=1000,
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
