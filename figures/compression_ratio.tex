@@ -1,0 +1,18 @@
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    xlabel=Sequence length,
+    ylabel=Compression ratio,
+    xmode=log,
+    ]
+    \addplot[only marks, color=colorbrewer1]
+    table[x=frequency, y=compression_ratio]
+    {plot_data/fib_sequence_transformed.data};
+
+    \legend{Fibonacci words}
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
