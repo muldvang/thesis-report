@@ -3,9 +3,10 @@
     xlabel=Sequence length,
     ylabel=Compression ratio,
     xmode=log,
+    ymode=log,
     ]
     \addplot[only marks, color=colorbrewer1]
-    table[x=frequency, y=compression_ratio]
+    table[x=n, y=compression_ratio]
     {plot_data/fib_sequence_transformed.data};
 
     \legend{Fibonacci words}
