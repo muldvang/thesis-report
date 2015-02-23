@@ -13,7 +13,16 @@
     table[x=n, y=compression_ratio]
     {plot_data/sequence_transformed.data};
 
-    \legend{Fibonacci words, Random alphabet size 4}
+    \addplot[only marks, color=colorbrewer3]
+    table[x=n, y=compression_ratio]
+    {plot_data/2_sequence_transformed.data};
+
+    \addplot[only marks, color=colorbrewer4]
+    table[x=n, y=compression_ratio]
+    {plot_data/1_sequence_transformed.data};
+
+    \legend{Fibonacci words, Random alphabet size 4, Random alphabet size 2,
+      Random alphabet size 1}
   \end{axis}
 \end{tikzpicture}
 
