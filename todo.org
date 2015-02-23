@@ -1,3 +1,8 @@
+* General
+- Other compressing schemes? Using e.g. Lempel-Ziv might make it possible to
+  speed up posterior decoding as explained by Lifshits, but it might be unlikely.
+- Parallelize algorithms? By this a speed up could be gained in posterior decoding.
+
 * Experiments
 - How many times should we use the compressed sequence to make the compression
   affordable?
