@@ -9,7 +9,11 @@
     table[x=n, y=compression_ratio]
     {plot_data/fib_sequence_transformed.data};
 
-    \legend{Fibonacci words}
+    \addplot[only marks, color=colorbrewer2]
+    table[x=n, y=compression_ratio]
+    {plot_data/sequence_transformed.data};
+
+    \legend{Fibonacci words, Random alphabet size 4}
   \end{axis}
 \end{tikzpicture}
 
