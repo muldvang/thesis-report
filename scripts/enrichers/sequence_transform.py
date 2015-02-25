@@ -19,23 +19,15 @@ df.columns = ["n",
               "simple_running_time",
 
               "zipHMMlib_uncompressed_pre_time",
-              "zipHMMlib_uncompressed_stage1_time",
-              "zipHMMlib_uncompressed_stage2_time",
               "zipHMMlib_uncompressed_running_time",
 
               "zipHMMlib_uncompressed_path_pre_time",
-              "zipHMMlib_uncompressed_path_stage1_time",
-              "zipHMMlib_uncompressed_path_stage2_time",
               "zipHMMlib_uncompressed_path_running_time",
 
               "zipHMMlib_pre_time",
-              "zipHMMlib_stage1_time",
-              "zipHMMlib_stage2_time",
               "zipHMMlib_running_time",
 
               "zipHMMlib_path_pre_time",
-              "zipHMMlib_path_stage1_time",
-              "zipHMMlib_path_stage2_time",
               "zipHMMlib_path_running_time",
 
               "compression_ratio"]
@@ -46,7 +38,7 @@ df['zipHMMlib_pre_time/n'] = df['zipHMMlib_pre_time'] / df['n']
 # Running time
 df['zipHMMlib_running_time/n'] = df['zipHMMlib_running_time'] / df['n']
 df['zipHMMlib_path_running_time/n'] = df['zipHMMlib_path_running_time'] / df['n']
-df['zipHMMlib_path_backtrack_time/n'] = (df['zipHMMlib_path_stage2_time'] - df['zipHMMlib_stage2_time']) / df['n']
+df['zipHMMlib_path_backtrack_time/n'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['n']
 
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
