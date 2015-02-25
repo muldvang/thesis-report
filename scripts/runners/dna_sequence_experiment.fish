@@ -2,9 +2,10 @@
 
 set code_dir ~/Repositories/thesis-code
 set report_dir ~/Repositories/thesis-report
-rm $report_dir/plot_data/dna_sequence.data
-for i in 1024 2048 4096 8192 16384 32768 65536 131072
+set results_file $report_dir/plot_data/dna_sequence.data
+rm $results_file
+for T in 1024 2048 4096 8192 16384 32768 65536 131072
         for j in (seq -w 20)
-                eval $code_dir/release/experiments/sequence $report_dir/data/16.hmm "$report_dir/data/chrI_$i.seq" $i 4 >> $report_dir/plot_data/dna_sequence.data
+                eval $code_dir/release/experiments/bench_viterbi $report_dir/data/chrI_{$T}.seq $T $report_dir/data/16.hmm 16 >> $results_file
         end
 end
