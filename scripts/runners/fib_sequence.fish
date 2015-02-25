@@ -2,7 +2,7 @@
 
 set code_dir ~/Repositories/thesis-code
 set report_dir ~/Repositories/thesis-report
-set results_file $report_dir/plot_data/fib_sequence.data
+set results_file $report_dir/plot_data/(basename -s .fish (status -f)).data
 rm $results_file
 for i in (seq 15 32)
         set T (math (wc -c < $report_dir/data/fib$i.seq) / 2)

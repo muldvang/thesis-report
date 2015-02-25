@@ -2,7 +2,7 @@
 
 set code_dir ~/Repositories/thesis-code
 set report_dir ~/Repositories/thesis-report
-set results_file $report_dir/plot_data/model.data
+set results_file $report_dir/plot_data/(basename -s .fish (status -f)).data
 rm $results_file
 for N in 2 3 4 6 8 12 16 24 32 48 64 96 128 192 256 384 512 768 1024
         for j in (seq -w 5)
