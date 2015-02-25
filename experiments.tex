@@ -2,14 +2,37 @@
 \chapter{Experiments}
 \label{cha:experiments}
 
+\fxerror{Introduction.}
+
+\fxerror{Experimental setup.}
+
+\section{Data}
+\label{sec:data}
+
+\fxerror{Random data/models, Fibonacci words, DNA.}
+
+\section{Compression Ratio}
+\label{sec:compression-ratio}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/compression_ratio.tex}
+  \caption{The compression ratio of Fibonacci words, random sequences of
+    alphabet size 2, random sequences of alphabet size 4, DNA
+    sequences, and single character sequences.}
+  \label{fig:compression_ratio}
+\end{figure}
+
 \section{Viterbi}
 \label{sec:viterbi}
 
-\subsection{Assymptotic Running Times}
-\label{sec:assymp-runn-times}
+\fxerror{Overview of section.}
 
-\subsubsection{Sequence Length $n$}
-\label{sec:sequence-length-n}
+\subsection{Verification of Theoretical Running Times}
+\label{sec:theor-runn-times}
+
+\subsubsection{Preprocessing}
+\label{sec:preprocessing}
 
 \begin{figure}[H]
   \centering
@@ -18,11 +41,45 @@
   \label{fig:pre_viterbi_n}
 \end{figure}
 
+% \begin{figure}[H]
+%   \centering
+%   \input{figures/pre_viterbi_k}
+%   \caption{zipHMMlib preprocessing time for varying model sizes.}
+%   \label{fig:pre_viterbi_k}
+% \end{figure}
+
+\subsubsection{Running Time Without Backtracking}
+\label{sec:running-time-without}
+
 \begin{figure}[H]
   \centering
   \input{figures/assymptotic_viterbi_n}
   \caption{zipHMMlib running time for varying sequence lengths.}
   \label{fig:assymptotic_viterbi_n}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_k}
+  \caption{zipHMMlib running time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_k}
+\end{figure}
+
+\subsubsection{Running Time With Backtracking}
+\label{sec:running-time-with-1}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_backtrack_n}
+  \caption{zipHMMlib Path backtracking time for varying sequence lengths.}
+  \label{fig:assymptotic_viterbi_backtrack_n}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \input{figures/assymptotic_viterbi_backtrack_k}
+  \caption{zipHMMlib Path backtracking time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_backtrack_k}
 \end{figure}
 
 \begin{figure}[H]
@@ -34,76 +91,33 @@
 
 \begin{figure}[H]
   \centering
-  \input{figures/assymptotic_viterbi_backtrack_n}
-  \caption{zipHMMlib Path backtracking time for varying sequence lengths.}
-  \label{fig:assymptotic_viterbi_backtrack_n}
-\end{figure}
-
-\subsubsection{Model Size $k$}
-\label{sec:model-size-k}
-
-\begin{figure}[H]
-  \centering
-  \input{figures/pre_viterbi_k}
-  \caption{zipHMMlib preprocessing time for varying model sizes.}
-  \label{fig:pre_viterbi_k}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \input{figures/assymptotic_viterbi_k}
-  \caption{zipHMMlib running time for varying model sizes.}
-  \label{fig:assymptotic_viterbi_k}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
   \input{figures/assymptotic_viterbi_path_k}
   \caption{zipHMMlib Path running time for varying model sizes.}
   \label{fig:assymptotic_viterbi_path_k}
 \end{figure}
 
-% \begin{figure}[H]
-%   \centering
-%   \input{figures/assymptotic_viterbi_backtrack_k}
-%   \caption{zipHMMlib Path backtracking time for varying model sizes.}
-%   \label{fig:assymptotic_viterbi_backtrack_k}
-% \end{figure}
-
-\subsection{Fibonacci Words}
-\label{sec:fibonacci-words}
-
-Using Fibonacci words for experiments are kind of a worst case example of
-sequences.
-
-\begin{figure}[H]
-  \centering
-  \input{figures/compression_ratio.tex}
-  \caption{The compression ratio of Fibonacci words, random sequences of
-    alphabet size 2, random sequences of alphabet size 4, DNA
-    sequences, amino acid sequences, and single character sequences.}
-  \label{fig:compression_ratio}
- \fxerror{Make experiment with DNA and amino acid sequences and
-    single character sequences.}
-\end{figure}
-
 \subsection{Comparing zipHMMlib to the original Viterbi algorithm.}
 \label{sec:comp-ziphmml-orig}
 
-\begin{figure}[H]
-  \centering
-  \input{figures/speedup_vs_complexity.tex}
-  \caption{Running time vs.\ sequence complexity using sequences of length $10^6$.}
-  \label{fig:speedup_vs_complexity}
-\end{figure}
+First we comparing zipHMMlib to the original implementation of the Viterbi
+algorithm. Recall that the preprocessesing may be saved to disk for later
+use. For some problems one might only need to run Viterbi once for a
+sequence. In  this case we should look at the running time including
+preprocessesing. It might be better to not spend any time compressing the
+sequence. In the plots below the time of computing Viterbi on a noncompressed
+sequence is also shown.
 
-\begin{figure}[H]
-  \centering
-  \input{figures/speedup_vs_k.tex}
-  \caption{Running time vs.\ model size.}
-  \label{fig:speedup_vs_k}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \input{figures/speedup_vs_complexity.tex}
+%   \caption{Running time vs.\ sequence complexity using sequences of length $10^6$.}
+%   \label{fig:speedup_vs_complexity}
+% \end{figure}
 
+\subsubsection{Random Data}
+\label{sec:random-data}
+
+Including preprocessesing time:
 \begin{figure}[H]
   \centering
   \input{figures/speedup_vs_sequence_length.tex}
@@ -114,11 +128,22 @@ sequences.
 
 \begin{figure}[H]
   \centering
+  \input{figures/speedup_vs_k.tex}
+  \caption{Running time vs.\ model size.}
+  \label{fig:speedup_vs_k}
+\end{figure}
+
+Excludeing preprocessesing time:
+\begin{figure}[H]
+  \centering
   \input{figures/speedup_vs_sequence_length2.tex}
   \caption{The speed up factor of the running time excluding preprocessing for
     sequences of varying lengths using a HMM with 16 states.}
   \label{fig:speedup_vs_sequence_length2}
 \end{figure}
+
+\subsubsection{Fibonacci Words}
+\label{sec:fibonacci-words-1}
 
 \begin{figure}[H]
   \centering
