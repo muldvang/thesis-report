@@ -7,6 +7,6 @@ rm $results_file
 for i in (seq 15 32)
         set T (math (wc -c < $report_dir/data/fib$i.seq) / 2)
         for j in (seq 5)
-                eval $code_dir/release/experiments/bench_viterbi $report_dir/data/fib{$i}.seq $T $report_dir/data/16.hmm 16 >> $results_file
+                eval $code_dir/release/experiments/bench_viterbi $report_dir/data/fib{$i}.seq $T $report_dir/data/16.hmm 16 $results_file
         end
 end
