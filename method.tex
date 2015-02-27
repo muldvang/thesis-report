@@ -235,6 +235,15 @@ to $O(M' N^3 +N^2 T')$. Using the the $\omega$ table and the $R$ matrices the
 Viterbi path can be obtained in $O(T)$ time. Hence, the running time with
 backtracking enabled is $O(M' N^3 +N^2 T' + T)$.
 
+The running time of the preprocessing part is $O(
+\left(
+  \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert
+\right) T)$, since one new symbol is introduced by scanning the string for
+pairs. Note that the $\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert$
+factor depends on the input. For sequences with many repetitions the byte-pair
+encoding will continue for more iterations than for sequences with few
+repetitions.
+
 \subsection{Saving Computed Stuff}
 \label{sec:saving-comp-stuff}
 \fxwarning{Better title.}
