@@ -5,12 +5,12 @@
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=k, y=zipHMMlib_total_ratio, y error=zipHMMlib_total_ratio_std]
+    table[x=k, y=zipHMMlib_running_ratio, y error=zipHMMlib_running_ratio_std]
     {plot_data/model_transformed.data};
 
-    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=k, y=zipHMMlib_path_total_ratio, y error=zipHMMlib_path_total_ratio_std]
-    {plot_data/model_transformed.data};
+    % \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    % table[x=k, y=zipHMMlib_path_total_ratio, y error=zipHMMlib_path_total_ratio_std]
+    % {plot_data/model_transformed.data};
 
     % \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
     % table[x=k, y=zipHMMlib_running_ratio, y error=zipHMMlib_running_ratio_std]
@@ -20,7 +20,7 @@
     % table[x=k, y=zipHMMlib_path_running_ratio, y error=zipHMMlib_path_running_ratio_std]
     % {plot_data/model_transformed.data};
 
-    \legend{zipHMMlib, zipHMMlib Path}
+    \legend{zipHMMlib}
   \end{axis}
 \end{tikzpicture}
 
