@@ -33,7 +33,7 @@ Formally a HMM can be defined as
   $h_i$ emitting $o_j$.
 \end{itemize}
 
-An HMM is parametrized by $\pi$, $A$, and $B$, which is denoted by $\lambda =
+A HMM is parametrized by $\pi$, $A$, and $B$, which is denoted by $\lambda =
 (\pi, A, B)$.
 
 \section{The Classical Viterbi Algorithm}
@@ -44,21 +44,25 @@ hidden states given a model $\lambda$ and an observed sequence $Y_{1:T}$ by
 maximizing the probability of the observed and hidden sequences for all
 possible hidden sequences: $\Pr(Y_{1:T} \mid \lambda) = \max_{x_{1:T}}
 \Pr(Y_{1:T}, X_{1:T} = x_{1:T} \mid \lambda)$. This may be computed efficiently
-by filling out a table, $\omega$, with entries $\omega_t(x_t) = \Pr(Y_{1:T},
+by filling out a table, $\omega$, with entries $\omega_t(x_t) = \Pr(Y_{1:t},
 X_t = x_t \mid \lambda) = \max_{x_{1:t-1}} \Pr(Y_{1:t}, X_{1:t} = x_{1:t} \mid
 \lambda)$ column by column from left to right, using the recursion
-\begin{align}
+\begin{equation}
   \label{eq:1}
-  \omega_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
-  \omega_t(x_t) &= b_{x_t, y_t} \max_{x_{t - 1}} \omega_{t - 1}(x_{t - 1})
-                  a_{x_{t - 1}, x_t}.
-\end{align}
+  \begin{aligned}
+    \omega_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
+    \omega_t(x_t) &= b_{x_t, y_t} \max_{x_{t - 1}} \omega_{t - 1}(x_{t - 1})
+    a_{x_{t - 1}, x_t}.
+  \end{aligned}
+\end{equation}
 After filling out $\omega$, $\Pr(Y_{1:T} \mid \lambda)$ can be computed as
 $\Pr(Y_{1:T} \mid \lambda) = \max_{x_T} \omega_T(x_T)$.
 
 To obtain the sequence of hidden states $s_1, s_2, \dots, s_T$, also known as
 the \emph{Viterbi path}, another table of the same size as $\omega$ is stored
-keeping the maximizing argument instead of value from the recursion above.
+keeping the maximizing argument instead of value from the recursion
+above. \fxwarning{Should $s_1, s_2, \dots, s_T$ be renamed to
+  $x_1, x_2, \dots, x_T$}
 
 Note that if only the likelihood of the most likely sequence is needed, only
 the last filled out column of $\omega$ needs to be stored, since the recursion
@@ -298,11 +302,75 @@ ${ \left( A \oplus B \right)}_{ij} = \max_k \left( \log A_{ik} + \log B_{kj}
 \section{Classical Posterior Decoding}
 \label{sec:posterior-decoding-1}
 
-\fxerror{Introduction to posterior decoding}
+The Viterbi algorithm described above find the most likely path of hidden
+states through the HMM emitting the input sequence. Another kind of decoding is
+called posterior decoding. Posterior decoding finds the most likely state at
+the time the symbol is emitted. Formally the most likely state $s_t$ being in
+when emitting symbol $Y_t$ may be written as
+\begin{equation*}
+  s_t = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t | Y_{1:T} \right).
+\end{equation*}
+Hence, the posterior decoding path $X_{1:T}$ is a sequence of hidden states
+that might not be a valid path according to the transitions of the
+model. \fxnote{So\dots Why use it/what is it used for?}
 
-\fxerror{Description of the forward-backward algorithm}
+The posterior decoding may be efficiently computed using the forward-backward
+algorithms. The forward-backward algorithms are comparible to the Viterbi
+algorithm. Instead of computing the probability of most likely path, they
+compute the joint probability of all paths, that is
+\begin{equation*}
+  \Pr
+  \left(
+    Y_{1:T} \mid \lambda
+  \right) = \sum_{x_{1:T}} \Pr
+  \left(
+    Y_{1:T}, X_{1:T} = x_{1:T} \mid \lambda
+  \right).
+\end{equation*}
 
-\fxerror{Computing the posterior decoding}
+For the classical forward algorithm a table, $\alpha$, with entries
+\begin{equation*}
+\alpha_t(x_t) = \Pr \left( Y_{1:t}, X_t = x_t \mid \lambda \right) =
+\sum_{x_{1:t-1}} \Pr \left( Y_{1:t}, X_{1:t} = x_{1:t} \mid \lambda \right)
+\end{equation*}
+is filled. As seen this is very similar to the Viterbi algorithm. Instead of
+taking the maximum over all previous states the sum is computed. Computing
+$\alpha$ may be done recursively column by column from left to right like the
+Viterbi algorithm using
+\begin{equation*}
+  \begin{aligned}
+    \alpha_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
+    \alpha_t(x_t) &= b_{x_t, y_t} \sum_{x_{t - 1}} \alpha_{t - 1}(x_{t - 1})
+    a_{x_{t - 1}, x_t}.
+  \end{aligned}
+\end{equation*}
+
+Where the forward algorithm computes the table from left to right, i.e.\
+it computes the joint probability of emitting $y_t$ after having emitted
+$y_{1:t-1}$, the backward algorithm computes the joint probability of emmiting
+$y_t$ and then emitting $y_{t+1:T}$. This corresponds to filling the table from
+right to left. The backward table is called $\beta$. The recursion may be written as
+\begin{equation*}
+  \begin{aligned}
+    \beta_T(x_T) &= (1, 1, \dots, 1) \\
+    \beta_t(x_t) &= b_{x_t, y_t} \sum_{x_{t + 1}} \beta_{t + 1}(x_{t + 1})
+    a_{x_{t + 1}, x_t}.
+  \end{aligned}
+\end{equation*}
+The rightmost column is filled with 1's, since the initial state is assumed
+given.
+
+After having computed the forward and backward tables, it is now possible to
+compute the posterior decoding $S_{1:T}$ that is given by
+\begin{equation*}
+  s_t = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t \mid Y_{1:T} \right) =
+  \argmax_{x_t \in \mathcal{H}} \frac{\alpha(x_t) \beta(x_t)}{\Pr \left( Y_{1:T} \right)}.
+\end{equation*}
+Since $\Pr \left( Y_{1:T} \right)$ is the same for all $t$ it may be treated as
+a constant result in the formula
+\begin{equation*}
+  s_t = \argmax_{x_t \in \mathcal{H}} \alpha(x_t) \beta(x_t).
+\end{equation*}
 
 \section{Posterior Decoding as Linear Algebra}
 \label{sec:post-decod-as}
