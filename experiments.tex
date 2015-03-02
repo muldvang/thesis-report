@@ -312,14 +312,20 @@ becomes too large though the algorithm fails at gaining a speedup.
 \label{sec:fibonacci-words-1}
 
 Even though good speedup factors were gained for random data, it is expected
-that much greaters speedups may be obtained by using repetitive sequences. Thus
-experiments similar to the ones for random data has been conducted. Again, a
-plot including the preprocessing time is shown and then a plot without the
-excluding preprocessing is shown in
+that much greaters speedups may be obtained by using repetitive
+sequences. Thus, experiments similar to the ones for random data has been
+conducted. Again, a plot including the preprocessing time is shown and then a
+plot excluding preprocessing is shown in
 figures~\ref{fig:fib_speedup_vs_sequence_length} and
 \ref{fig:fib_speedup_vs_sequence_length2} respectively.
 
-In both cases the largest speedup is gained by using the Compression algorithm.
+Here the largest speedup is in both cases gained by using the Compression
+algorithm. For the experiment including the preprocessesing speedups of up to a
+factor 120 is gained, while the speedups of the experiment excluding
+preprocessesing are growing exponentially as the sequence length
+increases. This is an effect of the good compression ratio of Fibonacci words
+discussed in section~\ref{sec:compression-ratio}.
+
 \begin{figure}[h!]
   \centering
   \input{figures/fib_speedup_vs_sequence_length.tex}
@@ -335,6 +341,16 @@ In both cases the largest speedup is gained by using the Compression algorithm.
     Fibonacci words of varying lengths using a HMM with 16 states.}
   \label{fig:fib_speedup_vs_sequence_length2}
 \end{figure}
+
+This ends the section experimenting with the Viterbi algorithm. It is concluded
+that the compression of sequences does indeed speed up the execution time of
+the Viterbi algorithm. But to gain a speed up, some restrictions are
+required. If the number of states in the model becomes too large, a speed up is
+gained. Secondly, a speedup is not necessarily gained if the Viterbi algorithm
+is only run a single time for a sequence, since the preprocesses/compression of
+the sequence takes too much time relatively to the execution of the Viterbi
+algorithm. This highly depends on the sequence though. For the very repetitive
+Fibonacci words, a speedup was gained even by running the Viterbi algorithm once.
 
 \section{Posterior Decoding}
 \label{sec:posterior-decoding}
