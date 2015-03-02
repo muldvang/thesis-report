@@ -24,7 +24,7 @@ Formally a HMM can be defined as
   states;
 \item $\mathcal{O} = {o_1, o_2, \dots, o_M}$, a finite alphabet of observables;
 \item a vector $\Pi = {(\pi_i)}_{1 \le i \le N}$, where $\pi_i = \Pr(x_1 =
-  h_i)$ is the probablity of the model starting in hidden state $h_i$;
+  h_i)$ is the probability of the model starting in hidden state $h_i$;
 \item a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$, where $a_{ij} = \Pr(x_t
   = h_j \mid x_{t - 1} = h_i)$ is the probability of a transition from state
   $h_i$ to state $h_j$;
@@ -33,7 +33,7 @@ Formally a HMM can be defined as
   $h_i$ emitting $o_j$.
 \end{itemize}
 
-An HMM is parameterised by $\pi$, $A$, and $B$, which is denoted by $\lambda =
+An HMM is parametrized by $\pi$, $A$, and $B$, which is denoted by $\lambda =
 (\pi, A, B)$.
 
 \section{The Classical Viterbi Algorithm}
@@ -76,7 +76,7 @@ arguments.
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
 
-In this chapter the theory of making the Viterbi algorithm faster by exploing
+In this chapter the theory of making the Viterbi algorithm faster by exploring
 repetitions is discussed. First, the algorithm is reformulated into matrix
 operations; second, the use of byte pair encoding is explained; and finally
 a solution to make the computation numerically stable is explained.
@@ -119,7 +119,7 @@ as described in section~\ref{sec:class-viterbi-algor}.
 
 The space consumption and running time of this algorithm has changed, compared
 to the classical Viterbi algorithm. For each symbol $o_i$ in the alphabet of
-observables the corresponding matrix $B_{o_i}$ is created, thus requirering
+observables the corresponding matrix $B_{o_i}$ is created, thus requiring
 $O(M N^2)$ space. The $C_{o_i}$ matrices require the same amount of space,
 $O(M N^2)$. $C_1$ is vector, thus only requiring $O(N)$ space. If
 equation~\eqref{eq:2} is evaluated from right to left it corresponds to a
