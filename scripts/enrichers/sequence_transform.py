@@ -13,10 +13,13 @@ if not len(sys.argv) == 2:
 path = str(sys.argv[1])
 
 df = pd.io.parsers.read_table(path, sep=' ')
-df.columns = ["n",
+df.columns = ["N", "T", "T'"
 
               "simple_pre_time",
               "simple_running_time",
+
+              "simple_path_pre_time",
+              "simple_path_running_time",
 
               "zipHMMlib_uncompressed_pre_time",
               "zipHMMlib_uncompressed_running_time",
@@ -28,9 +31,7 @@ df.columns = ["n",
               "zipHMMlib_running_time",
 
               "zipHMMlib_path_pre_time",
-              "zipHMMlib_path_running_time",
-
-              "compression_ratio"]
+              "zipHMMlib_path_running_time"]
 
 # Preprocessing
 df['zipHMMlib_pre_time/n'] = df['zipHMMlib_pre_time'] / df['n']
