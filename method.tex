@@ -1,4 +1,5 @@
 % chktex-file -1
+% chktex-file 24
 \chapter{Method}
 \label{cha:method}
 
@@ -297,7 +298,8 @@ ${ \left( A \oplus B \right)}_{ij} = \max_k \left( \log A_{ik} + \log B_{kj}
 \subsection{Compression Stopping Criterion}
 \label{sec:compr-stopp-crit}
 
-\fxnote{This is exactly as in \citet{sand2013ziphmmlib}.}
+This is exactly as in \citet{sand2013ziphmmlib}.
+\fxerror{Elaborate.}
 
 \section{Classical Posterior Decoding}
 \label{sec:posterior-decoding-1}
@@ -361,7 +363,7 @@ The rightmost column is filled with 1's, since the initial state is assumed
 given.
 
 After having computed the forward and backward tables, it is now possible to
-compute the posterior decoding $S_{1:T}$ that is given by
+compute the posterior decoding $S_{1:T}$ given by
 \begin{equation*}
   s_t = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t \mid Y_{1:T} \right) =
   \argmax_{x_t \in \mathcal{H}} \frac{\alpha(x_t) \beta(x_t)}{\Pr \left( Y_{1:T} \right)}.
@@ -372,23 +374,124 @@ a constant result in the formula
   s_t = \argmax_{x_t \in \mathcal{H}} \alpha(x_t) \beta(x_t).
 \end{equation*}
 
-\section{Posterior Decoding as Linear Algebra}
+\section{The Forward-Backward Algorithm as Linear Algebra}
 \label{sec:post-decod-as}
 
-\fxerror{Very musch like Viterbi as linear algebra and work made by Lifshifts
-  and Sand. But I might need to discuss scaling.}
+The main part of the posterior decoding algorithm described in the previous
+section is computing the forward and backward tables. Once this is done it is
+easy to compute the posterior decoding. The forward and backward algorithms may
+be expressed as linear algebra similarly to the Viterbi algorithm.
+
+The theory, implementation of, and experimentation with the forward algorithm
+is done by \citet{sand2013ziphmmlib}. As the theory described in
+section~\ref{sec:algorithm-as-linear} is built upon and using the same notation
+as work done by \citet{sand2013ziphmmlib} the description of the forward
+algorithm is omitted in this thesis.
+
+Expressing the backward algorithm in terms of matrix multiplications is
+essentially the same as the forward algorithm as the two algorithms are very
+similar as seen in section~\ref{sec:posterior-decoding-1}. Let the emission
+matrices, $B_{o_i}$, matrices be identical to the ones described in
+section~\ref{sec:algorithm-as-linear}. We can then set the $C$ matrices to
+\begin{align*}
+  C_{o_i} & = B_{o_i} A^*, \\
+  C_T     & = (1, 1, \dots, 1).
+\end{align*}
+Now $\beta_t$ can be computed using $C_{y_t}$ and $\beta_{t + 1}$ as
+\begin{equation}
+  \beta_t = C_{y_t} \beta_{t - 1} = C_{y_t} C_{y_{t+1}}\dots C_T,
+\end{equation}
+which is similar to the forward algorithm in \citet{sand2013ziphmmlib} and the
+Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
+matrix multiplications no longer are max times multiplications but normal
+matrix multiplications.
+
+The running time and space consumption is equal to the running time and space
+consumption of the Viterbi algorithm.
+
+\subsection{Numerical Stability}
+\label{sec:numerical-stability-1}
+
+Like for the the Viterbi algorithm a lot of probabilities are multiplied and
+numerical issues will occur. For the Viterbi algorithm this was solved by
+working in logarithmic space.
+
+\citet{sand2013ziphmmlib} describes how to make the computations in the forward
+algorithm numerically stable. First, as the $C$ matrices are defined by matrix
+multiplications, they tend underflow. Thus they are scaled by the sum of the
+entries in the matrix. This may be reused in the backward algorithm as well, as
+the $C$ matrices are computed in the same way. For the computation of the
+forward table, $\alpha$, a scalar are introduced for each column to make the
+entries sum to 1. Since the magnitudes of the forward table and backward table
+entries are comparable, it is reasonable to use the same scalars in the
+computation of the backward table.
+
+\fxwarning{Discuss that the scalars are stored in log space and needs to be
+  computed back to linear space, and argue that it isn't a problem.}
 
 \section{Problems in Exploiting Repetitions}
 \label{sec:probl-expl-repet}
 
+\citet{sand2013ziphmmlib} exploits repetitions for the forward algorithm using
+byte-pair encoding similarly to the description in
+section~\ref{sec:expl-repet} but do implement any kind of backtracking. Using
+the same method it is easy to also exploit repetetions in the backward
+algorithm.
 
-\fxerror{Like Viterbi we can obtain a partial path, i.e.\ the posterior decoding
-  of the compressed sequence.}
-\fxerror{For Viterbi we could precompute matrices. But this does not work for
-  posterior decoding since we multiply probabilities instead of taking the
-  maximum.}
-\fxerror{Stating the open problem: Can we compute the missing columns in the
-  forward/backward tables in less than $N^2$ time per column?}
+To compute the posterior decoding path of the uncompressed sequence from the
+forward and backward tables of the compressed sequence, either (1) the
+posterior decoding sequence may be computed using the partial path obtained
+from the compressed sequence, or (2) the entire forward and backward tables of
+the uncompressed sequence are required. For both approaches the running time of
+computing 1 state in the posterior decoding path must take strictly less than
+$O(N^2)$ time to gain a speedup, since one else might as well compute the
+forward and backward tables without compressing the input sequence. The two
+approaches are now discussed in turn.
+
+\begin{enumerate}
+\item For the Viterbi algorithm it is in section~\ref{sec:backtracking}
+  described how the $R$ matriced can be precomputed to retrieve the full
+  Viterbi path from the partial path. This method makes use of the property
+  that the Viterbi algorithm maximizes over all previous states. From the
+  partial path the previous state that maximizes the likelihood is known. Using
+  this information the current state may be found using only $O(N)$ time, since
+  it is not necessary to maximize over all previous states. Using information
+  about the next state it is possible to precompute the maximizing state for
+  each symbol for all previous and all next states, and thus computing the
+  current state in constant time.
+
+  The problem is that for the forward-backward algorithm the current state do
+  not only depend on the previous state, since it is not computed using the
+  maximum over all previous states but the sum of these. Hence, having computed
+  the partial path does not help retrieving the full path as the full path is
+  not dependent on partial path.
+\item Computing the full forward and backward tables is another approach. Since
+  the full tables have have $N$ entries in each column the running time of
+  filling an entry must take strictly less than $O(N)$ time to gain a
+  speedup. It might be possible that some relation exist between missing
+  columns in the partial tables that corresponds to the same symbol in the
+  input sequence.
+
+  Looking at figure~\ref{fig:full-forward-table}, assume the columns $i$ and
+  $j$ has been computed using the compressed sequence. The columns $i + 1$ and
+  $j + 1$  that correspond to the same symbol needs to be computed. It is an
+  open question whether it is posible to compute those faster than the naïve
+  approach that takes $2N^2$ time.
+\end{enumerate}
+
+\begin{figure}[ptbh!]
+  \centering
+  \input{figures/forward_table.tex}
+  \caption{Computing the full forward table from the partial table. The gray
+    boxes indicate columns filled during the when computing the table for the
+    compressed sequence. The white columns needs to be computed in less than
+    $O(N^2)$ time per column.}
+  \label{fig:full-forward-table}
+\end{figure}
+
+Unfortunately no solution to this problem has been found. Hence, the posterior
+decoding cannot be speeded up by exploiting repetitions in the observed
+sequence.
 
 %%% Local Variables:
 %%% mode: latex
