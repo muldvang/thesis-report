@@ -25,8 +25,12 @@
     table[x=T, y=compression_ratio]
     {plot_data/viterbi_dna_sequence_transformed.data};
 
-    \legend{Fibonacci words, Random ($\lvert{\Sigma}\rvert = 4$), Random
-      ($\lvert{\Sigma}\rvert  = 2$), Unary, DNA}
+    % \addplot[only marks, color=colorbrewer6]
+    % table[x=T, y=compression_ratio]
+    % {plot_data/viterbi_human_sequence_transformed.data};
+
+    \legend{Fibonacci words, Random ($\lvert{\mathcal{O}}\rvert = 4$), Random
+      ($\lvert{\mathcal{O}}\rvert  = 2$), Unary, DNA}
   \end{axis}
 \end{tikzpicture}
 

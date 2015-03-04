@@ -479,7 +479,7 @@ approaches are now discussed in turn.
   approach that takes $2N^2$ time.
 \end{enumerate}
 
-\begin{figure}[ptbh!]
+\begin{figure}
   \centering
   \input{figures/forward_table.tex}
   \caption{Computing the full forward table from the partial table. The gray
@@ -491,7 +491,11 @@ approaches are now discussed in turn.
 
 Unfortunately no solution to this problem has been found. Hence, the posterior
 decoding cannot be speeded up by exploiting repetitions in the observed
-sequence.
+sequence. The running time of computing the posterior decoding path is then
+$O(M N^3 + TN^2)$, which is assymptotically worse than the classical posterior
+decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
+$M$ typically is small, so it is expected that the assymptotic running times of
+the two algorithms in practice are comparable.
 
 %%% Local Variables:
 %%% mode: latex

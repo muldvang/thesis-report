@@ -4,7 +4,7 @@
     ylabel=$\frac{\text{Running time}}{N^2}$,
     xmode=log,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=k, y=zipHMMlib_time/k^2, y error=zipHMMlib_time/k^2_std]
     {plot_data/posterior_model_transformed.data};
   \end{axis}

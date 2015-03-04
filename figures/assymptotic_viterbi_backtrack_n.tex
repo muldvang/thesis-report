@@ -5,7 +5,7 @@
     xmode=log,
     ymin=0,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=T, y=zipHMMlib_path_backtrack_time/T, y error=zipHMMlib_path_backtrack_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
   \end{axis}

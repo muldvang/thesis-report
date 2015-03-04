@@ -4,7 +4,7 @@
     ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=T, y=zipHMMlib_running_time/T, y error=zipHMMlib_running_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
   \end{axis}
