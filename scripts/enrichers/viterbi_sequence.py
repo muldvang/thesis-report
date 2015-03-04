@@ -13,7 +13,7 @@ if not len(sys.argv) == 2:
 path = str(sys.argv[1])
 
 df = pd.io.parsers.read_table(path, sep=' ')
-df.columns = ["N", "T", "T'"
+df.columns = ["N", "T", "T'",
 
               "simple_pre_time",
               "simple_running_time",
@@ -34,12 +34,12 @@ df.columns = ["N", "T", "T'"
               "zipHMMlib_path_running_time"]
 
 # Preprocessing
-df['zipHMMlib_pre_time/n'] = df['zipHMMlib_pre_time'] / df['n']
+df['zipHMMlib_pre_time/T'] = df['zipHMMlib_pre_time'] / df['T']
 
 # Running time
-df['zipHMMlib_running_time/n'] = df['zipHMMlib_running_time'] / df['n']
-df['zipHMMlib_path_running_time/n'] = df['zipHMMlib_path_running_time'] / df['n']
-df['zipHMMlib_path_backtrack_time/n'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['n']
+df['zipHMMlib_running_time/T'] = df['zipHMMlib_running_time'] / df['T']
+df['zipHMMlib_path_running_time/T'] = df['zipHMMlib_path_running_time'] / df['T']
+df['zipHMMlib_path_backtrack_time/T'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['T']
 
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
@@ -61,22 +61,18 @@ df['zipHMMlib_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_total_time
 df['zipHMMlib_path_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_path_total_time']
 
 # Compute mean and std.
-grouped = df.groupby(['n'])
-df2 = pd.DataFrame()
-for name, group in grouped:
+res = pd.DataFrame()
+for _, group in df.groupby(['T']):
     # Average the measurements.
-    for m in df.columns:
-        group.loc[:, m + '_std'] = group.loc[:, m].std()
-        group.loc[:, m] = group.loc[:, m].mean()
+    group_frame = pd.DataFrame()
+    for c in df.columns:
+        std = group.loc[:, c].std()
+        mean = group.loc[:, c].mean()
+        group_frame[c] = pd.Series(mean)
+        group_frame[c + '_std'] = pd.Series(std)
 
-    # Remove duplicates
-    group = group.drop_duplicates()
-
-    group.reset_index()
-    df2 = df2.append(group)
-
-df = df2
+    res = res.append(group_frame)
 
 file_name, file_extension = os.path.splitext(path)
 
-df.to_csv(file_name + "_transformed" + file_extension, sep='\t', index=False)
+res.to_csv(file_name + "_transformed" + file_extension, sep=' ', index=False)
