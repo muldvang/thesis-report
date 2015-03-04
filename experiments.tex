@@ -215,13 +215,23 @@ implementation of the Viterbi algorithm. Recall that the preprocessing may be
 saved to disk for later use. For some problems one might only need to run
 Viterbi once for a sequence. In this case it is relevant to look at the running time
 including preprocessing. Hence, the experiments that both include and exclude
-the preprocessing time have been made. In the following plots a ``speedup
-factor'' is shown on the y-axis. The speedup factor is calculated as the
-running time of the classical algorithm divided by the running time of
-algorithm being measured. Hence, any speedup factor larger than one means
-that the algorithm being measured is faster than the classical algorithm.
+the preprocessing time have been made.
 
-\fxnote{Compare to a Simple algorithm and a Simple Path algorithm.}
+Four variations of the Viterbi algorithm have been measured:
+\begin{description}
+\item[Uncompressed] that does not compress the sequence and only find the log
+  likelihood of the most probable path,
+\item[Uncompressed Path] that also backtracks to find the most likely path,
+\item[Compressed] that compresses the sequence and only computes the
+  likelihood,
+\item[Compressed Path] that also backtracks.
+\end{description}
+
+In the following plots a ``speedup factor'' is shown on the y-axis. The speedup
+factor is calculated as the running time of the classical algorithm (with out
+without backtracking enabled) divided by the running time of algorithm being
+measured. Hence, any speedup factor larger than one means that the algorithm
+being measured is faster than the classical algorithm.
 
 % \begin{figure}[pbth!]
 %   \centering
@@ -236,15 +246,7 @@ that the algorithm being measured is faster than the classical algorithm.
 The first experiments have been made using random sequences. First the speedup
 including preprocessing is shown. In this case it might be better to not
 compress the sequence, since a lot of time is spent doing the
-preprocessing. Four variations of the Viterbi algorithm have been measured:
-\begin{description}
-\item[Uncompressed] that does not compress the sequence and only find the log
-  likelihood of the most probable path,
-\item[Uncompressed Path] that also backtracks to find the most likely path,
-\item[Compressed] that compresses the sequence and only computes the
-  likelihood,
-\item[Compressed Path] that also backtracks.
-\end{description}
+preprocessing.
 
 In figure~\ref{fig:speedup_vs_sequence_length} the speedup factor for these
 four algorithms is shown for sequences of varying length. Interestingly the
