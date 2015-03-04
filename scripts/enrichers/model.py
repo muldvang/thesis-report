@@ -13,12 +13,25 @@ if not len(sys.argv) == 2:
 path = str(sys.argv[1])
 
 df = pd.io.parsers.read_table(path, sep=' ')
-df.columns = ['N', 'T', 'compression_ratio',
-              'simple_pre_time', 'simple_running_time',
-              'zipHMMlib_uncompressed_pre_time', 'zipHMMlib_uncompressed_running_time',
-              'zipHMMlib_uncompressed_path_pre_time', 'zipHMMlib_uncompressed_path_running_time',
-              'zipHMMlib_pre_time', 'zipHMMlib_running_time',
-              'zipHMMlib_path_pre_time', 'zipHMMlib_path_running_time']
+df.columns = ["N", "T", "T'",
+
+              "simple_pre_time",
+              "simple_running_time",
+
+              "simple_path_pre_time",
+              "simple_path_running_time",
+
+              "zipHMMlib_uncompressed_pre_time",
+              "zipHMMlib_uncompressed_running_time",
+
+              "zipHMMlib_uncompressed_path_pre_time",
+              "zipHMMlib_uncompressed_path_running_time",
+
+              "zipHMMlib_pre_time",
+              "zipHMMlib_running_time",
+
+              "zipHMMlib_path_pre_time",
+              "zipHMMlib_path_running_time"]
 
 # Add total time.
 df['simple_total_time'] = df['simple_pre_time'] + df['simple_running_time']
@@ -59,4 +72,4 @@ for _, group in df.groupby(['N']):
 
 file_name, file_extension = os.path.splitext(path)
 
-res.to_csv(file_name + "_enriched" + file_extension, sep=' ', index=False)
+res.to_csv(file_name + "_transformed" + file_extension, sep=' ', index=False)
