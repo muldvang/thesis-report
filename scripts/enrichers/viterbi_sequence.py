@@ -60,6 +60,9 @@ df['zipHMMlib_uncompressed_path_total_ratio'] = df['simple_total_time'] / df['zi
 df['zipHMMlib_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_total_time']
 df['zipHMMlib_path_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_path_total_time']
 
+# Compression ratio
+df['compression_ratio'] = df['T'] / df["T'"]
+
 # Compute mean and std.
 res = pd.DataFrame()
 for _, group in df.groupby(['T']):
