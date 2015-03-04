@@ -369,7 +369,10 @@ This section contains all experiments performed on the posterior decoding
 algorithm. As described in section~\ref{sec:probl-expl-repet}, no efficient way
 of exploiting sequence repetitions has been found. Nevertheless experiments
 have been made to see whether a minor speedup can be obtained by computing the
-posterior decoding in the matrix multiplications framework.
+posterior decoding in the matrix multiplications framework. Hence, only one of
+the four variations introduced in the Viterbi experiments makes sense here,
+namely the Uncompressed Path variation, as the path is always wanted when doing
+posterior decoding.
 
 The section is split into two parts. The first part compares the actual
 running time to the theoretical running time to verify that the implementation
