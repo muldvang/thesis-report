@@ -1,10 +1,8 @@
 % chktex-file -1
 % chktex-file 24
 \chapter{Method}
-\label{cha:method}
 
 \section{Hidden Markov Models}
-\label{sec:hidden-markov-models}
 
 In the section the definition of and notation for a Hidden Markov Model and the
 Viterbi algorithm will be presented using the notation also used by
@@ -151,7 +149,6 @@ five different methods of doing this, while \citet{sand2013ziphmmlib} only uses
 byte-pair encoding.
 
 \subsection{Byte-Pair Encoding}
-\label{sec:byte-pair-encoding}
 
 Byte-pair encoding is a simple data compression method. The most common pair
 consecutive bytes in the data is replaced by a byte that do not exist in the
@@ -162,7 +159,6 @@ replaced by used of characters or intergers. For example, the input sequence
 next iteration it would be encoded into 344 by substituding 32 by 4 etc.
 
 \subsection{Using Byte-Pair Encoding to Speed Up Viterbi}
-\label{sec:using-byte-pair}
 
 The Viterbi algorithm achieves a speed up using byte-pair encoding in the
 following way. Let $o_i o_j \in O \times O$ be the most frequently occuring
@@ -171,9 +167,9 @@ occurences. $o_i o_j$ is substituded by a new symbol $o_{M + 1}$ and the length
 of $Y_{1:T}$ is thereby reduced by $n_{o_i o_j}$. All $n_{o_i o_j}$ occurences
 of $C_{o_i} \odot C_{o_j}$ in equation~\eqref{eq:2} may be replaced by the new
 matrix
-\begin{equation}
+\begin{equation*}
   C_{o_{M + 1}} = C_{o_i} \odot C_{o_j}.
-\end{equation}
+\end{equation*}
 Hence, the number of matrix multiplications is reduced by $n_{o_i o_j}$. The
 byte-pair encoding continues until $n_{o_i o_j}$ becomes too small to give a
 speed up. \fxwarning{When is this?} The result of this is a new sequence
@@ -260,7 +256,6 @@ sequences. Then the $C_{o_i}$ matrices could be computed beforehand and also
 saved to the disk.
 
 \subsection{Numerical Stability}
-\label{sec:numerical-stability}
 
 All matrices contain probabilities, i.e.\ the are in range between 0 and
 1. Multiplying them together results in even smaller numbers. Since the value
@@ -375,7 +370,6 @@ a constant result in the formula
 \end{equation*}
 
 \section{The Forward-Backward Algorithm as Linear Algebra}
-\label{sec:post-decod-as}
 
 The main part of the posterior decoding algorithm described in the previous
 section is computing the forward and backward tables. Once this is done it is
@@ -398,9 +392,9 @@ section~\ref{sec:algorithm-as-linear}. We can then set the $C$ matrices to
   C_T     & = (1, 1, \dots, 1).
 \end{align*}
 Now $\beta_t$ can be computed using $C_{y_t}$ and $\beta_{t + 1}$ as
-\begin{equation}
+\begin{equation*}
   \beta_t = C_{y_t} \beta_{t - 1} = C_{y_t} C_{y_{t+1}}\dots C_T,
-\end{equation}
+\end{equation*}
 which is similar to the forward algorithm in \citet{sand2013ziphmmlib} and the
 Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
 matrix multiplications no longer are max times multiplications but normal
@@ -410,7 +404,6 @@ The running time and space consumption is equal to the running time and space
 consumption of the Viterbi algorithm.
 
 \subsection{Numerical Stability}
-\label{sec:numerical-stability-1}
 
 Like for the the Viterbi algorithm a lot of probabilities are multiplied and
 numerical issues will occur. For the Viterbi algorithm this was solved by

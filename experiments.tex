@@ -1,7 +1,6 @@
 % chktex-file 24
 % chktex-file 44
 \chapter{Experiments}
-\label{cha:experiments}
 
 This chapter covers description and discussion of all experiments performed in
 this thesis. First, the experimental setup is described, followed by the data
@@ -18,7 +17,6 @@ measure. Furthermore, the standard deviation has been calculated and is shown
 as error bars in the plots.
 
 \section{Data}
-\label{sec:data}
 
 Hidden Markov models have successfully been applied to various kinds of
 data. \fxwarning{Reference} As this thesis is written with no specific kind of
@@ -77,7 +75,6 @@ algorithm will be very dependent on the input sequences.  \fxwarning{Discuss
 \end{figure}
 
 \section{Viterbi}
-\label{sec:viterbi}
 
 This section covers the experiments made in context of the Viterbi
 algorithm. First, the theoretical asymptotic running time of the algorithm is
@@ -90,7 +87,6 @@ disabled.
 \label{sec:theor-runn-times}
 
 \subsubsection{Preprocessing}
-\label{sec:preprocessing}
 
 As described in section~\ref{sec:saving-comp-stuff} the compression of the
 input sequence may be done prior to executing the Viterbi algorithm. This is
@@ -121,7 +117,6 @@ a better experiment also showing the size of the new alphabet?}
 % \end{figure}
 
 \subsubsection{Running Time Without Backtracking}
-\label{sec:running-time-without}
 
 The implementation of the Viterbi algorithm supports both computing the Viterbi
 path and not doing it. For the two of those there is a difference in the
@@ -159,7 +154,6 @@ decreasing and goes towards being constant.
 \end{figure}
 
 \subsubsection{Running Time With Backtracking}
-\label{sec:running-time-with-1}
 
 In most cases the Viterbi path is needed. Thus, backtracking has to be
 done. This takes time linear in the length $T$ of the original sequence. To verify
@@ -208,7 +202,6 @@ This ends the experiments concerning the theoretical running times of the
 Viterbi algorithm itself.
 
 \subsection{Comparing zipHMMlib to the Classical Viterbi Algorithm.}
-\label{sec:comp-ziphmml-class}
 
 First the zipHMMlib Viterbi algorithm is compared to the classical
 implementation of the Viterbi algorithm. Recall that the preprocessing may be
@@ -241,7 +234,6 @@ being measured is faster than the classical algorithm.
 % \end{figure}
 
 \subsubsection{Random Data}
-\label{sec:random-data}
 
 The first experiments have been made using random sequences. First the speedup
 including preprocessing is shown. In this case it might be better to not
@@ -292,9 +284,11 @@ Finally, instead of viewing the speedup factor as a function of the sequence
 length, the model size is used. Recall that the running time of Viterbi is
 $O(M' N^3 + N^2 T')$. Hence, the cubic factor might become a problem as $N$
 grows. The speedup factor as function of model size $N$ is plotted in
-figure~\ref{fig:speedup_vs_k}. As seen the speedup continues growing until 30
-states and the starts to become smaller again. It is noticeable though that the
-good speedup factors are gained for quite large models of hundreds of states.
+figures~\ref{fig:speedup_vs_k} and~\ref{fig:speedup_vs_k2} including and
+excluding the preprocessing. As expected the speedup continues growing until a
+certain number of states and the starts to become smaller again. It is
+noticeable though that the good speedup factors are gained for quite large
+models of hundreds of states.
 
 \begin{figure}
   \centering
@@ -307,7 +301,7 @@ good speedup factors are gained for quite large models of hundreds of states.
   \centering
   \input{figures/speedup_vs_k2.tex}
   \caption{Running time vs.\ model size excluding preprocessing time.}
-  \label{fig:speedup_vs_k}
+  \label{fig:speedup_vs_k2}
 \end{figure}
 
 In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
@@ -319,7 +313,6 @@ multiple models, a speedup is gained by compressing the sequence. If the model
 becomes too large though the algorithm fails at gaining a speedup.
 
 \subsubsection{Fibonacci Words}
-\label{sec:fibonacci-words-1}
 
 Even though good speedup factors were gained for random data, it is expected
 that much greater speedups may be obtained by using repetitive
@@ -363,7 +356,6 @@ algorithm. This highly depends on the sequence though. For the very repetitive
 Fibonacci words, a speedup was gained even by running the Viterbi algorithm once.
 
 \section{Posterior Decoding}
-\label{sec:posterior-decoding}
 
 This section contains all experiments performed on the posterior decoding
 algorithm. As described in section~\ref{sec:probl-expl-repet}, no efficient way
@@ -380,7 +372,6 @@ of the algorithm satisfies the theory. The second part compares it to the
 classical implementation of posterior decoding.
 
 \subsection{Asymptotic Running Time}
-\label{sec:assympt-runn-time}
 
 Like in section~\ref{sec:theor-runn-times}, the theoretical compared the the
 actual running times experiments have been made using random data. The
@@ -419,7 +410,6 @@ It is concluded that the actual running time of the algorithm follows the
 theoretical.
 
 \subsection{Comparison to the Classical Algorithm}
-\label{sec:comp-naive-algor}
 
 Now the algorithm is compared the classical algorithm. In
 figure~\ref{fig:posterior_speedup_vs_sequence_length} the speedup factor as
