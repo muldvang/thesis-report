@@ -41,6 +41,10 @@ df['zipHMMlib_running_time/T'] = df['zipHMMlib_running_time'] / df['T']
 df['zipHMMlib_path_running_time/T'] = df['zipHMMlib_path_running_time'] / df['T']
 df['zipHMMlib_path_backtrack_time/T'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['T']
 
+df["zipHMMlib_running_time/T'"] = df['zipHMMlib_running_time'] / df['T']
+df["zipHMMlib_path_running_time/T'"] = df['zipHMMlib_path_running_time'] / df['T']
+df["zipHMMlib_path_backtrack_time/T'"] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['T']
+
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
 df["simple_path_total_time"] = df["simple_path_running_time"] + df["simple_path_pre_time"]
