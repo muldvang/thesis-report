@@ -161,13 +161,18 @@ decreasing and goes towards being constant.
 \subsubsection{Running Time With Backtracking}
 
 In most cases the Viterbi path is needed. Thus, backtracking has to be
-done. This takes time linear in the length $T$ of the original sequence. To verify
-this the running time of the backtracking itself divided by $T$ for sequences
-of varying lengths and show in
+done. This takes time linear in the length $T$ of the original sequence. To
+verify this the running time of the backtracking itself divided by $T$ for
+sequences of varying lengths and show in
 figure~\ref{fig:assymptotic_viterbi_backtrack_n}. As seen it is indeed
 linear. To make sure that the backtracking is constant in the number of states,
 the running time is shown for various number of states in
-figure~\ref{fig:assymptotic_viterbi_backtrack_k}. \fxwarning{What do we see?}
+figure~\ref{fig:assymptotic_viterbi_backtrack_k}. It turns out that the running
+time depends on the number of states. This has been investigated and the reason
+seems to be that a few more calculations has to be done to will out the
+backtracking table. These calculations access matrices of size $N^2$, and as
+$N$ becomes larger these matrices may not be in the cache of the CPU, thus
+making the computation slower. \fxwarning{Can we see that?}
 
 \begin{figure}
   \centering
