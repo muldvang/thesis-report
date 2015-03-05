@@ -3,7 +3,6 @@
     xlabel=Sequence length $T$,
     ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
-    ymin=0,
     ]
     \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=T, y=zipHMMlib_path_backtrack_time/T, y error=zipHMMlib_path_backtrack_time/T_std]

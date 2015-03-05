@@ -57,6 +57,8 @@ df['zipHMMlib_running_time/N^3'] = df['zipHMMlib_running_time'] / df['N'] ** 3
 df['zipHMMlib_path_running_time/N^3'] = df['zipHMMlib_path_running_time'] / df['N'] ** 3
 df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']
 df['zipHMMlib_pre_time/N^3'] = df['zipHMMlib_pre_time'] / df['N'] ** 3
+df['zipHMMlib_path_backtrack_time/N'] = df['zipHMMlib_path_backtrack_time'] / df['N']
+df['zipHMMlib_path_backtrack_time/N^2'] = df['zipHMMlib_path_backtrack_time'] / df['N'] ** 2
 
 # Compute mean and std.
 res = pd.DataFrame()
