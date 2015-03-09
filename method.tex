@@ -63,18 +63,28 @@ keeping the maximizing argument instead of value from the recursion
 above. \fxwarning{Should $s_1, s_2, \dots, s_T$ be renamed to
   $x_1, x_2, \dots, x_T$}
 
-Note that if only the likelihood of the most likely sequence is needed, only
-the last filled out column of $\omega$ needs to be stored, since the recursion
-in equation~\eqref{eq:1} only needs the previous column to compute the new
-one. However, if backtracking is needed the entire table of maximizing
-arguments is kept in memory. \fxnote{Tricks exist to only keep parts of the
-  table in memory.}
+Note that only the last filled out column of $\omega$ needs to be stored, since
+the recursion in equation~\eqref{eq:1} only needs the previous column to
+compute the new one. However, if the most likely sequence is requested,
+backtracking through the table is required.
+
+\subsubsection{Backtracking}
+
+A simple way of backtracking through the table is to store pointers from each
+state in a column to the maximizing previous state. When the last column has
+been filled in $\omega$, the last state in the Viterbi path may be found using
+$\argmax_{x_T} \omega_T(x_T)$. From this state the entire path can be
+found by following the pointers in the table.
 
 The space consumption of this algorithm is the size of $\omega$ which is $O(N
 T)$. The time required to fill out a cell, the algorithm maximizes over all
-cells in the previous column yielding a running time of $O(N^2
-T)$. Backtracking in done in $O(T)$ time using the table of maximizing
-arguments.
+cells in the previous column resulting in a running time of $O(N^2
+T)$. Backtracking in done in $O(T)$ time using the table of pointers.
+
+A space consumption of $O(N T)$ might be a problem in some scenarios. Another
+way to backtrack is described by \citet{Tarnas01061998}. By using this approach
+the space consumption can be reduced to $O(N \sqrt{T})$ while the assymptotic
+running time of the algorithm is preserved. \fxerror{Description of this algorithm.}
 
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
