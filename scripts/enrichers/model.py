@@ -31,7 +31,9 @@ df.columns = ["N", "T", "T'",
               "zipHMMlib_running_time",
 
               "zipHMMlib_path_pre_time",
-              "zipHMMlib_path_running_time"]
+              "zipHMMlib_path_running_time",
+
+              "zipHMMlib_path_memory_running_time"]
 
 # Add total time.
 df['simple_total_time'] = df['simple_pre_time'] + df['simple_running_time']
@@ -59,6 +61,7 @@ df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zi
 df['zipHMMlib_pre_time/N^3'] = df['zipHMMlib_pre_time'] / df['N'] ** 3
 df['zipHMMlib_path_backtrack_time/N'] = df['zipHMMlib_path_backtrack_time'] / df['N']
 df['zipHMMlib_path_backtrack_time/N^2'] = df['zipHMMlib_path_backtrack_time'] / df['N'] ** 2
+df['zipHMMlib_path_memory_running_time/N^3'] = df['zipHMMlib_path_memory_running_time'] / df['N'] ** 3
 
 # Compute mean and std.
 res = pd.DataFrame()
