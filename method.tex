@@ -72,7 +72,7 @@ backtracking through the table is required.
 
 A simple way of backtracking through the table is to store pointers from each
 state in a column to the maximizing previous state. When the last column has
-been filled in $\omega$, the last state in the Viterbi path may be found using
+been computed in $\omega$, the last state in the Viterbi path may be found using
 $\argmax_{x_T} \omega_T(x_T)$. From this state the entire path can be
 found by following the pointers in the table.
 
@@ -84,7 +84,16 @@ T)$. Backtracking in done in $O(T)$ time using the table of pointers.
 A space consumption of $O(N T)$ might be a problem in some scenarios. Another
 way to backtrack is described by \citet{Tarnas01061998}. By using this approach
 the space consumption can be reduced to $O(N \sqrt{T})$ while the assymptotic
-running time of the algorithm is preserved. \fxerror{Description of this algorithm.}
+running time of the algorithm is preserved.
+
+Instead of storing the entire $\omega$ table in memory only the last column of
+blocks of some size $B$ is stored. These columns may be called
+checkpoints. When backtracking the blocks are recomputed using the checkpoint
+and backtracked from right to left. Hence, only one block is kept in memory at
+a time. If $B = \sqrt{T}$ is chosen, the space consumption of this algorithm is
+$O(N \sqrt{T})$. The Viterbi computations are now done two times, so the
+algorithm will be a bit slower, but it keeps having the same assymptotic
+running time of $O(N^2 T)$. \fxnote{Better description?}
 
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
