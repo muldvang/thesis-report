@@ -76,14 +76,6 @@ algorithm will be very dependent on the input sequences.  \fxwarning{Discuss
 
 \section{Viterbi}
 
-\begin{figure}[H]
-  \centering
-  \input{figures/memory_save.tex}
-  \caption{The running time of Viterbi with and without memory saving.}
-  \label{fig:memory_save}
-\end{figure}
-
-
 This section covers the experiments made in context of the Viterbi
 algorithm. First, the theoretical asymptotic running time of the algorithm is
 verified to make sure that the running time of the algorithm behaves as
@@ -101,7 +93,7 @@ enabled.
 
 \subsubsection{Preprocessing}
 
-As described in section~\ref{sec:saving-comp-stuff} the compression of the
+As described in section~\ref{sec:saving-compr-sequ} the compression of the
 input sequence may be done prior to executing the Viterbi algorithm. This is
 useful if the Viterbi algorithm is run with different models, as the
 compression of the sequence does not depend on the model.
@@ -133,7 +125,7 @@ a better experiment also showing the size of the new alphabet?}
 
 The implementation of the Viterbi algorithm supports both computing the Viterbi
 path and not doing it. For the two of those there is a difference in the
-theoretical time, since computing the path takes $O(T)$ time.
+theoretical time, since computing the path is linear in $T$.
 
 As stated in section~\ref{sec:running-time} the running time without
 backtracking is linear in the length of the compressed sequence and cubic in
@@ -149,7 +141,6 @@ thus verifying that the algorithm is linear in $T'$.
   \input{figures/assymptotic_viterbi_n}
   \caption{zipHMMlib running time for varying sequence lengths.}
   \label{fig:assymptotic_viterbi_n}
-\fxnote{Divide the running time by the length of the compressed sequence.}
 \end{figure}
 
 A similar experiment has been conducted to verify that the running time i cubic
@@ -169,18 +160,16 @@ decreasing and goes towards being constant.
 \subsubsection{Running Time With Backtracking}
 
 In most cases the Viterbi path is needed. Thus, backtracking has to be
-done. This takes time linear in the length $T$ of the original sequence. To
-verify this the running time of the backtracking itself divided by $T$ for
-sequences of varying lengths and show in
+done. As discussed in section~\ref{sec:running-time} the running time of the
+backtracking depends on the method used. In the following plots both the
+running time of the ``normal'' backtracking and the ``space saving''
+backtracking is shown.
+
+Both backtracking methods have a running time linear in the length $T$ of the
+original sequence. To verify this the running time of the backtracking itself
+divided by $T$ for sequences of varying lengths and show in
 figure~\ref{fig:assymptotic_viterbi_backtrack_n}. As seen it is indeed
-linear. To make sure that the backtracking is constant in the number of states,
-the running time is shown for various number of states in
-figure~\ref{fig:assymptotic_viterbi_backtrack_k}. It turns out that the running
-time depends on the number of states. This has been investigated and the reason
-seems to be that a few more calculations has to be done to will out the
-backtracking table. These calculations access matrices of size $N^2$, and as
-$N$ becomes larger these matrices may not be in the cache of the CPU, thus
-making the computation slower. \fxwarning{Can we see that?}
+linear.
 
 \begin{figure}
   \centering
@@ -188,6 +177,19 @@ making the computation slower. \fxwarning{Can we see that?}
   \caption{zipHMMlib Path backtracking time for varying sequence lengths.}
   \label{fig:assymptotic_viterbi_backtrack_n}
 \end{figure}
+
+The normal backtracking should be constant in the number of states $N$, while
+the space saving method has a running time is propotinal to $N^2$. The running
+time is shown for various number of states in
+figure~\ref{fig:assymptotic_viterbi_backtrack_k}. Notice that three curves are
+shown. The curve looks as expected for the space saving method, but it turns
+out that the running time of the normal backtracking depends on the number of
+states. To make the curve not grow, the running time has to be divided by
+$N^2$, which does not fit the theoretical running time. This has been
+investigated and the reason seems to be that a few more calculations has to be
+done to will out the backtracking table. These calculations access matrices of
+size $N^2$, and as $N$ becomes larger these matrices may not be in the cache of
+the CPU, thus making the computation slower. \fxwarning{Can we see that?}
 
 \begin{figure}
   \centering
@@ -228,14 +230,17 @@ Viterbi once for a sequence. In this case it is relevant to look at the running 
 including preprocessing. Hence, the experiments that both include and exclude
 the preprocessing time have been made.
 
-Four variations of the Viterbi algorithm have been measured:
+Six variations of the Viterbi algorithm have been measured:
 \begin{description}
-\item[Uncompressed] that does not compress the sequence and only find the log
-  likelihood of the most probable path,
+\item[Uncompressed] that does not compress the sequence and only find the
+  loglikelihood of the most probable path,
 \item[Uncompressed Path] that also backtracks to find the most likely path,
+\item[Uncompressed Path Space Saving] that also saves memory in the
+  backtracking process,
 \item[Compressed] that compresses the sequence and only computes the
-  likelihood,
-\item[Compressed Path] that also backtracks.
+  loglikelihood,
+\item[Compressed Path] that also backtracks,
+\item[Compressed Path Space Saving] that also saves memory on backtracking.
 \end{description}
 
 In the following plots a ``speedup factor'' is shown on the y-axis. The speedup
@@ -282,13 +287,15 @@ of the input sequence becomes larger. \fxwarning{Investigate why there is such
   \label{fig:speedup_vs_sequence_length}
 \end{figure}
 
-The next experiment still excludes the preprocessing. This will give the
-Compressed algorithm a boost, since a lot of time is spent compressing the
-sequence, especially for large input sequences. The result of this in shown in
+The next experiment excludes the preprocessing. This will give the Compressed
+algorithm a boost, since a lot of time is spent compressing the sequence,
+especially for large input sequences. The result of this in shown in
 figure~\ref{fig:speedup_vs_sequence_length2}. As seen the Compressed algorithms
 now gain a larger speedup than the Uncompressed ones. It is though noticeable
-that the Viterbi path retrieval is very expensive yielding a much lower speedup
-than just computing the log likelihood.
+that the Viterbi path retrieval is very expensive resulting in a much lower
+speedup than just computing the loglikelihood. However, the both the Compresed
+Path and Compressed Path Space Saving is better than the Uncompressed Path and
+gains a speedup factor of approximately 20 to the classical implementation.
 
 \begin{figure}
   \centering
@@ -324,11 +331,14 @@ models of hundreds of states.
 
 In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
 random data given the right circumstances. In all cases a much larger speedup
-is obtained if the Viterbi path is not needed. If one only needs to run the
-algorithm once, compression should be either enabled or disabled depending on
-whether the path is requested or not. If the Viterbi algorithm is run for
-multiple models, a speedup is gained by compressing the sequence. If the model
-becomes too large though the algorithm fails at gaining a speedup.
+is obtained if the Viterbi path is not needed. The Compressed Path Space Saving
+algorithm is slower noticeably slower than the Compressed Path algorithm. Which
+of the algorithms to use is a tradeoff between memory usage and speed of the
+program. If one only needs to run the algorithm once, compression should be
+either enabled or disabled depending on whether the path is requested or
+not. If the Viterbi algorithm is run for multiple models, a speedup is gained
+by compressing the sequence. If the model becomes too large though the
+algorithm fails at gaining a speedup.
 
 \subsubsection{Fibonacci Words}
 
