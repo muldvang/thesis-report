@@ -1,9 +1,9 @@
+\tikzsetnextfilename{assymptotic_posterior_n}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Sequence length $n$,
     ylabel=$\frac{\text{Running time}}{n}$,
     xmode=log,
-    ymin=0,
     ]
     \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=n, y=zipHMMlib_time/n, y error=zipHMMlib_time/n_std]

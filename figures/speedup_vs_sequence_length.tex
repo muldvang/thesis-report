@@ -1,3 +1,4 @@
+\tikzsetnextfilename{speedup_vs_sequence_length}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Sequence length $T$,
@@ -20,7 +21,12 @@
     table[x=T, y=zipHMMlib_path_total_ratio, y error=zipHMMlib_path_total_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
-    \legend{Uncompressed, Uncompressed Path, Compressed, Compressed Path}
+    \addplot[only marks, color=colorbrewer5, error bars, y dir=both, y explicit]
+    table[x=T, y=zipHMMlib_path_memory_total_ratio, y error=zipHMMlib_path_memory_total_ratio_std]
+    {plot_data/viterbi_sequence_transformed.data};
+
+    \legend{Uncompressed, Uncompressed Path, Compressed, Compressed Path,
+      Compressed Path Space Saving}
   \end{axis}
 \end{tikzpicture}
 

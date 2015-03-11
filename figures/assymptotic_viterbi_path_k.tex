@@ -1,12 +1,19 @@
+\tikzsetnextfilename{assymptotic_viterbi_path_k}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Model size $N$,
     ylabel=$\frac{\text{Running time}}{N^3}$,
     xmode=log,
     ]
-    \addplot[only marks, color=black, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
     table[x=N, y=zipHMMlib_path_running_time/N^3, y error=zipHMMlib_path_running_time/N^3_std]
     {plot_data/viterbi_model_transformed.data};
+
+    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    table[x=N, y=zipHMMlib_path_memory_running_time/N^3, y error=zipHMMlib_path_memory_running_time/N^3_std]
+    {plot_data/viterbi_model_transformed.data};
+
+    \legend{Normal, Space saving};
   \end{axis}
 \end{tikzpicture}
 

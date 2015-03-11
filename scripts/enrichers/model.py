@@ -41,26 +41,31 @@ df['zipHMMlib_uncompressed_total_time'] = df['zipHMMlib_uncompressed_pre_time'] 
 df['zipHMMlib_uncompressed_path_total_time'] = df['zipHMMlib_uncompressed_path_pre_time'] + df['zipHMMlib_uncompressed_path_running_time']
 df['zipHMMlib_total_time'] = df['zipHMMlib_pre_time'] + df['zipHMMlib_running_time']
 df['zipHMMlib_path_total_time'] = df['zipHMMlib_path_pre_time'] + df['zipHMMlib_path_running_time']
+df['zipHMMlib_path_memory_total_time'] = df['zipHMMlib_path_pre_time'] + df['zipHMMlib_path_memory_running_time']
 
 # Compare total time to simple.
 df['zipHMMlib_uncompressed_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_uncompressed_total_time']
 df['zipHMMlib_uncompressed_path_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_uncompressed_path_total_time']
 df['zipHMMlib_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_total_time']
 df['zipHMMlib_path_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_path_total_time']
+df['zipHMMlib_path_memory_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_path_memory_total_time']
 
 # Compare running time to simple.
 df['zipHMMlib_uncompressed_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_uncompressed_running_time']
 df['zipHMMlib_uncompressed_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_uncompressed_path_running_time']
 df['zipHMMlib_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_running_time']
 df['zipHMMlib_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_path_running_time']
+df['zipHMMlib_path_memory_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_path_memory_running_time']
 
 # Assymptotic running times.
 df['zipHMMlib_running_time/N^3'] = df['zipHMMlib_running_time'] / df['N'] ** 3
 df['zipHMMlib_path_running_time/N^3'] = df['zipHMMlib_path_running_time'] / df['N'] ** 3
 df['zipHMMlib_path_backtrack_time'] = df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']
+df['zipHMMlib_path_memory_backtrack_time'] = (df['zipHMMlib_path_memory_running_time'] - df['zipHMMlib_running_time'])
 df['zipHMMlib_pre_time/N^3'] = df['zipHMMlib_pre_time'] / df['N'] ** 3
 df['zipHMMlib_path_backtrack_time/N'] = df['zipHMMlib_path_backtrack_time'] / df['N']
 df['zipHMMlib_path_backtrack_time/N^2'] = df['zipHMMlib_path_backtrack_time'] / df['N'] ** 2
+df['zipHMMlib_path_memory_backtrack_time/N^2'] = df['zipHMMlib_path_memory_backtrack_time'] / df['N'] ** 2
 df['zipHMMlib_path_memory_running_time/N^3'] = df['zipHMMlib_path_memory_running_time'] / df['N'] ** 3
 
 # Compute mean and std.

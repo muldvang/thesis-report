@@ -1,3 +1,4 @@
+\tikzsetnextfilename{speedup_vs_k2}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Number of states $N$,
@@ -20,7 +21,12 @@
     table[x=N, y=zipHMMlib_path_running_ratio, y error=zipHMMlib_path_running_ratio_std]
     {plot_data/viterbi_model_transformed.data};
 
-    \legend{Uncompressed, Uncompressed Path, Compressed, Compressed Path}
+    \addplot[only marks, color=colorbrewer5, error bars, y dir=both, y explicit]
+    table[x=N, y=zipHMMlib_path_memory_running_ratio, y error=zipHMMlib_path_memory_running_ratio_std]
+    {plot_data/viterbi_model_transformed.data};
+
+    \legend{Uncompressed, Uncompressed Path, Compressed, Compressed Path,
+      Compressed Path Space Saving}
   \end{axis}
 \end{tikzpicture}
 
