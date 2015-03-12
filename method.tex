@@ -392,6 +392,7 @@ a constant result in the formula
 \end{equation*}
 
 \section{The Forward-Backward Algorithm as Linear Algebra}
+\fxnote{Section heading look ugly in page header.}
 
 The main part of the posterior decoding algorithm described in the previous
 section is computing the forward and backward tables. Once this is done it is
@@ -409,14 +410,20 @@ essentially the same as the forward algorithm as the two algorithms are very
 similar as seen in section~\ref{sec:posterior-decoding-1}. Let the emission
 matrices, $B_{o_i}$, matrices be identical to the ones described in
 section~\ref{sec:algorithm-as-linear}. We can then set the $C$ matrices to
-\begin{align*}
-  C_{o_i} & = B_{o_i} A^*, \\
-  C_T     & = (1, 1, \dots, 1).
-\end{align*}
+\begin{equation}
+  \label{eq:4}
+  \begin{aligned}
+    C_{o_i} & = B_{o_i} A^*, \\
+    C_T & = (1, 1, \dots, 1).
+  \end{aligned}
+\end{equation}
 Now $\beta_t$ can be computed using $C_{y_t}$ and $\beta_{t + 1}$ as
-\begin{equation*}
-  \beta_t = C_{y_t} \beta_{t - 1} = C_{y_t} C_{y_{t+1}}\dots C_T,
-\end{equation*}
+\begin{equation}
+  \label{eq:5}
+  \begin{aligned}
+    \beta_t = C_{y_t} \beta_{t - 1} = C_{y_t} C_{y_{t+1}}\dots C_T,
+  \end{aligned}
+\end{equation}
 which is similar to the forward algorithm in \citet{sand2013ziphmmlib} and the
 Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
 matrix multiplications no longer are max times multiplications but normal
@@ -432,17 +439,22 @@ numerical issues will occur. For the Viterbi algorithm this was solved by
 working in logarithmic space.
 
 \citet{sand2013ziphmmlib} describes how to make the computations in the forward
-algorithm numerically stable. First, as the $C$ matrices are defined by matrix
-multiplications, they tend underflow. Thus they are scaled by the sum of the
-entries in the matrix. This may be reused in the backward algorithm as well, as
-the $C$ matrices are computed in the same way. For the computation of the
-forward table, $\alpha$, a scalar are introduced for each column to make the
-entries sum to 1. Since the magnitudes of the forward table and backward table
-entries are comparable, it is reasonable to use the same scalars in the
-computation of the backward table.
+algorithm numerically stable. First, as the $C$ matrices in
+equation~\eqref{eq:4} are defined by matrix multiplications, they tend to
+underflow, since each matrix consists of entries in the interval $[0, 1]$. To
+overcome this problem in for forward algorithm the matrices are normalized,
+that is they are scaled by the sum of the entries in the matrix. This may be
+reused in the backward algorithm as well, as the $C$ matrices are computed in
+the same way.
 
-\fxwarning{Discuss that the scalars are stored in log space and needs to be
-  computed back to linear space, and argue that it isn't a problem.}
+For the computation of the forward table, $\alpha$, a similar approach is
+used. Each column is normalized by scaling with the sum of the entries. Since
+the magnitudes of the forward table and backward table entries are comparable,
+it is reasonable to use the same scalars in the computation of the backward
+table in equation~\eqref{eq:5}. \fxwarning{Isn't it also required that the scalars are equal for the
+  posterior decoding.}
+
+
 
 \section{Problems in Exploiting Repetitions}
 \label{sec:probl-expl-repet}
