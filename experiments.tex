@@ -74,6 +74,31 @@ algorithm will be very dependent on the input sequences.  \fxwarning{Discuss
   \label{fig:compression_ratio}
 \end{figure}
 
+\section{Preprocessing}
+
+As described in section~\ref{sec:saving-compr-sequ} the compression of the
+input sequence may be done prior to executing the Viterbi or Forward-Backward
+algorithms. This is useful if the Viterbi algorithm is run with different
+models, as the compression of the sequence does not depend on the model.
+
+The preprocessing that has a theoretical running time of
+$O( \left( \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert \right) T)$ as
+stated in section~\ref{sec:running-time}. In figure~\ref{fig:pre_viterbi_n} the
+running time divided by the length of the sequence, $T$, is shown for random
+sequences of varying length. As seen the running time is not linear in $T$,
+since the compression ratio is dependent on $T$. Since the size of the new
+alphabet $\mathcal{O'}$ grows with the compression ratio, the new alphabet size
+is also dependent on $T$. Hence, what is seen in the figure is not surprising;
+the running time of the preprocessing is super linear in $T$ and not linear as
+the theoretical running time suggests.
+
+\begin{figure}
+  \centering
+  \input{figures/pre_viterbi_n}
+  \caption{zipHMMlib preprocessing time for varying sequence lengths.}
+  \label{fig:pre_viterbi_n}
+\end{figure}
+
 \section{Viterbi}
 
 This section covers the experiments made in context of the Viterbi
@@ -90,36 +115,6 @@ In this section the theoretical running times are verified to make sure that
 the implementation runs as expected. The running time has been measured
 seperately for the preprocessing and Viterbi with and without backtracking
 enabled.
-
-\subsubsection{Preprocessing}
-
-As described in section~\ref{sec:saving-compr-sequ} the compression of the
-input sequence may be done prior to executing the Viterbi algorithm. This is
-useful if the Viterbi algorithm is run with different models, as the
-compression of the sequence does not depend on the model.
-
-The first experiment in this section is verifying the theoretical running time
-of the preprocessing that has a theoretical running time of
-$O( \left( \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert \right) T)$ as
-stated in section~\ref{sec:running-time}.
-
-In figure~\ref{fig:pre_viterbi_n} the running time divided by the length of the
-sequence is shown for random sequences of varying length. \fxnote{Should I make
-a better experiment also showing the size of the new alphabet?}
-
-\begin{figure}
-  \centering
-  \input{figures/pre_viterbi_n}
-  \caption{zipHMMlib preprocessing time for varying sequence lengths.}
-  \label{fig:pre_viterbi_n}
-\end{figure}
-
-% \begin{figure}
-%   \centering
-%   \input{figures/pre_viterbi_k}
-%   \caption{zipHMMlib preprocessing time for varying model sizes.}
-%   \label{fig:pre_viterbi_k}
-% \end{figure}
 
 \subsubsection{Running Time Without Backtracking}
 
