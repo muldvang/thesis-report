@@ -216,7 +216,7 @@ towards a constant.
 This ends the experiments concerning the theoretical running times of the
 Viterbi algorithm itself.
 
-\subsection{Comparing zipHMMlib to the Classical Viterbi Algorithm.}
+\subsection{Comparing zipHMMlib Viterbi to the Classical Viterbi Algorithm}
 
 First the zipHMMlib Viterbi algorithm is compared to the classical
 implementation of the Viterbi algorithm. Recall that the preprocessing may be
@@ -264,7 +264,7 @@ of the input sequence becomes larger.
 \begin{figure}
   \centering
   \input{figures/compressed_1_speedup_vs_sequence_length.tex}
-  \caption{The speed up factor for the Compressed 1 algorithms of the total
+  \caption{The speed up factor for the Viterbi 1 algorithms of the total
     running time including preprocessing for sequences of varying lengths using
     a HMM with 16 states.}
   \label{fig:compressed_1_speedup_vs_sequence_length}
@@ -275,7 +275,7 @@ of the input sequence becomes larger.
 \begin{figure}
   \centering
   \input{figures/compressed_500_speedup_vs_sequence_length.tex}
-  \caption{The speed up factor for the Compressed 500 algorithms of the total
+  \caption{The speed up factor for the Viterbi 500 algorithms of the total
     running time including preprocessing for sequences of varying lengths using
     a HMM with 16 states.}
   \label{fig:compressed_500_speedup_vs_sequence_length}
@@ -293,7 +293,7 @@ gained for quite large models of hundreds of states.
 \begin{figure}
   \centering
   \input{figures/speedup_vs_k.tex}
-  \caption{The speedup factor for varying model sizes using the Compressed 1
+  \caption{The speedup factor for varying model sizes using the Viterbi 1
     algorithms.}
   \label{fig:speedup_vs_k}
 \end{figure}
@@ -301,7 +301,7 @@ gained for quite large models of hundreds of states.
 \begin{figure}
   \centering
   \input{figures/speedup_vs_k2.tex}
-  \caption{The speedup factor for varying model sizes using the Compressed 500
+  \caption{The speedup factor for varying model sizes using the Viterbi 500
     algorithms.}
   \label{fig:speedup_vs_k2}
 \end{figure}
@@ -381,8 +381,7 @@ theoretical running time of $O(TN^2)$ does make sense for these experiments.
 
 First, the running time compared to the sequence length is shown in
 figure~\ref{fig:posterior_n}. A model with 16 states has been used. As expected
-the running time is slightly decreasing going towards constant. \fxerror{Remove
-  that stupid outlier in the end.}
+the running time is slightly decreasing going towards constant.
 
 \begin{figure}
   \centering
