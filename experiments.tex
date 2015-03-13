@@ -221,113 +221,95 @@ Viterbi algorithm itself.
 First the zipHMMlib Viterbi algorithm is compared to the classical
 implementation of the Viterbi algorithm. Recall that the preprocessing may be
 saved to disk for later use. For some problems one might only need to run
-Viterbi once for a sequence. In this case it is relevant to look at the running time
-including preprocessing. Hence, the experiments that both include and exclude
-the preprocessing time have been made.
-
-Six variations of the Viterbi algorithm have been measured:
+Viterbi once for a sequence. As described in section~\ref{sec:compr-stopp-crit}
+the preprocessesing uses an estimate of how many times the Viterbi algorithm is
+run to compress the sequence appropriately. Experiments have been made with one
+execution of Viterbi and with 500 executions of Viterbi. In total, six
+variations of the Viterbi algorithm have been measured:
 \begin{description}
-\item[Uncompressed] that does not compress the sequence and only find the
-  loglikelihood of the most probable path,
-\item[Uncompressed Path] that also backtracks to find the most likely path,
-\item[Uncompressed Path Space Saving] that also saves memory in the
-  backtracking process,
-\item[Compressed] that compresses the sequence and only computes the
+% \item[Uncompressed] that does not compress the sequence and only find the
+%   loglikelihood of the most probable path,
+% \item[Uncompressed Path] that also backtracks to find the most likely path,
+% \item[Uncompressed Path Space Saving] that also saves memory in the
+%   backtracking process,
+\item[Viterbi 1] that compresses the sequence and only computes the
   loglikelihood,
-\item[Compressed Path] that also backtracks,
-\item[Compressed Path Space Saving] that also saves memory on backtracking.
+\item[Viterbi 1 Path] that also backtracks,
+\item[Viterbi 1 Path Space Saving] that also saves memory on backtracking.
+\item[Viterbi 500] that compresses the sequence and computes the
+  loglikelihood 500 times,
+\item[Viterbi 500 Path] that also backtracks 500 times,
+\item[Viterbi 500 Path Space Saving] that also saves memory on backtracking.
 \end{description}
 
 In the following plots a ``speedup factor'' is shown on the y-axis. The speedup
-factor is calculated as the running time of the classical algorithm (with out
-without backtracking enabled) divided by the running time of algorithm being
-measured. Hence, any speedup factor larger than one means that the algorithm
-being measured is faster than the classical algorithm.
-
-% \begin{figure}
-%   \centering
-%   \input{figures/speedup_vs_complexity.tex}
-%   \caption{Running time vs.\ sequence complexity using sequences of length $10^6$.}
-%   \label{fig:speedup_vs_complexity}
-% \end{figure}
+factor is calculated as the running time of the classical algorithm (with or
+out without backtracking enabled) divided by the running time of algorithm
+being measured. Hence, any speedup factor larger than one means that the
+algorithm being measured is faster than the classical algorithm.
 
 \subsubsection{Random Data}
 
-The first experiments have been made using random sequences. First the speedup
-including preprocessing is shown. In this case it might be better to not
-compress the sequence, since a lot of time is spent doing the
-preprocessing.
+The first experiments have been made using random sequences.
 
-In figure~\ref{fig:speedup_vs_sequence_length} the speedup factor for these
-four algorithms is shown for sequences of varying length. Interestingly the
-speedup of the Uncompressed algorithm is increasing as the input length of the
-input sequence increases. This is not expected since the Simple algorithm and
-the Uncompressed algorithm have the same theoretical running times. For the
-Compressed algorithm it is seen that as the length of the input sequence
-becomes very large the speedup tends to decrease due to spending more time on
-the compression. \fxnote{Should this be avoided by the compression stopping
-  criterion?} Comparing Compressed and Uncompressed it is seen that the latter
-is superior.
+In figures~\ref{fig:compressed_1_speedup_vs_sequence_length}
+and~\ref{fig:compressed_500_speedup_vs_sequence_length} the speedup factor for
+the Viterbi algorithms is shown for sequences of varying length. \fxnote{Should
+  this be avoided by the compression stopping criterion?}
 
 As expected, computing the path limits the speedup increasingly as the length
-of the input sequence becomes larger. \fxwarning{Investigate why there is such
-  a huge difference between Uncompressed and Uncompressed Path.}
+of the input sequence becomes larger.
 \fxwarning{Elaborate.}
 
 \begin{figure}
   \centering
-  \input{figures/speedup_vs_sequence_length.tex}
-  \caption{The speed up factor of the total running time including preprocessing
-    for sequences of varying lengths using a HMM with 16 states.}
-  \label{fig:speedup_vs_sequence_length}
+  \input{figures/compressed_1_speedup_vs_sequence_length.tex}
+  \caption{The speed up factor for the Compressed 1 algorithms of the total
+    running time including preprocessing for sequences of varying lengths using
+    a HMM with 16 states.}
+  \label{fig:compressed_1_speedup_vs_sequence_length}
+\fxnote{It should not be decreasing when the compression criterion is set for
+  Viterbi explicitly.}
 \end{figure}
-
-The next experiment excludes the preprocessing. This will give the Compressed
-algorithm a boost, since a lot of time is spent compressing the sequence,
-especially for large input sequences. The result of this in shown in
-figure~\ref{fig:speedup_vs_sequence_length2}. As seen the Compressed algorithms
-now gain a larger speedup than the Uncompressed ones. It is though noticeable
-that the Viterbi path retrieval is very expensive resulting in a much lower
-speedup than just computing the loglikelihood. However, the both the Compresed
-Path and Compressed Path Space Saving is better than the Uncompressed Path and
-gains a speedup factor of approximately 20 to the classical implementation.
 
 \begin{figure}
   \centering
-  \input{figures/speedup_vs_sequence_length2.tex}
-  \caption{The speed up factor of the running time excluding preprocessing for
-    sequences of varying lengths using a HMM with 16 states.}
-  \label{fig:speedup_vs_sequence_length2}
+  \input{figures/compressed_500_speedup_vs_sequence_length.tex}
+  \caption{The speed up factor for the Compressed 500 algorithms of the total
+    running time including preprocessing for sequences of varying lengths using
+    a HMM with 16 states.}
+  \label{fig:compressed_500_speedup_vs_sequence_length}
 \end{figure}
 
 Finally, instead of viewing the speedup factor as a function of the sequence
 length, the model size is used. Recall that the running time of Viterbi is
 $O(M' N^3 + N^2 T')$. Hence, the cubic factor might become a problem as $N$
 grows. The speedup factor as function of model size $N$ is plotted in
-figures~\ref{fig:speedup_vs_k} and~\ref{fig:speedup_vs_k2} including and
-excluding the preprocessing. As expected the speedup continues growing until a
-certain number of states and the starts to become smaller again. It is
-noticeable though that the good speedup factors are gained for quite large
-models of hundreds of states.
+figures~\ref{fig:speedup_vs_k} and~\ref{fig:speedup_vs_k2}. As expected the
+speedup continues growing until a certain number of states and then starts to
+become smaller again. It is noticeable though that the good speedup factors are
+gained for quite large models of hundreds of states.
 
 \begin{figure}
   \centering
   \input{figures/speedup_vs_k.tex}
-  \caption{Running time vs.\ model size including preprocessing time.}
+  \caption{The speedup factor for varying model sizes using the Compressed 1
+    algorithms.}
   \label{fig:speedup_vs_k}
 \end{figure}
 
 \begin{figure}
   \centering
   \input{figures/speedup_vs_k2.tex}
-  \caption{Running time vs.\ model size excluding preprocessing time.}
+  \caption{The speedup factor for varying model sizes using the Compressed 500
+    algorithms.}
   \label{fig:speedup_vs_k2}
 \end{figure}
 
 In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
 random data given the right circumstances. In all cases a much larger speedup
-is obtained if the Viterbi path is not needed. The Compressed Path Space Saving
-algorithm is slower noticeably slower than the Compressed Path algorithm. Which
+is obtained if the Viterbi path is not needed. The Viterbi Path Space Saving
+algorithm is slower noticeably slower than the Viterbi Path algorithm. Which
 of the algorithms to use is a tradeoff between memory usage and speed of the
 program. If one only needs to run the algorithm once, compression should be
 either enabled or disabled depending on whether the path is requested or
@@ -340,33 +322,26 @@ algorithm fails at gaining a speedup.
 Even though good speedup factors were gained for random data, it is expected
 that much greater speedups may be obtained by using repetitive
 sequences. Thus, experiments similar to the ones for random data has been
-conducted. Again, a plot including the preprocessing time is shown and then a
-plot excluding preprocessing is shown in
-figures~\ref{fig:fib_speedup_vs_sequence_length} and
-\ref{fig:fib_speedup_vs_sequence_length2} respectively.
-
-Here the largest speedup is in both cases gained by using the Compression
-algorithm. For the experiment including the preprocessing speedups of up to a
-factor 120 is gained, while the speedups of the experiment excluding
-preprocessing are growing exponentially as the sequence length
-increases. This is an effect of the good compression ratio of Fibonacci words
-discussed in section~\ref{sec:compression-ratio}.
+conducted.
 
 \begin{figure}
   \centering
-  \input{figures/fib_speedup_vs_sequence_length.tex}
-  \caption{The speed up factor of the total running time include preprocessing
-    for Fibonacci words of varying lengths using a HMM with 16 states.}
-  \label{fig:fib_speedup_vs_sequence_length}
+  \input{figures/fib_compressed_1_speedup_vs_sequence_length.tex}
+  \caption{The speed up factor for the Viterbi 1 algorithms of the total
+    running time including preprocessing for Fibonacci sequences of varying
+    lengths using a HMM with 16 states.}
+  \label{fig:fib_compressed_1_speedup_vs_sequence_length}
 \end{figure}
 
 \begin{figure}
   \centering
-  \input{figures/fib_speedup_vs_sequence_length2.tex}
-  \caption{The speed up factor of the running time excluding preprocessing for
-    Fibonacci words of varying lengths using a HMM with 16 states.}
-  \label{fig:fib_speedup_vs_sequence_length2}
+  \input{figures/fib_compressed_500_speedup_vs_sequence_length.tex}
+  \caption{The speed up factor for the Viterbi 500 algorithms of the total
+    running time including preprocessing for Fibonacci sequences of varying
+    lengths using a HMM with 16 states.}
+  \label{fig:fib_compressed_500_speedup_vs_sequence_length}
 \end{figure}
+
 
 This ends the section experimenting with the Viterbi algorithm. It is concluded
 that the compression of sequences does indeed speed up the execution time of

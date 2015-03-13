@@ -17,3 +17,6 @@
   to the typical very large T.
 
 * Code
+- Compression stopping criterion should be parametrized in Forward and
+  Viterbi. And maybe figure how the backtracking time can be incorporated in
+  the stopping criterion.

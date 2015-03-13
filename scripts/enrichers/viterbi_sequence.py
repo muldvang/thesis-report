@@ -13,64 +13,81 @@ if not len(sys.argv) == 2:
 path = str(sys.argv[1])
 
 df = pd.io.parsers.read_table(path, sep=' ')
-df.columns = ["N", "T", "T'",
+df.columns = ["N",
+              "T",
+              "T'",
 
               "simple_pre_time",
               "simple_running_time",
-
               "simple_path_pre_time",
               "simple_path_running_time",
 
-              "zipHMMlib_uncompressed_pre_time",
-              "zipHMMlib_uncompressed_running_time",
+              "uncompressed_pre_time",
+              "uncompressed_running_time",
+              "uncompressed_path_pre_time",
+              "uncompressed_path_running_time",
+              "uncompressed_path_memory_running_time",
 
-              "zipHMMlib_uncompressed_path_pre_time",
-              "zipHMMlib_uncompressed_path_running_time",
+              "one_pre_time",
+              "one_running_time",
+              "one_path_pre_time",
+              "one_path_running_time",
+              "one_path_memory_running_time",
 
-              "zipHMMlib_pre_time",
-              "zipHMMlib_running_time",
-
-              "zipHMMlib_path_pre_time",
-              "zipHMMlib_path_running_time",
-
-              "zipHMMlib_path_memory_running_time"]
+              "many_pre_time",
+              "many_running_time",
+              "many_path_pre_time",
+              "many_path_running_time",
+              "many_path_memory_running_time"]
 
 # Preprocessing
-df['zipHMMlib_pre_time/T'] = df['zipHMMlib_pre_time'] / df['T']
+df['many_pre_time/T'] = df['many_pre_time'] / df['T']
 
 # Running time
-df['zipHMMlib_running_time/T'] = df['zipHMMlib_running_time'] / df['T']
-df['zipHMMlib_path_running_time/T'] = df['zipHMMlib_path_running_time'] / df['T']
-df['zipHMMlib_path_backtrack_time/T'] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df['T']
-df['zipHMMlib_path_memory_running_time/T'] = df['zipHMMlib_path_memory_running_time'] / df['T']
-df['zipHMMlib_path_memory_backtrack_time/T'] = (df['zipHMMlib_path_memory_running_time'] - df['zipHMMlib_running_time']) / df['T']
+df['many_running_time/T'] = df['many_running_time'] / df['T']
+df['many_path_running_time/T'] = df['many_path_running_time'] / df['T']
+df['many_path_backtrack_time/T'] = (df['many_path_running_time'] - df['many_running_time']) / df['T']
+df['many_path_memory_running_time/T'] = df['many_path_memory_running_time'] / df['T']
+df['many_path_memory_backtrack_time/T'] = (df['many_path_memory_running_time'] - df['many_running_time']) / df['T']
 
-df["zipHMMlib_running_time/T'"] = df['zipHMMlib_running_time'] / df["T'"]
-df["zipHMMlib_path_running_time/T'"] = df['zipHMMlib_path_running_time'] / df["T'"]
-df["zipHMMlib_path_backtrack_time/T'"] = (df['zipHMMlib_path_running_time'] - df['zipHMMlib_running_time']) / df["T'"]
+df["many_running_time/T'"] = df['many_running_time'] / df["T'"]
+df["many_path_running_time/T'"] = df['many_path_running_time'] / df["T'"]
+df["many_path_backtrack_time/T'"] = (df['many_path_running_time'] - df['many_running_time']) / df["T'"]
 
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
 df["simple_path_total_time"] = df["simple_path_running_time"] + df["simple_path_pre_time"]
-df["zipHMMlib_uncompressed_total_time"] = df["zipHMMlib_uncompressed_running_time"] + df["zipHMMlib_uncompressed_pre_time"]
-df["zipHMMlib_uncompressed_path_total_time"] = df["zipHMMlib_uncompressed_path_running_time"] + df["zipHMMlib_uncompressed_path_pre_time"]
-df["zipHMMlib_total_time"] = df["zipHMMlib_running_time"] + df["zipHMMlib_pre_time"]
-df["zipHMMlib_path_total_time"] = df["zipHMMlib_path_running_time"] + df["zipHMMlib_path_pre_time"]
-df["zipHMMlib_path_memory_total_time"] = df["zipHMMlib_path_memory_running_time"] + df["zipHMMlib_path_pre_time"]
+df["uncompressed_total_time"] = df["uncompressed_running_time"] + df["uncompressed_pre_time"]
+df["uncompressed_path_total_time"] = df["uncompressed_path_running_time"] + df["uncompressed_path_pre_time"]
+df["uncompressed_path_memory_total_time"] = df["uncompressed_path_memory_running_time"] + df["uncompressed_path_pre_time"]
+df["one_total_time"] = df["one_running_time"] + df["one_pre_time"]
+df["one_path_total_time"] = df["one_path_running_time"] + df["one_path_pre_time"]
+df["one_path_memory_total_time"] = df["one_path_memory_running_time"] + df["one_path_pre_time"]
+df["many_total_time"] = 500 * df["many_running_time"] + df["many_pre_time"]
+df["many_path_total_time"] = 500 * df["many_path_running_time"] + df["many_path_pre_time"]
+df["many_path_memory_total_time"] = 500 * df["many_path_memory_running_time"] + df["many_path_pre_time"]
 
 # Running time compared to Simple
-df['zipHMMlib_uncompressed_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_uncompressed_running_time']
-df['zipHMMlib_uncompressed_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_uncompressed_path_running_time']
-df['zipHMMlib_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_running_time']
-df['zipHMMlib_path_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_path_running_time']
-df['zipHMMlib_path_memory_running_ratio'] = df['simple_running_time'] / df['zipHMMlib_path_memory_running_time']
+df['uncompressed_running_ratio'] = df['simple_running_time'] / df['uncompressed_running_time']
+df['uncompressed_path_running_ratio'] = df['simple_running_time'] / df['uncompressed_path_running_time']
+df['uncompressed_path_memory_running_ratio'] = df['simple_running_time'] / df['uncompressed_path_memory_running_time']
+df['one_running_ratio'] = df['simple_running_time'] / df['one_running_time']
+df['one_path_running_ratio'] = df['simple_running_time'] / df['one_path_running_time']
+df['one_path_memory_running_ratio'] = df['simple_running_time'] / df['one_path_memory_running_time']
+df['many_running_ratio'] = df['simple_running_time'] / df['many_running_time']
+df['many_path_running_ratio'] = df['simple_running_time'] / df['many_path_running_time']
+df['many_path_memory_running_ratio'] = df['simple_running_time'] / df['many_path_memory_running_time']
 
 # Total time compared to Simple
-df['zipHMMlib_uncompressed_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_uncompressed_total_time']
-df['zipHMMlib_uncompressed_path_total_ratio'] = df['simple_path_total_time'] / df['zipHMMlib_uncompressed_path_total_time']
-df['zipHMMlib_total_ratio'] = df['simple_total_time'] / df['zipHMMlib_total_time']
-df['zipHMMlib_path_total_ratio'] = df['simple_path_total_time'] / df['zipHMMlib_path_total_time']
-df['zipHMMlib_path_memory_total_ratio'] = df['simple_path_total_time'] / df['zipHMMlib_path_memory_total_time']
+df['uncompressed_total_ratio'] = df['simple_total_time'] / df['uncompressed_total_time']
+df['uncompressed_path_total_ratio'] = df['simple_path_total_time'] / df['uncompressed_path_total_time']
+df['uncompressed_path_memory_total_ratio'] = df['simple_path_total_time'] / df['uncompressed_path_memory_total_time']
+df['one_total_ratio'] = df['simple_total_time'] / df['one_total_time']
+df['one_path_total_ratio'] = df['simple_path_total_time'] / df['one_path_total_time']
+df['one_path_memory_total_ratio'] = df['simple_path_total_time'] / df['one_path_memory_total_time']
+df['many_total_ratio'] = 500 * df['simple_total_time'] / df['many_total_time']
+df['many_path_total_ratio'] = 500 * df['simple_path_total_time'] / df['many_path_total_time']
+df['many_path_memory_total_ratio'] = 500 * df['simple_path_total_time'] / df['many_path_memory_total_time']
 
 # Compression ratio
 df['compression_ratio'] = df['T'] / df["T'"]

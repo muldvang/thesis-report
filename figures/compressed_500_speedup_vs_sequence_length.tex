@@ -1,21 +1,21 @@
-\tikzsetnextfilename{speedup_vs_k2}
+\tikzsetnextfilename{compressed_500_speedup_vs_sequence_length}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
-    xlabel=Number of states $N$,
+    xlabel=Sequence length $T$,
     ylabel=Speedup factor,
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=N, y=many_running_ratio, y error=many_running_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=many_total_ratio, y error=many_total_ratio_std]
+    {plot_data/viterbi_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=N, y=many_path_running_ratio, y error=many_path_running_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=many_path_total_ratio, y error=many_path_total_ratio_std]
+    {plot_data/viterbi_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
-    table[x=N, y=many_path_memory_running_ratio, y error=many_path_memory_running_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=many_path_memory_total_ratio, y error=many_path_memory_total_ratio_std]
+    {plot_data/viterbi_sequence_transformed.data};
 
     \legend{Viterbi 500, Viterbi 500 Path, Viterbi 500 Path Space Saving}
   \end{axis}

@@ -6,7 +6,7 @@
     xmode=log,
     ]
     \addplot[only marks, color=black, error bars, y dir=both, y explicit]
-    table[x=T', y=zipHMMlib_running_time/T', y error=zipHMMlib_running_time/T'_std]
+    table[x=T', y=many_running_time/T', y error=many_running_time/T'_std]
     {plot_data/viterbi_sequence_transformed.data};
   \end{axis}
 \end{tikzpicture}

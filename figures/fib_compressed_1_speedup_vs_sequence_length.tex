@@ -1,21 +1,21 @@
-\tikzsetnextfilename{speedup_vs_k}
+\tikzsetnextfilename{fib_compressed_1_speedup_vs_sequence_length}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
-    xlabel=Number of states $N$,
+    xlabel=Sequence length $T$,
     ylabel=Speedup factor,
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=N, y=one_total_ratio, y error=one_total_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=one_total_ratio, y error=one_total_ratio_std]
+    {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=N, y=one_path_total_ratio, y error=one_path_total_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=one_path_total_ratio, y error=one_path_total_ratio_std]
+    {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
-    table[x=N, y=one_path_memory_total_ratio, y error=one_path_memory_total_ratio_std]
-    {plot_data/viterbi_model_transformed.data};
+    table[x=T, y=one_path_memory_total_ratio, y error=one_path_memory_total_ratio_std]
+    {plot_data/viterbi_fib_sequence_transformed.data};
 
     \legend{Viterbi 1, Viterbi 1 Path, Viterbi 1 Path Space Saving}
   \end{axis}
