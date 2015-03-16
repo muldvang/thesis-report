@@ -6,7 +6,7 @@
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=n, y=zipHMMlib_ratio, y error=zipHMMlib_ratio_std]
+    table[x=T, y=zipHMMlib_ratio, y error=zipHMMlib_ratio_std]
     {plot_data/posterior_sequence_transformed.data};
 
     \legend{Uncompressed Path}

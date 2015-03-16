@@ -12,11 +12,15 @@ if not len(sys.argv) == 2:
 
 path = str(sys.argv[1])
 
-df = pd.io.parsers.read_table(path, sep=' ')
+df = pd.io.parsers.read_table(path, sep=' ', header=None)
 df.columns = ["N",
               "T",
               "simple_time",
               "zipHMMlib_time"]
+
+df["zipHMMlib_time/T"] = df["zipHMMlib_time"] / df["T"]
+df["zipHMMlib_ratio"] = df["simple_time"] / df["zipHMMlib_time"]
+
 
 # Compute mean and std.
 res = pd.DataFrame()
