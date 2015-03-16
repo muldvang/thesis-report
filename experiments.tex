@@ -431,7 +431,8 @@ Looking at the speedup factor as function of the number of states in
 figure~\ref{fig:posterior_speedup_vs_k}, it is seen that for small models it is
 below 1. This means that the algorithm is slower than the classical posterior
 decoding algorithm. However, as the number of states in the model increases the
-speedup factor quickly becomes larger than 1.
+speedup factor quickly becomes larger than 1, due to the matrix multiplications
+being very efficient due to the BLAS framework.
 
 \begin{figure}
   \centering
