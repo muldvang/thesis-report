@@ -410,11 +410,12 @@ theoretical.
 
 Now the algorithm is compared the classical algorithm. In
 figure~\ref{fig:posterior_speedup_vs_sequence_length} the speedup factor as
-function of the sequence length is shown. As seen for small sequences the
-zipHMMlib algorithm is slower than the classical implementation, whereas for
-larger sequences a minor speedup is gained. However, the speedup for sequences
-at any length in the experiment is between $0.5$ and 2. Hence, it almost does
-not matter  which of the algorithms is used.
+function of the sequence length is shown. A model with 16 states was used for
+the experiment. In all tested cases the algorithm is a bit faster than the
+classical implementation. There is a tendency that the speedup slowly becomes
+larger as the input sequence grows. Speedup factors between 1 and 4 are gained
+in this experiment. This may change if the number of states in the model is
+different.
 
 \begin{figure}
   \centering
@@ -425,10 +426,10 @@ not matter  which of the algorithms is used.
 \end{figure}
 
 Looking at the speedup factor as function of the number of states in
-figure~\ref{fig:posterior_speedup_vs_k}, the results are similar to the ones
-from the Viterbi algorithm. At some point the speedup factor becomes smaller
-due to the $M N^3$ factor. Again it is seen that the speedup factor is within a
-small interval of $(0.5, 4)$.
+figure~\ref{fig:posterior_speedup_vs_k}, it is seen that for small models it is
+below 1. This means that the algorithm is slower than the classical posterior
+decoding algorithm. However, as the number of states in the model increases the
+speedup factor quickly becomes larger than 1.
 
 \begin{figure}
   \centering
@@ -440,7 +441,8 @@ small interval of $(0.5, 4)$.
 
 These experiments ends the section of posterior decoding. Overall the algorithm
 has a running time that is very comparable to the classical implementation of
-posterior decoding.
+posterior decoding. For scenarios with large models and sequences the zipHMMlib
+is faster whereas the classical algorithm is a better for small models.
 
 
 %%% Local Variables:
