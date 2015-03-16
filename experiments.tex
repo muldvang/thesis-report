@@ -57,15 +57,18 @@ performance. To see how well the different kinds of data compresses when used
 by zipHMMlib the compression ratio for all the sequences described above have
 been measured. The compression ratio is defined as
 $\frac{\text{original size}}{\text{compressed size}}$. Hence, the greater
-compression ratio the better.
+compression ratio the better. Recall, that the amount of compression depends on
+the estimate of how many times the algorithm is run after compressing the
+sequence. For this experiment an estimate of $e = 500$ have been provided to
+the program.
 
 As seen in figure~\ref{fig:compression_ratio} the compression ratio grows
 exponentially as the sequence length increases. The compression of Fibonacci
 words are much better than the compression of random sequences, just as
-expected. The Fibonacci words compresses orders of magnitudes better than
-random data. This already suggests that the performance of the Viterbi
-algorithm will be very dependent on the input sequences.  \fxwarning{Discuss
-  random sequences of alphabet size 2, DNA, and single character sequences?}
+expected. This already suggests that the performance of the Viterbi
+algorithm will be very dependent on the input sequences. Just to verify that
+the Fibonacci sequences is very repetitive unary sequences have also been
+compressed, and as seen the compression of these two types is very comparable.
 
 \begin{figure}
   \centering
