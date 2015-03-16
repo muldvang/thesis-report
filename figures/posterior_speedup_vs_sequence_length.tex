@@ -1,10 +1,9 @@
 \tikzsetnextfilename{posterior_speedup_vs_sequence_length}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
-    xlabel=Sequence length,
+    xlabel=Sequence length $T$,
     ylabel=Speedup factor,
     xmode=log,
-    max space between ticks=20pt,
     ]
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
     table[x=T, y=zipHMMlib_ratio, y error=zipHMMlib_ratio_std]
