@@ -12,7 +12,7 @@ if not len(sys.argv) == 2:
 
 path = str(sys.argv[1])
 
-df = pd.io.parsers.read_table(path, sep=' ')
+df = pd.io.parsers.read_table(path, sep=' ', header=None)
 df.columns = ["N",
               "T",
               "T'",
