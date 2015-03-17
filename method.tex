@@ -267,6 +267,29 @@ factor depends on the input. For sequences with many repetitions the byte-pair
 encoding will continue for more iterations than for sequences with few
 repetitions.
 
+An overview of the theoretical running times and space consumptions is shown in
+table
+
+\begin{table}
+  \centering
+  \caption{Running time and space consumption of the different variations of the
+    Viterbi algorithm.}
+  \label{tab:running-time}
+  \begin{tabular}{lll}
+    \toprule
+    Algorithm & Running time & Space consumption \\
+    \midrule
+    Classical & $O(N^2 T)$ & $O(T)$ \\
+    Classical Path & $O(N^2 T)$ & $O(NT)$ \\
+    Classical Path Space Saving & $O(N^2 T)$ & $O(N\sqrt{T})$ \\
+    Viterbi & $O(M' N^3 + N^2 T')$ & $O(M' N^2 + T')$ \\
+    Viterbi Path & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N T' + T)$ \\
+    Viterbi Path Space Saving & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N
+                                                           \sqrt{T'} + T)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsection{Saving Compressed Sequence and Computed Matrices}
 \label{sec:saving-compr-sequ}
 
