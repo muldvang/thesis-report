@@ -1,4 +1,4 @@
-\tikzsetnextfilename{assymptotic_viterbi_backtrack_n}
+\tikzsetnextfilename{assymptotic_viterbi_path_T}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Sequence length $T$,
@@ -6,11 +6,11 @@
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=T, y=many_path_backtrack_time/T, y error=many_path_backtrack_time/T_std]
+    table[x=T, y=many_path_running_time/T, y error=many_path_running_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=T, y=many_path_memory_backtrack_time/T, y error=many_path_memory_backtrack_time/T_std]
+    table[x=T, y=many_path_memory_running_time/T, y error=many_path_memory_running_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \legend{Normal, Space saving};

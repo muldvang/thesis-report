@@ -87,6 +87,10 @@ df['many_path_memory_backtrack_time/N^2'] = df['many_path_memory_backtrack_time'
 df['many_path_memory_running_time/N^3'] = df['many_path_memory_running_time'] / df['N'] ** 3
 df['uncompressed_running_time/N^3'] = df['uncompressed_running_time'] / df['N'] ** 3
 df['uncompressed_running_time/N^2'] = df['uncompressed_running_time'] / df['N'] ** 2
+df['uncompressed_path_running_time/N^3'] = df['uncompressed_path_running_time'] / df['N'] ** 3
+df['uncompressed_path_running_time/N^2'] = df['uncompressed_path_running_time'] / df['N'] ** 2
+df['uncompressed_path_memory_running_time/N^3'] = df['uncompressed_path_memory_running_time'] / df['N'] ** 3
+df['uncompressed_path_memory_running_time/N^2'] = df['uncompressed_path_memory_running_time'] / df['N'] ** 2
 
 # Compute mean and std.
 res = pd.DataFrame()

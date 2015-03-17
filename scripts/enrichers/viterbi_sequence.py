@@ -53,6 +53,7 @@ df['many_path_memory_backtrack_time/T'] = (df['many_path_memory_running_time'] -
 df["many_running_time/T'"] = df['many_running_time'] / df["T'"]
 df["many_path_running_time/T'"] = df['many_path_running_time'] / df["T'"]
 df["many_path_backtrack_time/T'"] = (df['many_path_running_time'] - df['many_running_time']) / df["T'"]
+df["many_path_memory_running_time/T'"] = df['many_path_memory_running_time'] / df["T'"]
 
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
