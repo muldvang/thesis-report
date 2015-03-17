@@ -47,7 +47,6 @@ measure. Furthermore, the standard deviation has been calculated and is shown
 as error bars in the plots.
 
 \section{Compression Ratio}
-\label{sec:compression-ratio}
 
 The running time of the Viterbi algorithm implemented in zipHMMlib is highly
 dependent on the size of the compressed sequence. As mentioned in
@@ -88,7 +87,7 @@ models, as the compression of the sequence does not depend on the model.
 
 The preprocessing that has a theoretical running time of
 $O( \left( \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert \right) T)$ as
-stated in section~\ref{sec:running-time}. In figure~\ref{fig:pre_viterbi_n} the
+stated in section~\ref{sec:running-time}. In figure~\ref{fig:pre_viterbi_T} the
 running time divided by the length of the sequence, $T$, is shown for random
 sequences of varying length. As seen the running time is not linear in $T$,
 since the compression ratio is dependent on $T$. Since the size of the new
@@ -99,9 +98,9 @@ the theoretical running time suggests.
 
 \begin{figure}
   \centering
-  \input{figures/pre_viterbi_n}
-  \caption{zipHMMlib preprocessing time for varying sequence lengths.}
-  \label{fig:pre_viterbi_n}
+  \input{figures/pre_viterbi_T}
+  \caption{Viterbi preprocessing time for varying sequence lengths.}
+  \label{fig:pre_viterbi_T}
 \end{figure}
 
 \section{Viterbi}
@@ -117,109 +116,85 @@ disabled.
 \label{sec:theor-runn-times}
 
 In this section the theoretical running times are verified to make sure that
-the implementation runs as expected. The running time has been measured
-seperately for the preprocessing and Viterbi with and without backtracking
-enabled.
+the implementation runs as expected. The running time has been measured for
+three variations of the Viterbi algorithm corresponding to the backtracking
+discussed in section~\ref{sec:backtracking}. They are named as follows.
+\begin{description}
+\item[Viterbi] that compresses the sequence and only computes the
+  loglikelihood,
+\item[Viterbi Path] that also backtracks,
+\item[Viterbi Path Space Saving] that also saves memory on backtracking.
+\end{description}
 
-\subsubsection{Running Time Without Backtracking}
+The next two sections verifies that the implementation follows the theoretical
+running times.
+
+\subsubsection{Sequence Length}
 
 The implementation of the Viterbi algorithm supports both computing the Viterbi
 path and not doing it. For the two of those there is a difference in the
 theoretical time, since computing the path is linear in $T$.
 
-As stated in section~\ref{sec:running-time} the running time without
-backtracking is linear in the length of the compressed sequence and cubic in
-the number of states.
-
-In figure~\ref{fig:assymptotic_viterbi_n} the running divided by the length of
-the compressed sequence is shown for input sequences of varying lengths. As
-expected this fraction is close to constant with a slightly decreasing curve,
-thus verifying that the algorithm is linear in $T'$.
+In figure~\ref{fig:assymptotic_viterbi_T} the running divided by the length of
+the compressed sequence $T'$ is shown for input sequences of varying
+lengths. As expected this fraction is close to constant with a slightly
+decreasing curve for Viterbi, whereas it starts increasing for Viterbi Path and
+Viterbi Path Space Saving. Thus as expected Viterbi is linear in $T'$, while
+the backtracking makes it superlinear in $T'$.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_viterbi_n}
+  \input{figures/assymptotic_viterbi_T}
   \caption{zipHMMlib running time for varying sequence lengths.}
-  \label{fig:assymptotic_viterbi_n}
+  \label{fig:assymptotic_viterbi_T}
 \end{figure}
 
-A similar experiment has been conducted to verify that the running time i cubic
-in the number of states. This is shown in
-figure~\ref{fig:assymptotic_viterbi_k}. Again, as expected the fraction is
-decreasing and goes towards being constant.
+Both backtracking methods have a theoretical running time linear in the length
+of the original sequence $T$. To verify this the running time of the
+backtracking itself divided by $T$ for sequences of varying lengths and shown in
+figure~\ref{fig:assymptotic_viterbi_backtrack_T}. As seen it is indeed linear.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_viterbi_k}
-  \caption{zipHMMlib running time for varying model sizes.}
-  \label{fig:assymptotic_viterbi_k}
-\fxnote{Make experiment without compression enabled? Then the running time
-  should be only quadratic in the number of states.}
-\end{figure}
-
-\subsubsection{Running Time With Backtracking}
-
-In most cases the Viterbi path is needed. Thus, backtracking has to be
-done. As discussed in section~\ref{sec:running-time} the running time of the
-backtracking depends on the method used. In the following plots both the
-running time of the ``normal'' backtracking and the ``space saving''
-backtracking is shown.
-
-Both backtracking methods have a running time linear in the length $T$ of the
-original sequence. To verify this the running time of the backtracking itself
-divided by $T$ for sequences of varying lengths and show in
-figure~\ref{fig:assymptotic_viterbi_backtrack_n}. As seen it is indeed
-linear.
-
-\begin{figure}
-  \centering
-  \input{figures/assymptotic_viterbi_backtrack_n}
+  \input{figures/assymptotic_viterbi_backtrack_T}
   \caption{zipHMMlib Path backtracking time for varying sequence lengths.}
-  \label{fig:assymptotic_viterbi_backtrack_n}
+  \label{fig:assymptotic_viterbi_backtrack_T}
 \end{figure}
 
-The normal backtracking should be constant in the number of states $N$, while
-the space saving method has a running time is propotinal to $N^2$. The running
-time is shown for various number of states in
-figure~\ref{fig:assymptotic_viterbi_backtrack_k}. Notice that three curves are
-shown. The curve looks as expected for the space saving method, but it turns
-out that the running time of the normal backtracking depends on the number of
-states. To make the curve not grow, the running time has to be divided by
-$N^2$, which does not fit the theoretical running time. This has been
-investigated and the reason seems to be that a few more calculations has to be
-done to will out the backtracking table. These calculations access matrices of
-size $N^2$, and as $N$ becomes larger these matrices may not be in the cache of
-the CPU, thus making the computation slower. \fxwarning{Can we see that?}
+\subsubsection{Model Size}
+
+The theoretical running times of all three variation of the Viterbi algorithm
+are cubic in the number of states $N$. To verify this the running time divided
+by $N^3$ is shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. As seen
+the points of all three algorithms form a decreasing curve verifying that the
+running time is cubic in $N$.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_viterbi_backtrack_k}
+  \input{figures/assymptotic_viterbi_backtrack_N}
   \caption{zipHMMlib Path backtracking time for varying model sizes.}
-  \label{fig:assymptotic_viterbi_backtrack_k}
+  \label{fig:assymptotic_viterbi_backtrack_N}
 \end{figure}
 
-For completeness the total running time of the Viterbi algorithm including
-backtracking is shown in figures~\ref{fig:assymptotic_viterbi_path_n} and
-\ref{fig:assymptotic_viterbi_path_k}. The running time is divided by $T$ and
-$N^3$ respectively, and as seen this still forms a decreasing curve going
-towards a constant.
+Recall that the running time is cubic in $N$ is due to the computation of the
+$C$ matrices. The multiplication of the matrices can be done in time
+proportional to $N^2$ as stated in section~\ref{sec:running-time}. When the
+size of the new alphabet $M'$ is small compared to the length of the compressed
+seuence, the $N^3$ term vanishes in practice when compared to the $N^2$
+term. Hence, it may be seen that the running time of the matrix multiplication
+(and the backtracking) is propotional to $N^2$ by not compressing the
+sequence. This is shown in figure~\ref{fig:assymptotic_viterbi_N} where
+$\lvert M' \rvert = 4$ and $\lvert T' \rvert = 10.000$.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_viterbi_path_n}
-  \caption{zipHMMlib Path running time for varying sequence lengths.}
-  \label{fig:assymptotic_viterbi_path_n}
+  \input{figures/assymptotic_viterbi_N}
+  \caption{zipHMMlib running time for varying model sizes.}
+  \label{fig:assymptotic_viterbi_N}
 \end{figure}
 
-\begin{figure}
-  \centering
-  \input{figures/assymptotic_viterbi_path_k}
-  \caption{zipHMMlib Path running time for varying model sizes.}
-  \label{fig:assymptotic_viterbi_path_k}
-\end{figure}
-
-This ends the experiments concerning the theoretical running times of the
-Viterbi algorithm itself.
+% This ends the experiments concerning the theoretical running times of the
+% Viterbi algorithm itself.
 
 \subsection{Comparing zipHMMlib Viterbi to the Classical Viterbi Algorithm}
 
@@ -270,7 +245,7 @@ of the input sequence becomes larger.
   \centering
   \input{figures/compressed_1_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi 1 algorithms of the total
-    running time including preprocessing for sequences of varying lengths using
+    running time for sequences of varying lengths using
     a HMM with 16 states.}
   \label{fig:compressed_1_speedup_vs_sequence_length}
 \fxnote{It should not be decreasing when the compression criterion is set for
@@ -281,7 +256,7 @@ of the input sequence becomes larger.
   \centering
   \input{figures/compressed_500_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi 500 algorithms of the total
-    running time including preprocessing for sequences of varying lengths using
+    running time for sequences of varying lengths using
     a HMM with 16 states.}
   \label{fig:compressed_500_speedup_vs_sequence_length}
 \end{figure}
@@ -290,25 +265,25 @@ Finally, instead of viewing the speedup factor as a function of the sequence
 length, the model size is used. Recall that the running time of Viterbi is
 $O(M' N^3 + N^2 T')$. Hence, the cubic factor might become a problem as $N$
 grows. The speedup factor as function of model size $N$ is plotted in
-figures~\ref{fig:speedup_vs_k} and~\ref{fig:speedup_vs_k2}. As expected the
+figures~\ref{fig:speedup_vs_N} and~\ref{fig:speedup_vs_N2}. As expected the
 speedup continues growing until a certain number of states and then starts to
 become smaller again. It is noticeable though that the good speedup factors are
 gained for quite large models of hundreds of states.
 
 \begin{figure}
   \centering
-  \input{figures/speedup_vs_k.tex}
+  \input{figures/speedup_vs_N.tex}
   \caption{The speedup factor for varying model sizes using the Viterbi 1
     algorithms.}
-  \label{fig:speedup_vs_k}
+  \label{fig:speedup_vs_N}
 \end{figure}
 
 \begin{figure}
   \centering
-  \input{figures/speedup_vs_k2.tex}
+  \input{figures/speedup_vs_N2.tex}
   \caption{The speedup factor for varying model sizes using the Viterbi 500
     algorithms.}
-  \label{fig:speedup_vs_k2}
+  \label{fig:speedup_vs_N2}
 \end{figure}
 
 In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
@@ -327,13 +302,15 @@ algorithm fails at gaining a speedup.
 Even though good speedup factors were gained for random data, it is expected
 that much greater speedups may be obtained by using repetitive
 sequences. Thus, experiments similar to the ones for random data has been
-conducted.
+conducted. In figures~\ref{fig:fib_compressed_1_speedup_vs_sequence_length}
+and~\ref{fig:fib_compressed_500_speedup_vs_sequence_length} the speedup factor
+is shown for sequences of varying length using 1 or 500 runs respectively.
 
 \begin{figure}
   \centering
   \input{figures/fib_compressed_1_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi 1 algorithms of the total
-    running time including preprocessing for Fibonacci sequences of varying
+    running time for Fibonacci sequences of varying
     lengths using a HMM with 16 states.}
   \label{fig:fib_compressed_1_speedup_vs_sequence_length}
 \end{figure}
@@ -342,21 +319,30 @@ conducted.
   \centering
   \input{figures/fib_compressed_500_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi 500 algorithms of the total
-    running time including preprocessing for Fibonacci sequences of varying
+    running time for Fibonacci sequences of varying
     lengths using a HMM with 16 states.}
   \label{fig:fib_compressed_500_speedup_vs_sequence_length}
 \end{figure}
 
+As seen, the speedup factors are much greater than for random data. For random
+data the computation of the Viterbi path limited the speedup factor. This
+limitation only becomes larger for Fibonacci sequences. This may e.g.\ be seen
+in figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length}, where the
+computation of the Viterbi path makes the computation orders of magnitudes
+slower than just computing the likelihood. However, the speedup factor for the
+Viterbi Path algorithms still perform better on Fibonacci sequences than on
+random sequences.
+
+\subsubsection{Conclusion}
 
 This ends the section experimenting with the Viterbi algorithm. It is concluded
 that the compression of sequences does indeed speed up the execution time of
-the Viterbi algorithm. But to gain a speed up, some restrictions are
-required. If the number of states in the model becomes too large, a speed up is
-gained. Secondly, a speedup is not necessarily gained if the Viterbi algorithm
-is only run a single time for a sequence, since the preprocessing/compression of
-the sequence takes too much time relatively to the execution of the Viterbi
-algorithm. This highly depends on the sequence though. For the very repetitive
-Fibonacci words, a speedup was gained even by running the Viterbi algorithm once.
+the Viterbi algorithm. The best results are of course found for repetitive data
+with the Viterbi algorithm run multiple times. Speedup factors in the order of
+thousands were found, so for these kind of problems this method has a great
+potential. I other scenarios with random data and only a few hidden states a
+speedup factor much lower is obtained such that the execution only is a couples
+of times faster.
 
 \section{Posterior Decoding}
 
@@ -385,27 +371,27 @@ if $N$ is not too large, but as seen in the plots the assumption of a
 theoretical running time of $O(TN^2)$ does make sense for these experiments.
 
 First, the running time compared to the sequence length is shown in
-figure~\ref{fig:posterior_n}. A model with 16 states has been used. As expected
+figure~\ref{fig:posterior_T}. A model with 16 states has been used. As expected
 the running time is slightly decreasing going towards constant.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_posterior_n.tex}
+  \input{figures/assymptotic_posterior_T.tex}
   \caption{The running time of posterior decoding is linear in the size of the
     input sequence.}
-  \label{fig:posterior_n}
+  \label{fig:posterior_T}
 \end{figure}
 
-Secondly, in figure~\ref{fig:posterior_k} the running time for an increasing
+Secondly, in figure~\ref{fig:posterior_N} the running time for an increasing
 number of states is shown. A random sequence of length 10000 has been used. It
 can be seen that the running time is indeed quadratic in the numbers of states.
 
 \begin{figure}
   \centering
-  \input{figures/assymptotic_posterior_k.tex}
+  \input{figures/assymptotic_posterior_N.tex}
   \caption{The running time of posterior decoding is quadratic in the number of
     states.}
-  \label{fig:posterior_k}
+  \label{fig:posterior_N}
 \end{figure}
 
 It is concluded that the actual running time of the algorithm follows the
@@ -431,7 +417,7 @@ different.
 \end{figure}
 
 Looking at the speedup factor as function of the number of states in
-figure~\ref{fig:posterior_speedup_vs_k}, it is seen that for small models it is
+figure~\ref{fig:posterior_speedup_vs_N}, it is seen that for small models it is
 below 1. This means that the algorithm is slower than the classical posterior
 decoding algorithm. However, as the number of states in the model increases the
 speedup factor quickly becomes larger than 1, due to the matrix multiplications
@@ -439,10 +425,10 @@ being very efficient due to the BLAS framework.
 
 \begin{figure}
   \centering
-  \input{figures/posterior_speedup_vs_k.tex}
+  \input{figures/posterior_speedup_vs_N.tex}
   \caption{The speed up factor as function of the model size using a sequence
     of length 10000.}
-  \label{fig:posterior_speedup_vs_k}
+  \label{fig:posterior_speedup_vs_N}
 \end{figure}
 
 These experiments ends the section of posterior decoding. Overall the algorithm
