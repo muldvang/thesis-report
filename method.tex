@@ -248,10 +248,10 @@ The space consumption is comparable to the Viterbi algorithm without
 compression enabled. The number of $C$ matrices has changed from $M$ to $M'$
 thus requiring $O(M' N^2)$ space. The introduction of the $R$ matrices does not
 change this since the $C$ matrices are of similar size. The table used for the
-simple backtracking has decreased to size $O(N T')$ resulting in a total space
-consumption of $O(M' N^2 + N T')$. If the space saving trick introduced in
-section~\ref{sec:backtracking-1} is used the space consumption will be
-$O(M' N^2 + N \sqrt{T'})$.
+simple backtracking has decreased to size $O(N T')$. The Viterbi path has size
+$T$ resulting in a total space consumption of $O(M' N^2 + N T' + T)$. If the space
+saving trick introduced in section~\ref{sec:backtracking-1} is used the space
+consumption will be $O(M' N^2 + N \sqrt{T'} + T)$.
 
 With similar arguments the running time of computing the likelihood has changed
 to $O(M' N^3 +N^2 T')$. Using the the the $R$ matrices the Viterbi path can be
