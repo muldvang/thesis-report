@@ -59,8 +59,10 @@ $\Pr(Y_{1:T} \mid \lambda) = \max_{x_T} \omega_T(x_T)$.
 
 Note that only the last filled out column of $\omega$ needs to be stored, since
 the recursion in equation~\eqref{eq:1} only needs the previous column to
-compute the new one. However, if the most likely sequence is requested,
-backtracking through the table is required.
+compute the new one. Hence, the space consumption of the algorithm will be the
+space needed for two columns and the input sequence, that is $O(N + T)$. To
+fill out a cell in $\omega$ Viterbi maximizes over all cells in the previous
+column resulting in a running time of $O(N^2 T)$.
 
 \subsubsection{Backtracking}
 \label{sec:backtracking-1}
@@ -74,9 +76,7 @@ may be found using $x_T^* = \argmax_{x_T} \omega_T(x_T)$. From this state the en
 path can be found by following the pointers in the table.
 
 The space consumption of this backtracking algorithm is the size of $\omega$
-which is $O(N T)$. To fill out a cell in $\omega$ Viterbi maximizes over all
-cells in the previous column resulting in a running time of $O(N^2
-T)$. Backtracking is done in $O(T)$ time using the table of pointers.
+which is $O(N T)$. Backtracking is done in $O(T)$ time using the table of pointers.
 
 A space consumption of $O(N T)$ might be a problem in some scenarios. Another
 way to backtrack is described by \citet{Tarnas01061998}. By using this approach
@@ -217,9 +217,9 @@ stage $\omega_T$ is computed by
 Obtaining the Viterbi path $S = s_1, s_2, \dots, s_T$ of $Y_{1:T}$ is no longer
 as simple as for the classical Viterbi algorithm. Using the standard
 backtracking methods, only the Viterbi path $S' = s_1', s_2', \dots, s_{T'}'$
-of the compressed sequence $Y'_{1:T'}$ may. However, it turns out that $S$ can
-be inferred from $S'$ since $S'$ is a subsequence of $S$ as described by
-\citet{lifshits2009speeding}. To do this a set of matrices $R_{o_i}$ is kept
+of the compressed sequence $Y'_{1:T'}$ may be found. However, it turns out that
+$S$ can be inferred from $S'$ since $S'$ is a subsequence of $S$ as described
+by \citet{lifshits2009speeding}. To do this a set of matrices $R_{o_i}$ is kept
 along the $C_{o_i}$ matrices for each of the new symbols
 $o_{M + 1}, \dots, o_{M' - M}$ defined as
 \begin{equation*}
@@ -241,6 +241,17 @@ obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
 or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
 recursively.
 
+Since $S'$ may be found in two different ways as discussed in
+section~\ref{sec:backtracking-1}, three different variations of the Viterbi
+algorithm may be defined.
+\begin{description}
+\item[Viterbi\textsubscript{L}] that compresses the sequence and only computes the
+  loglikelihood,
+\item[Viterbi\textsubscript{P}] that also backtracks using a table of pointers,
+\item[Viterbi\textsubscript{PM}] that saves memory on backtracking by using checkpoints.
+\end{description}
+The same variations may be defined for the classical Viterbi algorithm.
+
 \subsection{Running Time}
 \label{sec:running-time}
 
@@ -249,9 +260,9 @@ compression enabled. The number of $C$ matrices has changed from $M$ to $M'$
 thus requiring $O(M' N^2)$ space. The introduction of the $R$ matrices does not
 change this since the $C$ matrices are of similar size. The table used for the
 simple backtracking has decreased to size $O(N T')$. The Viterbi path has size
-$T$ resulting in a total space consumption of $O(M' N^2 + N T' + T)$. If the space
-saving trick introduced in section~\ref{sec:backtracking-1} is used the space
-consumption will be $O(M' N^2 + N \sqrt{T'} + T)$.
+$T$ resulting in a total space consumption of $O(M' N^2 + N T' + T)$ for
+Viterbi\textsubscript{P}. For Viterbi\textsubscript{PM} the space consumption will be
+$O(M' N^2 + N \sqrt{T'} + T)$.
 
 With similar arguments the running time of computing the likelihood has changed
 to $O(M' N^3 +N^2 T')$. Using the the the $R$ matrices the Viterbi path can be
@@ -261,14 +272,14 @@ enabled is $O(M' N^3 +N^2 T' + T)$.
 The running time of the preprocessing part is $O(
 \left(
   \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert
-\right) T)$, since one new symbol is introduced by scanning the string for
+\right) T)$, since one new symbol is introduced by scanning the input sequence for
 pairs. Note that the $\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert$
 factor depends on the input. For sequences with many repetitions the byte-pair
 encoding will continue for more iterations than for sequences with few
 repetitions.
 
 An overview of the theoretical running times and space consumptions is shown in
-table
+table~\ref{tab:running-time}.
 
 \begin{table}
   \centering
@@ -277,15 +288,14 @@ table
   \label{tab:running-time}
   \begin{tabular}{lll}
     \toprule
-    Algorithm & Running time & Space consumption \\
+    Algorithm                   & Running time             & Space consumption             \\
     \midrule
-    Classical & $O(N^2 T)$ & $O(T)$ \\
-    Classical Path & $O(N^2 T)$ & $O(NT)$ \\
-    Classical Path Space Saving & $O(N^2 T)$ & $O(N\sqrt{T})$ \\
-    Viterbi & $O(M' N^3 + N^2 T')$ & $O(M' N^2 + T')$ \\
-    Viterbi Path & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N T' + T)$ \\
-    Viterbi Path Space Saving & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N
-                                                           \sqrt{T'} + T)$ \\
+    Classical\textsubscript{L}  & $O(N^2 T)$               & $O(N + T)$                    \\
+    Classical\textsubscript{P}  & $O(N^2 T)$               & $O(NT)$                       \\
+    Classical\textsubscript{PM} & $O(N^2 T)$               & $O(N\sqrt{T})$                \\
+    Viterbi\textsubscript{L}    & $O(M' N^3 + N^2 T')$     & $O(M' N^2 + T')$              \\
+    Viterbi\textsubscript{P}    & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N T' + T)$        \\
+    Viterbi\textsubscript{PM}   & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N \sqrt{T'} + T)$ \\
     \bottomrule
   \end{tabular}
 \end{table}
