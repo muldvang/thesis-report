@@ -16,8 +16,12 @@
 \usepackage[round]{natbib}
 \bibliographystyle{plainnat}
 
+% Captions
+\usepackage[hang,bf]{caption}
+
 % Graphics
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -26,13 +30,10 @@
 \tikzexternalize[prefix=tikz/,mode=list and make]
 \pgfplotsset{%
   colorbrewer cycle list=Set1,
-  legend style={at={(1, 1)},anchor=north west,draw=none,fill=none,font=\scriptsize},
+  legend style={at={(1, 1)},anchor=north west,draw=none,fill=none},
   legend cell align=left
 }
 \pgfplotsset{compat=1.11}
-
-% Captions
-\usepackage[hang,bf]{caption}
 
 % Links
 \usepackage[hidelinks]{hyperref}
