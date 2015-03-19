@@ -1,0 +1,33 @@
+\tikzsetnextfilename{viterbi_pre_vs_running_many}
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    legend entries={Preprocessing, Viterbi},
+    legend to name=named,
+    legend columns=2,
+    transpose legend,
+    reverse legend,
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot
+    table[x=T, y=many_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \addplot
+    table[x=T, y=many_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

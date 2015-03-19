@@ -1,0 +1,31 @@
+\tikzsetnextfilename{viterbi_pre_vs_running_one_path_memory}
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    legend style={at={(0, 1)},anchor=north west},
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot
+    table[x=T, y=one_path_memory_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \addplot
+    table[x=T, y=one_path_memory_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    % \legend{Preprocessing, Viterbi};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

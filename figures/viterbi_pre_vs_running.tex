@@ -1,0 +1,101 @@
+\tikzsetnextfilename{viterbi_pre_vs_running}
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot table[x=T, y=many_path_memory_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data} \closedcycle;
+
+    \addplot table[x=T, y=many_path_memory_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data} \closedcycle;
+
+    \legend{Preprocessing, Viterbi\textsubscript{PM} 500};
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot
+    table[x=T, y=one_path_memory_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \addplot
+    table[x=T, y=one_path_memory_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \legend{Preprocessing, Viterbi\textsubscript{PM} 1};
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot
+    table[x=T, y=many_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \addplot
+    table[x=T, y=many_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \legend{Preprocessing, Viterbi\textsubscript{L} 500};
+  \end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    stack plots=y,
+    area style,
+    enlarge x limits=false,
+    xmode=log,
+    ymin=0,
+    ymax=1,
+    width=\textwidth,
+    ]
+
+    \addplot
+    table[x=T, y=one_pre_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \addplot
+    table[x=T, y=one_running_fraction]
+    {plot_data/viterbi_sequence_transformed.data}
+    \closedcycle;
+
+    \legend{Preprocessing, Viterbi\textsubscript{L} 1};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

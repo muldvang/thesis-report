@@ -68,6 +68,21 @@ df["many_total_time"] = 500 * df["many_running_time"] + df["many_pre_time"]
 df["many_path_total_time"] = 500 * df["many_path_running_time"] + df["many_path_pre_time"]
 df["many_path_memory_total_time"] = 500 * df["many_path_memory_running_time"] + df["many_path_pre_time"]
 
+# Pre and running fraction of total time.
+df["uncompressed_path_memory_pre_fraction"] = df["uncompressed_path_pre_time"] / df["uncompressed_path_memory_total_time"]
+df["uncompressed_path_memory_running_fraction"] = df["uncompressed_path_memory_running_time"] / df["uncompressed_path_memory_total_time"]
+df["one_path_memory_pre_fraction"] = df["one_path_pre_time"] /  df["one_path_memory_total_time"]
+df["one_path_memory_running_fraction"] = df["one_path_memory_running_time"] /  df["one_path_memory_total_time"]
+df["many_path_memory_pre_fraction"] = df["many_path_pre_time"] /  df["many_path_memory_total_time"]
+df["many_path_memory_running_fraction"] = 500 * df["many_path_memory_running_time"] /  df["many_path_memory_total_time"]
+
+df["uncompressed_pre_fraction"] = df["uncompressed_pre_time"] / df["uncompressed_total_time"]
+df["uncompressed_running_fraction"] = df["uncompressed_running_time"] / df["uncompressed_total_time"]
+df["one_pre_fraction"] = df["one_pre_time"] /  df["one_total_time"]
+df["one_running_fraction"] = df["one_running_time"] /  df["one_total_time"]
+df["many_pre_fraction"] = df["many_pre_time"] /  df["many_total_time"]
+df["many_running_fraction"] = 500 * df["many_running_time"] /  df["many_total_time"]
+
 # Running time compared to Simple
 df['uncompressed_running_ratio'] = df['simple_running_time'] / df['uncompressed_running_time']
 df['uncompressed_path_running_ratio'] = df['simple_running_time'] / df['uncompressed_path_running_time']
