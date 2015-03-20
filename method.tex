@@ -349,7 +349,7 @@ ${ \left( A \oplus B \right)}_{ij} = \max_k \left( \log A_{ik} + \log B_{kj}
 \label{sec:compr-stopp-crit}
 
 Using the byte-pair compression method a sequence can be compressed to a single
-character. However, as more symbol are added to the alphabet, the most common
+character. However, as more symbols are added to the alphabet, the most common
 pair of symbols will be less and less frequent as the sequence gets more
 compressed. Hence, for the first iterations of the compression, a large speedup
 of Viterbi is expected, where the speedup of later iterations will result in a
@@ -357,15 +357,17 @@ more modest speedup.
 
 \citet{sand2013ziphmmlib} describes a method on how to determine when the
 compression should stop for the forward algorithm, and it may be reused in the
-context of the Viterbi algorithm. As a minimum the user must supply an estimate $e$
-of how many times the compressed sequence is going to be used, as the more
-times the sequence is used, the better the compression should be. In the
-compression phaze it is estimated how much time will be spent on the actual $e$
-executions of the algorithm, by measuring the time it takes to do a
-matrix-matrix multiplication and a matrix-vector multiplication. When the time
-it takes to make another iteration of the compression is larger than the
-estimate of the time saved in the execution of the algorithm, the compression
-is stopped.
+context of the Viterbi algorithm. The user supplies an estimate $e$ of how many
+times the compressed sequence is going to be used, as the more times the
+sequence is used, the better the compression should be. Furthermore the user
+specifies a parameter $N_{\text{min}}$ or a list of parameters
+$(N_{\text{min}}^1, N_{\text{min}}^2, \dots)$ that is the size of the model or
+models that will be used. In the compression phaze it is estimated how much
+time will be spent on the actual $e$ executions of the algorithm, by measuring
+the time it takes to do a matrix-matrix multiplication and a matrix-vector
+multiplication with matrices of size $N_{\text{min}}$. When the time it takes to make
+another iteration of the compression is larger than the estimate of the time
+saved in the execution of the algorithm, the compression is stopped.
 \fxerror{Elaborate.}
 
 \section{Classical Posterior Decoding}
