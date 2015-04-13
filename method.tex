@@ -576,6 +576,28 @@ decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
 $M$ typically is small, so it is expected that the assymptotic running times of
 the two algorithms in practice are comparable.
 
+\section{Subsequence Posterior Decoding}
+
+In the last section it was discussed that the posterior decoding for a sequence
+cannot be done assymptotically faster using the byte-pair compression. However,
+if only parts of the posterior decoding path are needed instead of the entire
+path, a speedup may be obtained.
+
+For subsequence posterior decoding not only an input sequence $Y_{1:T}$ and a
+model $\lambda$ is given as input, but also two indexes $i,j \in
+[1:T], i \ge j$. Instead of returning the posterior decoding path $X_{1:T}$ the
+subpath $X_{i:j}$ is returned.
+
+Recall from section (?)\fxwarning{Provide reference} that the columns of the
+forward and backward tables of the compressed sequence are a subset of columns
+in the tables of the uncompressed sequence. Furthermore, recall that a column
+may be computed using the column emmediately to the left or right for the
+forward and backward algorithms respectively.
+
+Using this, the columns $i$ to $j$ of the forward and backward tables of the
+uncompressed sequence may be found using columns from the tables of the
+compressed sequence.
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
