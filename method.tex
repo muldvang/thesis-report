@@ -595,8 +595,71 @@ may be computed using the column emmediately to the left or right for the
 forward and backward algorithms respectively.
 
 Using this, the columns $i$ to $j$ of the forward and backward tables of the
-uncompressed sequence may be found using columns from the tables of the
-compressed sequence.
+uncompressed sequence may be found using one column from the table for the
+compressed sequence. An example of this situation is illustrated in
+figure~\ref{fig:subsequence-posterior}. For simplicity focus in the following
+is kept on the computation of the forward table from index $i$ to $j$, as the
+backward table may be computed similarly.
+
+\begin{figure}
+  \centering
+  \input{figures/subsequence_posterior.tex}
+  \caption{Illustration of the computation of the forward (or backward) table
+    for a substring of the uncompressed sequence given by indices $i$ to $j$,
+    given that the forward table for the compressed sequence, shown in grey,
+    has been computed in advance.}
+  \label{fig:subsequence-posterior}
+\end{figure}
+
+Assume that the forward table for the compressed sequence has been
+computed. This is shown as grey columns.
+
+To obtain the columns from index $i$ to $j$, the computed column at some index
+$k$ to the left of index $i$ may be used as a starting point for the forward
+computation. Instead of using the initial probabilities $\Pi$ from the model,
+this column is used. In this example that is column 2 when using indexes from
+the compressed sequence. To find the column a sorted map from uncompressed
+indices to compressed indices is created. In this example the map would consist
+of the mappings $1 \rightarrow 2, 3 \rightarrow 2, 7 \rightarrow 3$ and
+$10 \rightarrow 4$. To find the index $k$ a binary search is performed on the
+map to find the largest key strictly less than $i$. The value corresponding to
+this key is the index to the column in the forward table for the compressed
+sequence that should be used as starting point for the forward computation. The
+mappings can be computed by scanning through the compressed sequence one symbol
+at a time while incrementing the corresponding index in the uncompressed
+sequence by the uncompressed length of that symbol.
+
+The only thing missing for the computation is the substring for which the
+forward table should be computed. This may be found by decompressing part of
+the compressed sequence. The part of the compressed sequence to be decompressed
+is starting at index $k + 1$ and continuing to the index of the computed column
+to the right of index $j$ at some index $l$. This index may be found
+similarly by using the map. In the example above the compressed sequence from
+index 3 to 4 would be decompressed to the uncompressed sequence from index 4 to
+10.
+
+The backward table may be computed similarly by using the column at index $l$
+as a starting point instead of using the $(1, 1, \dots, 1)$ vector. Note that
+some unnecessary columns will be computed as the computation starts a some
+index to the left of $i$ and ends to the right of $j$.
+
+Finally, the posterior decoding may be computed from index $i$ to $j$ using the
+forward and backward tables of the substring of the uncompressed sequence.
+
+\subsection{Running Time}
+
+As described the computation of the forward and backward tables of the
+uncompressed subsequence depends on the tables of the compressed sequence. If
+preprocessing is not included this takes $O(M' N^3 + N^2 T')$. Performing the
+binary search on the map to translate the $i$ and $j$ index to $k$ and $l$
+takes $O(\log T')$ time. Decompressing the subsequence takes time proportional
+to the length of the decompressed subsequence, that is $O(j - i + \delta)$,
+where $\delta$ is the extra columns to the left of $i$ and right of
+$j$. Computing the forward and backward tables takes time
+$O(M N^3 + N^2 (j - i + \delta))$. Summing this up a running time of $O(M' N^3
++ N^2 T' + N^2 (j - i + \delta)$ is obtained.
+
+
 
 %%% Local Variables:
 %%% mode: latex
