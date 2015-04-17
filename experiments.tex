@@ -47,6 +47,7 @@ measure. Furthermore, the standard deviation has been calculated and is shown
 as error bars in the plots.
 
 \section{Compression Ratio}
+\label{sec:compression-ratio}
 
 The running time of the Viterbi algorithm implemented in zipHMMlib is highly
 dependent on the size of the compressed sequence. As mentioned in
@@ -62,9 +63,10 @@ sequence. For this experiment an estimate of $e = 500$ have been provided to
 the program.
 
 As seen in figure~\ref{fig:compression_ratio} the compression ratio grows
-exponentially as the sequence length increases. The compression of Fibonacci
-words are much better than the compression of random sequences, just as
-expected. This already suggests that the performance of the Viterbi
+exponentially for the Fibonacci words as the sequence length increases, whereas
+is it almost constant at a ratio of four for randon sequences. The compression
+of Fibonacci words are much better than the compression of random sequences,
+just as expected. This already suggests that the performance of the Viterbi
 algorithm will be very dependent on the input sequences. Just to verify that
 the Fibonacci sequences is very repetitive unary sequences have also been
 compressed, and as seen the compression of these two types is very comparable.
@@ -237,9 +239,9 @@ algorithm, e.g.\ for Viterbi\textsubscript{L} algorithms the classical
 algorithm without backtracking has been used. In the following plots a
 ``speedup factor'' is shown on the y-axis. The speedup factor is calculated as
 the running time of the classical algorithm (with or out without backtracking
-enabled) divided by the running time of algorithm being measured. Hence, any
-speedup factor larger than one means that the algorithm being measured is
-faster than the classical algorithm.
+enabled) divided by the running time of algorithm being measured, including the
+time it takes to do the compression. Hence, any speedup factor larger than one
+means that the algorithm being measured is faster than the classical algorithm.
 
 \subsubsection{Random Data}
 
@@ -431,6 +433,7 @@ of the algorithm satisfies the theory. The second part compares it to the
 classical implementation of posterior decoding.
 
 \subsection{Asymptotic Running Time}
+\label{sec:asympt-runn-time}
 
 Like in section~\ref{sec:theor-runn-times}, the theoretical compared the the
 actual running times experiments have been made using random data. The
@@ -509,7 +512,65 @@ has a running time that is very comparable to the classical implementation of
 posterior decoding. For scenarios with large models and sequences the zipHMMlib
 is faster whereas the classical algorithm is a better for small models.
 
+\section{Subsequence Posterior Decoding}
 
+In this section experiments on the subsequence posterior decoding is
+made. Recall that subsequence posterior decoding also takes two indeces $i$ and
+$j$ as input an only returns the posterior decoding for the subsequence
+$Y_{i:j}$.
+
+Recall from section~\ref{sec:running-time-2} that the algorithm has a
+theoretical running time of $O(M' N^3 + N^2 T' + N^2 (j - i + \delta))$,
+assuming the input sequence has already been compressed. This is very similar
+to both the Viterbi algorithm and the posterior decoding algorithm. Therefore
+the theoretical running time has not been verified as done in the two previous
+sections. However, the three terms of the running time are discussed in turn
+below.
+
+The first term $M' N^3$ comes from the computation of the $C$ matrices. This
+has already been experimented with for the Viterbi algorithm in
+section~\ref{sec:theor-runn-times}. Since the only difference between the
+computations for the Viterbi algorithm and the forward-backward algorithm has
+to do with nummerical stability, the theoretical running will be also hold for
+the posterior decoding.
+
+The second term $N^2 T'$ comes from computing the forward and backward tables
+for the compressed sequence of length $T'$. In
+section~\ref{sec:asympt-runn-time} this was already verified the for posterior
+decoding algorithm.
+
+Finally the $N^2 (j - i + \delta)$ term comes from the decompression of the
+compressed subsequence that is linear in $(j - i + \delta)$ and from computing
+the posterior decoding for the subsequence. The running time of the posterior
+decoding has already been shown to match the theoretical running time. The
+decompression is quite simple and experiments have not been done for
+this. \fxwarning{Make experiment for decompression?}
+
+\subsection{Comparison}
+
+The subsequence posterior decoding algorithm has been compared to the standard
+posterior decoding algorithms, that is the classical posterior decoding and the
+posterior decoding in zipHMMlib without compression enabled. For the standard
+algorithms the entire path as been found and then the path from index $i$ to
+$j$ has been extracted.
+
+The running time of the subsequence posterior decoding is much dependent on the
+size of the size of the interval for which to compute the path, i.e.\
+$j-i$. The value of $\delta$ depends heavily on the data and the
+compression. In general, for an increasing compression ratio the value of
+$\delta$ will increase. But if a part of a sequence is very compressible and
+another part is not compressible, the value of $\delta$ will also depend on the
+indices $i$ and $j$.
+
+Depending on how well the data compresses, the value of $T'$ will be larger og
+smaller than $(j - i + \delta)$. This is the case for e.g.\ random data that
+only has a compression ratio of approximately 4 as seen
+section~\ref{sec:compression-ratio}. Hence, it is expected that the value of
+$i$ and $j$ will not give a major change in the running time. For Fibonacci
+words though, the compression ratio is much better and for the experiment made
+in section~\ref{sec:compression-ratio} the size of $T'$ becomes 2 for any
+$T$. In this case, the value of $i$ and $j$ will be dominant in the running
+time.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
