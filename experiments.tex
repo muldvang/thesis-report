@@ -548,11 +548,9 @@ this. \fxwarning{Make experiment for decompression?}
 
 \subsection{Comparison}
 
-The subsequence posterior decoding algorithm has been compared to the standard
-posterior decoding algorithms, that is the classical posterior decoding and the
-posterior decoding in zipHMMlib without compression enabled. For the standard
-algorithms the entire path as been found and then the path from index $i$ to
-$j$ has been extracted.
+The subsequence posterior decoding algorithm has been compared to the classical
+posterior decoding algorithm. For the classical algorithm the entire path as
+been found and then the path from index $i$ to $j$ has been extracted.
 
 The running time of the subsequence posterior decoding is much dependent on the
 size of the size of the interval for which to compute the path, i.e.\
@@ -562,15 +560,27 @@ $\delta$ will increase. But if a part of a sequence is very compressible and
 another part is not compressible, the value of $\delta$ will also depend on the
 indices $i$ and $j$.
 
-Depending on how well the data compresses, the value of $T'$ will be larger og
-smaller than $(j - i + \delta)$. This is the case for e.g.\ random data that
-only has a compression ratio of approximately 4 as seen
+Depending on how well the data compresses, the value of the length of the
+compressed sequence $T'$ will be larger or smaller than the length of
+subsequence for which the posterior decoding is returned, that is
+$(j - i + \delta)$.  This is the case for e.g.\ random data that only has a
+compression ratio of approximately 4 as seen
 section~\ref{sec:compression-ratio}. Hence, it is expected that the value of
 $i$ and $j$ will not give a major change in the running time. For Fibonacci
 words though, the compression ratio is much better and for the experiment made
 in section~\ref{sec:compression-ratio} the size of $T'$ becomes 2 for any
 $T$. In this case, the value of $i$ and $j$ will be dominant in the running
 time.
+
+The comparison of to the classical implementation is split into three
+parts. First, the influence of the parameters $i$ and $j$ is measured for a
+constant length of the input sequence and a constant number of states. Next the
+sequence length is varied for a constant subsequence length, and finally the
+number of states is varied.
+
+\subsubsection{Subsequence Length}
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
