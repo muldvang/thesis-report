@@ -647,6 +647,7 @@ Finally, the posterior decoding may be computed from index $i$ to $j$ using the
 forward and backward tables of the substring of the uncompressed sequence.
 
 \subsection{Running Time}
+\label{sec:running-time-2}
 
 As described the computation of the forward and backward tables of the
 uncompressed subsequence depends on the tables of the compressed sequence. If
@@ -657,7 +658,7 @@ to the length of the decompressed subsequence, that is $O(j - i + \delta)$,
 where $\delta$ is the extra columns to the left of $i$ and right of
 $j$. Computing the forward and backward tables takes time
 $O(M N^3 + N^2 (j - i + \delta))$. Summing this up a running time of $O(M' N^3
-+ N^2 T' + N^2 (j - i + \delta)$ is obtained.
++ N^2 T' + N^2 (j - i + \delta))$ is obtained.
 
 
 
