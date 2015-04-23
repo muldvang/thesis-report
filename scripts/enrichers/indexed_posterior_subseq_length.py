@@ -17,11 +17,10 @@ df.columns = ["N",
               "T",
               "subseq_length",
               "simple_running_time",
-              "uncompressed_running_time",
+              "one_running_time",
               "many_running_time"]
 
 # Running time compared to Simple
-df['uncompressed_running_ratio'] = df['simple_running_time'] / df['uncompressed_running_time']
 df['one_running_ratio'] = df['simple_running_time'] / df['one_running_time']
 df['many_running_ratio'] = df['simple_running_time'] / df['many_running_time']
 
