@@ -31,6 +31,8 @@ df['many_total_time'] = df['many_pre_time'] / 500 + df['many_running_time']
 # Running time compared to Simple
 df['one_total_ratio'] = df['simple_total_time'] / df['one_total_time']
 df['many_total_ratio'] = df['simple_total_time'] / df['many_total_time']
+df['one_running_ratio'] = df['simple_running_time'] / df['one_running_time']
+df['many_running_ratio'] = df['simple_running_time'] / df['many_running_time']
 
 # Compute mean and std.
 res = pd.DataFrame()
