@@ -1,0 +1,23 @@
+\tikzsetnextfilename{indexed_posterior_speedup_vs_N}
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    xlabel=Model size $N$,
+    ylabel=Speedup factor,
+    xmode=log,
+    ]
+    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    table[x=N, y=one_total_ratio, y error=one_total_ratio_std]
+    {plot_data/indexed_posterior_model_transformed.data};
+
+    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    table[x=N, y=many_total_ratio, y error=many_total_ratio_std]
+    {plot_data/indexed_posterior_model_transformed.data};
+
+    \legend{Substring posterior 1, Substring posterior 500}
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
