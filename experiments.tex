@@ -709,7 +709,10 @@ better than for random data.
 As before the speedup factor has also been measured for varying sequence
 lengths. Again, a model with 16 states has been used and the posterior decoding
 has been computed for a substring of length 200. The result of this experiment
-is shown in figure~\ref{fig:indexed_posterior_fib_speedup_vs_T}.
+is shown in figure~\ref{fig:indexed_posterior_fib_speedup_vs_T}. As seen, the
+speedup factor improves by a lot for the substring posterior 500 algorithm. For
+the substring posterior 1 algorithm the speedup factor is more modest. However,
+the longer the input sequence, the better the speedup.
 
 \begin{figure}
   \centering
@@ -718,9 +721,6 @@ is shown in figure~\ref{fig:indexed_posterior_fib_speedup_vs_T}.
     algorithm for Fibonacci words of varying lengths.}
   \label{fig:indexed_posterior_fib_speedup_vs_T}
 \end{figure}
-
-Blah blah blah. Write something about indexed_posterior_fib_sequence
-experiment. The raw plot data has been made.
 
 %%% Local Variables:
 %%% mode: latex
