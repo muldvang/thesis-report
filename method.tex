@@ -1,5 +1,6 @@
 % chktex-file -1
 % chktex-file 24
+% chktex-file 9
 \chapter{Method}
 
 \section{Hidden Markov Models}
@@ -592,14 +593,11 @@ Recall from section (?)\fxwarning{Provide reference} that the columns of the
 forward and backward tables of the compressed sequence are a subset of columns
 in the tables of the uncompressed sequence. Furthermore, recall that a column
 may be computed using the column emmediately to the left or right for the
-forward and backward algorithms respectively.
-
-Using this, the columns $i$ to $j$ of the forward and backward tables of the
-uncompressed sequence may be found using one column from the table for the
-compressed sequence. An example of this situation is illustrated in
-figure~\ref{fig:subsequence-posterior}. For simplicity focus in the following
-is kept on the computation of the forward table from index $i$ to $j$, as the
-backward table may be computed similarly.
+forward and backward algorithms respectively. Using this, the forward and
+backward tables $\alpha$ and $\beta$ of the subsequence $Y_{i:j}$ may be found
+using existing columns from the forward and backward tables of the compressed
+sequence. An example of this situation is illustrated in
+figure~\ref{fig:subsequence-posterior}.
 
 \begin{figure}
   \centering
@@ -611,37 +609,107 @@ backward table may be computed similarly.
   \label{fig:subsequence-posterior}
 \end{figure}
 
-Assume that the forward table for the compressed sequence has been
-computed. This is shown as grey columns.
+Assume that the forward table $\alpha'$ and the backward table $\beta'$ for the
+compressed sequence has been computed. This is shown as grey columns.
 
-To obtain the columns from index $i$ to $j$, the computed column at some index
+To compute $\alpha$ and $\beta$ for $Y_{i:j}$, the computed column at some index
 $k$ to the left of index $i$ may be used as a starting point for the forward
-computation. Instead of using the initial probabilities $\Pi$ from the model,
-this column is used. In this example that is column 2 when using indexes from
-the compressed sequence. To find the column a sorted map from uncompressed
-indices to compressed indices is created. In this example the map would consist
-of the mappings $1 \rightarrow 2, 3 \rightarrow 2, 7 \rightarrow 3$ and
-$10 \rightarrow 4$. To find the index $k$ a binary search is performed on the
-map to find the largest key strictly less than $i$. The value corresponding to
-this key is the index to the column in the forward table for the compressed
-sequence that should be used as starting point for the forward computation. The
-mappings can be computed by scanning through the compressed sequence one symbol
-at a time while incrementing the corresponding index in the uncompressed
-sequence by the uncompressed length of that symbol.
+computation. In this example that is column 2 when using indexes from the
+compressed sequence. Likewise, some column $l$ with $l$ being to the right of
+$j$ can be used as a starting point for the computation of the backward
+table.
 
-The only thing missing for the computation is the substring for which the
-forward table should be computed. This may be found by decompressing part of
-the compressed sequence. The part of the compressed sequence to be decompressed
-is starting at index $k + 1$ and continuing to the index of the computed column
-to the right of index $j$ at some index $l$. This index may be found
-similarly by using the map. In the example above the compressed sequence from
-index 3 to 4 would be decompressed to the uncompressed sequence from index 4 to
-10.
+To find the indicies $k$ and $l$ for the uncompressed sequence and the
+corresponding indicies $k'$ and $l'$ for the compressed sequence, a sorted
+mapping \texttt{orig\_index2new\_index} \fxwarning{Better name for mapping.}
+from uncompressed indices to compressed indices is created. In this example the
+map would consist of the mappings
+$1 \rightarrow 1, 3 \rightarrow 2, 7 \rightarrow 3$ and $10 \rightarrow 4$. To
+find the index $k$, a binary search is performed on the map to find the largest
+key less than $i$. The value corresponding to this key is the index to the
+column in the forward table of the compressed sequence that should be used as
+starting point for the forward computation of the uncompressed sequence.
 
-The backward table may be computed similarly by using the column at index $l$
-as a starting point instead of using the $(1, 1, \dots, 1)$ vector. Note that
-some unnecessary columns will be computed as the computation starts a some
-index to the left of $i$ and ends to the right of $j$.
+The mapping is computed as follows. First, another mapping
+\texttt{symbol2length} from each symbol in the new alphabet $\mathcal{O'}$ to
+its original length is created. This may be done iteratively by inserting first
+inserting each original symbol $o_1, \dots, o_M \in \mathcal{O}$ with length 1
+into the map. Next, $o_{M+1}, o_{M+2}, \dots, o_{M'} \in \mathcal{O'}$ is
+inserted in the specified order. As each new symbol $o_k \in \mathcal{O'}$ is
+created using two existing symbols $o_i$ and $o_j$ the length of $o_k$ can be
+computed by using the map to get the the lengths of $o_i$ and $o_j$ and add
+these.
+
+Next, \texttt{orig\_index2new\_index} is computed by scanning through the
+compressed sequence one symbol at a time while incrementing the corresponding
+index in the uncompressed sequence by using the map of lengths.
+
+Now the first column of $\alpha$ is easily found by finding $k'$ using a binary
+search as just discussed. Similarly the last column of $\beta$ can be
+found. The only thing missing for the computation is the substring for which
+$\alpha$ and $\beta$ should be computed.
+
+A simple way of doing this would be decompressing $Y_{k':l'}'$ to obtain
+$Y_{k:l}$, then compute columns corresponding to this subsequence and
+afterwards remove columns $[k, i)$ and $(l, n]$. Decompressing $Y_{k':l'}'$
+entirely might be inefficient though. If the compressed sequence $Y_{1:T'}'$ is
+much compressed, i.e.\ $T' \ll T$, the length of $Y_{k:l}$ will be much larger
+than $Y_{i:j}$. In the worst case of $T' = 1$, the decompression would result
+in the uncompressed sequence $Y_{1:T}$. Then and the algorithm will spend a lot
+of time computing columns and throwing these away afterwards. Hence, the
+decompression needs to be made smarter.
+
+Observe that only the symbols from index $[i,j]$ needs to be from the orignal
+alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
+new alphabet, since each column in the these parts of $\alpha$ and $\beta$ are
+not needed for the posterior decoding computation. Hence, when decompressing
+$Y_{k':l'}'$ symbols that correspond to uncompressed symbols in the interval
+$[k, i)$ should not be decompressed by left as compressed symbols. Likewise,
+symbols corresponding to the interval $(j, l]$ should not be decompressed. The
+partially decompressed sequence $Z$ will then contain some symbols from
+$\mathcal{O'}$ a the beginning, then some symbols from $\mathcal{O}$ in the
+middle, being the symbols $Y_{i:j}$, and the some symbols from $\mathcal{O'}$
+in the end. Pseudo code for such an algorithm is given below.\fxerror{Make
+  reference to algorithm.}
+
+\begin{algorithm}
+  \caption{Partially decompress the compressed sequence.}
+  \begin{algorithmic}[1]
+    \Procedure{decompress\_substring}{$Y, i, j, k, l$}
+    \State{string $Z$}
+    \State{integer subseq\_start\_index}
+    \State{index = $-$ symbol2length[$Y_1$]}
+    \While{$Y$ is not empty}
+        \State{$c = Y$.pop\_front()}
+        \State{new\_idx = index + symbol2length[$c$]}
+        \If{$new\_idx < k$}
+            \State{// Do nothing}
+        \ElsIf{$new\_idx < i$}
+            \State{$Z$.push\_back($c$)}
+        \ElsIf{$new\_idx \le j \lor index < j$}
+            \If{$c \in \mathcal{O}$}
+                \If{subseq\_start\_index is not set}
+                    \State{subseq\_start\_index = $Z$.size()}
+                \EndIf{}
+                \State{$Z$.push\_back($c$)}
+            \Else{}
+                \State{$p, q$ = get\_pair($c$)}
+                \State{$Y$.push\_front($q$)}
+                \State{$Y$.push\_front($p$)}
+                \State{continue}
+            \EndIf{}
+        \ElsIf{$new\_idx \le l$}
+            \State{$Z$.push\_back($c$)}
+        \Else{}
+            \State{break}
+        \EndIf{}
+
+        \State{index = new\_idx}
+    \EndWhile{}
+    \State{return Z, subseq\_start\_index}
+    \EndProcedure{}
+\end{algorithmic}
+\end{algorithm}
 
 Finally, the posterior decoding may be computed from index $i$ to $j$ using the
 forward and backward tables of the substring of the uncompressed sequence.
