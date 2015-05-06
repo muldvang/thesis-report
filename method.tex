@@ -678,37 +678,32 @@ is given in algorithm~\ref{alg:decompress}.
   \label{alg:decompress}
   \begin{algorithmic}[1]
     \Procedure{decompress\_substring}{$Y, i, j, k, l$}
-    \State{string $Z \gets $ nil}
-    \State{integer $start\_index \gets $ nil}
-    \State{$index \gets - 1$}
-    \While{$Y$ is not empty}
-        \State{$c \gets \text{Remove first element of }Y$}
-        \State{$new\_index \gets index + symbol2length[c]$}
-        \If{$new\_index < k$}
-            \State{}\Comment{Do nothing.}
-        \ElsIf{$new\_index < i$}
-            \State{Append $c$ to $Z$}
-        \ElsIf{$index < j$}
-            \If{$c \in \mathcal{O}$}
-                \If{$start\_index$ is nil}
-                    \State{$start\_index \gets \text{length of } Z$}
+        \State{$Z \gets $ nil}
+        \State{start\_index $\gets$ nil}
+        \State{index $\gets -1$}
+        \State{next\_index $\gets$ 0}
+        \While{next\_index $\le l$}
+            \State{$c \gets$ pop first element from $Y$}
+            \State{next\_index $\gets$ index + symbol2length[$c$]}
+            \If{$(\text{index} < i \land \text{next\_index} \ge i) \lor
+                 (\text{index} \ge i \land \text{index} < j)$}
+                \If{$c$ $\not \in \mathcal{O}$}
+                    \State{$c_l, c_r \gets$ get\_pair($c$)}
+                    \State{Prepend $c_l c_r$ to $Y$}
+                    \State{\textbf{continue}}
+                \Else{}
+                    \State{$Z$.push\_back($c$)}
+                    \If{start\_index is nil}
+                        \State{start\_index $\gets$ $Z$.size() $- 1$}
+                    \EndIf{}
                 \EndIf{}
-                \State{Append $c$ to $Z$}
-            \Else{}
-                \State{$c_l, c_r \gets get\_pair(c)$}
-                \State{Prepend $c_r$ to $Y$}
-                \State{Prepend $c_l$ to $Y$}
-                \State{\textbf{continue}}
+            \ElsIf{$(\text{index} < k \land \text{next\_index} \ge k) \lor
+                       (\text{index} \ge k \land \text{index} < l)$}
+                \State{$Z$.push\_back($c$)}
             \EndIf{}
-        \ElsIf{$new\_index \le l$}
-            \State{Append $c$ to $Z$}
-        \Else{}
-            \State{\textbf{break}}
-        \EndIf{}
-
-        \State{$index \gets new\_index$}
-    \EndWhile{}
-    \State{\Return{}$Z, start\_index$}
+            \State{index $\gets$ next\_index}
+        \EndWhile{}
+        \State{\Return{$Z$, start\_index}}
     \EndProcedure{}
 \end{algorithmic}
 \end{algorithm}
