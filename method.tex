@@ -440,9 +440,10 @@ compute the posterior decoding $S_{1:T}$ given by
 \end{equation*}
 Since $\Pr \left( Y_{1:T} \right)$ is the same for all $t$ it may be treated as
 a constant result in the formula
-\begin{equation*}
+\begin{equation}
+  \label{eq:6}
   s_t = \argmax_{x_t \in \mathcal{H}} \alpha(x_t) \beta(x_t).
-\end{equation*}
+\end{equation}
 
 \section{The Forward-Backward Algorithm as Linear Algebra}
 \fxnote{Section heading look ugly in page header.}
@@ -670,8 +671,21 @@ decompressed. Symbols corresponding to uncompressed symbols that overlap
 $[i, j]$ should be decompressed. The partially decompressed sequence $Z$ will
 then contain some symbols from $\mathcal{O'}$ a the beginning, then some
 symbols from $\mathcal{O}$ in the middle, being the symbols $Y_{i:j}$, and the
-some symbols from $\mathcal{O'}$ in the end. Pseudo code for such an algorithm
-is given in algorithm~\ref{alg:decompress}.
+some symbols from $\mathcal{O'}$ in the end.
+
+An algorithm for doing this takes as input a compressed sequence $Y$ and the
+indicies $i, j, k$ and $l$. The algorithm may be implemented iteratively, by
+removing symbols one by one from the beginning of $Y$, while the corresponding
+uncompressed index is maintained by using the \texttt{symbol2length} map. When
+a symbol $c$ that overlap $[i, j]$ is encountered $c$ is either appended to $Z$
+if $c \in \mathcal{O}$ or it is split into a pair and added to the front of
+$Y$, such that the left symbol of that pair will be removed in the next
+iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is
+encountered, the symbols index in $Z$ is saved, as it must be used later for
+computing the posterior decoding. If $c$ overlaps $[k, l]$ it is appended to
+$Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is
+done. Pseudo code for such an algorithm is given in
+algorithm~\ref{alg:decompress}.
 
 \begin{algorithm}
   \caption{Partially decompress the compressed sequence.}
@@ -687,19 +701,19 @@ is given in algorithm~\ref{alg:decompress}.
             \State{next\_index $\gets$ index + symbol2length[$c$]}
             \If{$(\text{index} < i \land \text{next\_index} \ge i) \lor
                  (\text{index} \ge i \land \text{index} < j)$}
-                \If{$c$ $\not \in \mathcal{O}$}
-                    \State{$c_l, c_r \gets$ get\_pair($c$)}
-                    \State{Prepend $c_l c_r$ to $Y$}
-                    \State{\textbf{continue}}
-                \Else{}
+                \If{$c \in \mathcal{O}$} \Comment{$c$ overlaps $[i, j]$}
                     \State{$Z$.push\_back($c$)}
                     \If{start\_index is nil}
                         \State{start\_index $\gets$ $Z$.size() $- 1$}
                     \EndIf{}
+                \Else{}
+                    \State{$c_l, c_r \gets$ get\_pair($c$)}
+                    \State{Prepend $c_l c_r$ to $Y$}
+                    \State{\textbf{continue}}
                 \EndIf{}
             \ElsIf{$(\text{index} < k \land \text{next\_index} \ge k) \lor
                        (\text{index} \ge k \land \text{index} < l)$}
-                \State{$Z$.push\_back($c$)}
+                \State{$Z$.push\_back($c$)} \Comment{$c$ overlaps $[k, l]$}
             \EndIf{}
             \State{index $\gets$ next\_index}
         \EndWhile{}
@@ -708,8 +722,12 @@ is given in algorithm~\ref{alg:decompress}.
 \end{algorithmic}
 \end{algorithm}
 
-Finally, the posterior decoding may be computed from index $i$ to $j$ using the
-forward and backward tables of the substring of the uncompressed sequence.
+In the previous paragraphs the start columns from $\alpha'$ and $\beta'$, that
+is the columns at index $k'$ and $l'$ respectively, have been found. There are
+used as the first column of the forward table $\alpha$ and the last column of
+the backward table $\beta$. Furthermore, the substring $Z$ for which to compute
+the the tables have been found. To complete the substring posterior decoding
+algorithm equation~\eqref{eq:6} is used.
 
 \subsection{Running Time}
 \label{sec:running-time-2}
