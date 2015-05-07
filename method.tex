@@ -673,47 +673,50 @@ then contain some symbols from $\mathcal{O'}$ a the beginning, then some
 symbols from $\mathcal{O}$ in the middle, being the symbols $Y_{i:j}$, and the
 some symbols from $\mathcal{O'}$ in the end.
 
-An algorithm for doing this takes as input a compressed sequence $Y$ and the
-indicies $i, j, k$ and $l$. The algorithm may be implemented iteratively, by
-removing symbols one by one from the beginning of $Y$, while the corresponding
-uncompressed index is maintained by using the \texttt{symbol2length} map. When
-a symbol $c$ that overlap $[i, j]$ is encountered $c$ is either appended to $Z$
-if $c \in \mathcal{O}$ or it is split into a pair and added to the front of
-$Y$, such that the left symbol of that pair will be removed in the next
-iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is
-encountered, the symbols index in $Z$ is saved, as it must be used later for
+An algorithm for doing this takes as input a compressed sequence $Y'$ and the
+indicies $i, j, k, l, k'$ and $l'$. The symbols of substring $Y_{k':l'}'$ is
+pushed to a stack $Y^S$, such that $Y_{l'}'$ is at the bottom and $Y_{k'}'$ at
+the top. The algorithm may be implemented iteratively, by popping symbols one
+by one from $Y^S$, while the corresponding uncompressed index into the
+uncompressed sequence $Y$ is maintained by using the \texttt{symbol2length}
+map. When a symbol $c$ that overlap $[i, j]$ is encountered $c$ is either
+appended to $Z$ if $c \in \mathcal{O}$ or it is split into a pair and added to
+the front of $Y$, such that the left symbol of that pair will be removed in the
+next iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$
+is encountered, the symbols index in $Z$ is saved, as it must be used later for
 computing the posterior decoding. If $c$ overlaps $[k, l]$ it is appended to
-$Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is
-done. Pseudo code for such an algorithm is given in
+$Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is done,
+i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
 algorithm~\ref{alg:decompress}.
 
 \begin{algorithm}
   \caption{Partially decompress the compressed sequence.}
   \label{alg:decompress}
   \begin{algorithmic}[1]
-    \Procedure{decompress\_substring}{$Y, i, j, k, l$}
-        \State{$Z \gets $ nil}
+    \Procedure{decompress\_substring}{$Y, i, j, k, l, k', l'$}
+        \State{String $Z \gets $ nil}
+        \State{Stack $Y^S \gets $ nil}
+        \State{Push $Y_{l'}, \dots, Y_{k'}$ to $Y^S$}
         \State{start\_index $\gets$ nil}
-        \State{index $\gets -1$}
-        \State{next\_index $\gets$ 0}
-        \While{next\_index $\le l$}
-            \State{$c \gets$ pop first element from $Y$}
+        \State{index $\gets k - (\text{symbol2length[}Y^S\text{.top()]} - 1)$}
+        \While{$Y^S$ is not empty}
+            \State{$c \gets Y^S\text{.pop()}$}
             \State{next\_index $\gets$ index + symbol2length[$c$]}
-            \If{$(\text{index} < i \land \text{next\_index} \ge i) \lor
-                 (\text{index} \ge i \land \text{index} < j)$}
+            \If{$(\text{index} \le i \land \text{next\_index} > i) \lor
+                 (\text{index} > i \land \text{index} \le j)$}
                 \If{$c \in \mathcal{O}$} \Comment{$c$ overlaps $[i, j]$}
-                    \State{$Z$.push\_back($c$)}
+                    \State{$Z$.append($c$)}
                     \If{start\_index is nil}
                         \State{start\_index $\gets$ $Z$.size() $- 1$}
                     \EndIf{}
                 \Else{}
                     \State{$c_l, c_r \gets$ get\_pair($c$)}
-                    \State{Prepend $c_l c_r$ to $Y$}
+                    \State{Push $c_r, c_l$ to $Y^S$}
                     \State{\textbf{continue}}
                 \EndIf{}
-            \ElsIf{$(\text{index} < k \land \text{next\_index} \ge k) \lor
-                       (\text{index} \ge k \land \text{index} < l)$}
-                \State{$Z$.push\_back($c$)} \Comment{$c$ overlaps $[k, l]$}
+            \ElsIf{$(\text{index} \le k \land \text{next\_index} > k) \lor
+                       (\text{index} > k \land \text{index} \le l)$}
+                \State{$Z$.append($c$)} \Comment{$c$ overlaps $[k, l]$}
             \EndIf{}
             \State{index $\gets$ next\_index}
         \EndWhile{}
@@ -732,16 +735,17 @@ algorithm equation~\eqref{eq:6} is used.
 \subsection{Running Time}
 \label{sec:running-time-2}
 
-As described the computation of the forward and backward tables of the
-uncompressed subsequence depends on the tables of the compressed sequence. If
-preprocessing is not included this takes $O(M' N^3 + N^2 T')$. Performing the
-binary search on the map to translate the $i$ and $j$ index to $k$ and $l$
-takes $O(\log T')$ time. Decompressing the subsequence takes time proportional
-to the length of the decompressed subsequence, that is $O(j - i + \delta)$,
-where $\delta$ is the extra columns to the left of $i$ and right of
-$j$. Computing the forward and backward tables takes time
-$O(M N^3 + N^2 (j - i + \delta))$. Summing this up a running time of $O(M' N^3
-+ N^2 T' + N^2 (j - i + \delta))$ is obtained.
+As described the computation of the forward and backward tables, $\alpha$ and
+$\beta$, for the uncompressed subsequence depends on the tables, $\alpha'$ and
+$\beta'$, of the compressed sequence. If preprocessing/compression of the input
+string $Y$ is not included this takes $O(M' N^3 + N^2 T')$. Performing the
+binary search on the map to find the indicies $k, l, k'$ and $l'$ takes
+$O(\log T')$ time. Decompressing the subsequence takes time proportional to the
+length of the decompressed subsequence plus the length of the compressed, that
+is $O(j - i + \delta + T')$, where $\delta$ is the number of symbols in the
+intervals $[k, i)$ and $(j, l]$.  Computing $\alpha$ and $\beta$ takes time
+$O(M N^3 + N^2 (j - i + \delta))$.  Summing this up a running time of
+$O(M' N^3 + N^2 T' + N^2 (j - i + \delta))$ is obtained.
 
 
 
