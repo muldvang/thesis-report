@@ -4,23 +4,24 @@
 \chapter{Background}
 \label{cha:background}
 
-\fxnote{Meta text.}
-
-Hidden Markov models, from now on abbreviated HMMs, were first introduced and
-studied in the end of the 1960s and the beginning of the 1970s. Since then they
-have become very popular and have proven to be both effective and efficient in
-many applications. \fxnote{Move this to the section below?}
+In this section hidden Markov models are described and defined. Also, the work
+made by \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} is described.
 
 \section{Hidden Markov Models}
 \label{sec:hidden-markov-models}
 
+Hidden Markov models, from now on abbreviated HMMs, were first introduced and
+studied in the end of the 1960s and the beginning of the 1970s. Since then they
+have become very popular and have proven to be both effective and efficient in
+many applications. \citep{rabiner1989tutorial}
+
 Think of a system that can be described as a being in one of $N$ states and any
 time. Let the set states be notated as $\mathcal{H} = {h_1, h_2, \dots, h_N}$.
-In figure~\ref{fig:markov-chain} an example of a with three states is shown. In
-some discrete time steps denoted $t = 1, 2, \dots$ the system changes state to
-a new state or back to the same state. For each state there is a certain
-probability of making a transition to any other state. This may be represented
-as a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
+In figure~\ref{fig:markov-chain} an example with three states is shown. In some
+discrete time steps denoted $t = 1, 2, \dots$ the system changes state to a new
+state or back to the same state. For each state there is a certain probability
+of making a transition to any other state. This may be represented as a matrix
+$A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
 $\sum_{j = 1}^N a_{ij} = 1$. This is called a Markov process, or more precisely
 for discrete-time and finite state spaces: a Markov chain. The non-zero
 transition probabilities is shown as arrows in

@@ -4,7 +4,11 @@
 \chapter{Method}
 \label{cha:method}
 
-\fxerror{Introduction to chapter.}
+This chapter describes the theory used and developed in this thesis. First, the
+definition of and notation for HMMs is written out as this is used extensively
+in the following sections. Next the classical Viterbi algorithm is described
+and it is described how it may be reformulated to make use of the byte pair
+encoding. Finally theory for the posterior decoding algorithm is described.
 
 \section{Notation}
 
@@ -58,7 +62,7 @@ space needed for two columns and the input sequence, that is $O(N + T)$. To
 fill out a cell in $\omega$ Viterbi maximizes over all cells in the previous
 column resulting in a running time of $O(N^2 T)$.
 
-\subsubsection{Backtracking}
+\subsection{Backtracking}
 \label{sec:backtracking-1}
 
 To obtain the most likely sequence of hidden states corresponding to the
@@ -342,27 +346,48 @@ ${ \left( A \oplus B \right)}_{ij} = \max_k \left( \log A_{ik} + \log B_{kj}
 \subsection{Compression Stopping Criterion}
 \label{sec:compr-stopp-crit}
 
-Using the byte-pair compression method a sequence can be compressed to a single
-character. However, as more symbols are added to the alphabet, the most common
-pair of symbols will be less and less frequent as the sequence gets more
-compressed. Hence, for the first iterations of the compression, a large speedup
-of Viterbi is expected, where the speedup of later iterations will result in a
-more modest speedup.
+Using the byte-pair compression method a sequence can be compressed until only
+a single character is present. However, as more symbols are added to the
+alphabet, the most common pair of symbols will be less and less frequent as the
+sequence gets more compressed. This means that the first iterations of the
+compression will make the sequence much shorter whereas the later iterations
+will not compress the sequence as effectively as the first. Hence, for the
+first iterations of the compression, a large increase in the speedup of Viterbi
+is expected, where the increase in speedup of later iterations will be more
+modest.
 
-\citet{sand2013ziphmmlib} describes a method on how to determine when the
-compression should stop for the forward algorithm, and it may be reused in the
-context of the Viterbi algorithm. The user supplies an estimate $e$ of how many
-times the compressed sequence is going to be used, as the more times the
-sequence is used, the better the compression should be. Furthermore the user
-specifies a parameter $N_{\text{min}}$ or a list of parameters
-$(N_{\text{min}}^1, N_{\text{min}}^2, \dots)$ that is the size of the model or
-models that will be used. In the compression phaze it is estimated how much
-time will be spent on the actual $e$ executions of the algorithm, by measuring
-the time it takes to do a matrix-matrix multiplication and a matrix-vector
-multiplication with matrices of size $N_{\text{min}}$. When the time it takes to make
-another iteration of the compression is larger than the estimate of the time
-saved in the execution of the algorithm, the compression is stopped.
-\fxerror{Elaborate.}
+\citet{sand2013ziphmmlib} describe a method on how to determine when the
+compression should stop for the forward algorithm. The user of the program
+supplies an estimate $e$ of how many times the compressed sequence is going to
+be used. For a low $e$ the algorithm should not spend too much time on
+compressing the sequence while for a high value of $e$, the algorithm can
+``afford'' spending more time on compression, since the time spent will be
+reearned again when running the actual algorithm. Furthermore the user
+specifies a parameter $N_{\text{min}}$ that is the number of states in the
+model that will be used. In the compression phaze it is estimated how much time
+will be spent on the actual $e$ executions of the actual algorithm, by
+measuring the time it takes to do a matrix-matrix multiplication and a
+matrix-vector multiplication with matrices of size $N_{\text{min}}$. Hence, it
+may be estimated how long it will take to execute the actual algorithm. When the
+time it takes to make another iteration of the compression is larger than the
+estimate of the time saved in the execution of the algorithm, the compression
+is stopped. If a single value of $N_{\text{min}}$ cannot be found a list of
+parameters $(N_{\text{min}}^1, N_{\text{min}}^2, \dots)$ may be specified and
+the input sequence will be compressed for each of these model sizes. If no
+$N_{\text{min}}$ parameter is provided the compression continues until the
+frequency of the most common pair is the same in two consequtive iterations.
+
+This method may be reused for the Viterbi algorithm. Instead of measuring the
+time it takes to do matrix-matrix multiplications and matrix-vector
+multiplications, the time measured for max-times multiplications is used.
+
+This simple algorithm does not take backtracking into account, since the time
+estimated is only for the computation of the likelihood. By letting the user
+specify whether backtracking is required, the time estimation could also
+involve an estimate on how much time will be spent on backtracking, by
+estimating the time it takes to allocate an array of size $T$ and
+``decompress'' \fxwarning{Decompress?} the compressed Viterbi path. This has
+not been implemented.
 
 \section{Classical Posterior Decoding}
 \label{sec:posterior-decoding-1}
@@ -644,14 +669,15 @@ found. The only thing missing for the computation is the substring for which
 $\alpha$ and $\beta$ should be computed.
 
 A simple way of doing this would be decompressing $Y_{k':l'}'$ to obtain
-$Y_{k:l}$, then compute columns corresponding to $Y_{k:l}$ and
-afterwards remove columns $[k, i)$ and $(l, n]$. Decompressing $Y_{k':l'}'$
-entirely might be inefficient though. If the compressed sequence $Y_{1:T'}'$ is
-much compressed, i.e.\ $T' \ll T$, the length of $Y_{k:l}$ will be much larger
-than $Y_{i:j}$. In the worst case of $T' = 1$, the decompression would result
-in the uncompressed sequence $Y_{1:T}$. Then and the algorithm will spend a lot
-of time computing columns and throwing these away afterwards. Hence, the
-decompression needs to be made smarter.
+$Y_{k:l}$, then compute columns corresponding to $Y_{k:l}$ and afterwards
+remove columns $[k, i)$ and $(l, n]$. Decompressing $Y_{k':l'}'$ entirely might
+be inefficient though. \fxwarning{Create much better description. E.g.\ pseudo
+  code for the simple decompression algorithm.} If the compressed sequence
+$Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the length of $Y_{k:l}$ will
+be much larger than $Y_{i:j}$. In the worst case of $T' = 1$, the decompression
+would result in the uncompressed sequence $Y_{1:T}$. Then and the algorithm
+will spend a lot of time computing columns and throwing these away
+afterwards. Hence, the decompression needs to be made smarter.
 
 Observe that only the symbols from index $[i,j]$ needs to be from the orignal
 alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
