@@ -622,14 +622,14 @@ table.
 
 To find the indicies $k$ and $l$ for the uncompressed sequence and the
 corresponding indicies $k'$ and $l'$ for the compressed sequence, a sorted
-mapping \texttt{orig\_index2new\_index} \fxwarning{Better name for mapping.}
-from uncompressed indices to compressed indices is created. In this example the
-map would consist of the mappings
-$1 \rightarrow 1, 3 \rightarrow 2, 7 \rightarrow 3$ and $10 \rightarrow 4$. To
-find the index $k$, a binary search is performed on the map to find the largest
-key less than $i$. The value corresponding to this key is the index to the
-column in the forward table of the compressed sequence that should be used as
-starting point for the forward computation of the uncompressed sequence.
+mapping \texttt{orig\_index2comp\_index} from uncompressed indices to
+compressed indices is created. In this example the map would consist of the
+mappings $1 \rightarrow 1, 3 \rightarrow 2, 7 \rightarrow 3$ and
+$10 \rightarrow 4$. To find the index $k$, a binary search is performed on the
+map to find the largest key less than $i$. The value corresponding to this key
+is the index to the column in the forward table of the compressed sequence that
+should be used as starting point for the forward computation of the
+uncompressed sequence.
 
 The mapping is computed as follows. First, another mapping
 \texttt{symbol2length} from each symbol in the new alphabet $\mathcal{O'}$ to
@@ -641,7 +641,7 @@ created using two existing symbols $o_i$ and $o_j$ the length of $o_k$ can be
 computed by using the map to get the the lengths of $o_i$ and $o_j$ and add
 these.
 
-Next, \texttt{orig\_index2new\_index} is computed by scanning through the
+Next, \texttt{orig\_index2comp\_index} is computed by scanning through the
 compressed sequence one symbol at a time while incrementing the corresponding
 index in the uncompressed sequence by using the map of lengths.
 
@@ -683,10 +683,10 @@ map. When a symbol $c$ that overlap $[i, j]$ is encountered $c$ is either
 appended to $Z$ if $c \in \mathcal{O}$ or it is split into a pair and added to
 the front of $Y$, such that the left symbol of that pair will be removed in the
 next iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$
-is encountered, the symbols index in $Z$ is saved, as it must be used later for
-computing the posterior decoding. If $c$ overlaps $[k, l]$ it is appended to
-$Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is done,
-i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
+is encountered, the index of that symbol in $Z$ is saved, as it must be used
+later for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is
+appended to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing
+is done, i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
 algorithm~\ref{alg:decompress}.
 
 \begin{algorithm}
@@ -736,13 +736,13 @@ algorithm equation~\eqref{eq:6} is used.
 \label{sec:running-time-2}
 
 As described the computation of the forward and backward tables, $\alpha$ and
-$\beta$, for the uncompressed subsequence depends on the tables, $\alpha'$ and
-$\beta'$, of the compressed sequence. If preprocessing/compression of the input
-string $Y$ is not included this takes $O(M' N^3 + N^2 T')$. Performing the
-binary search on the map to find the indicies $k, l, k'$ and $l'$ takes
-$O(\log T')$ time. Decompressing the subsequence takes time proportional to the
-length of the decompressed subsequence plus the length of the compressed, that
-is $O(j - i + \delta + T')$, where $\delta$ is the number of symbols in the
+$\beta$, for the uncompressed subsequence depends on the tables $\alpha'$ and
+$\beta'$ of the compressed sequence. If preprocessing/compression of the input
+string $Y$ is not included it takes time $O(M' N^3 + N^2 T')$ to
+compute. Performing the binary search on the map to find the indicies
+$k, l, k'$ and $l'$ takes $O(\log T')$ time. Decompressing the subsequence
+takes time proportional to the length of the decompressed subsequence, that is
+$O(j - i + \delta)$, where $\delta$ is the number of symbols in the
 intervals $[k, i)$ and $(j, l]$.  Computing $\alpha$ and $\beta$ takes time
 $O(M N^3 + N^2 (j - i + \delta))$.  Summing this up a running time of
 $O(M' N^3 + N^2 T' + N^2 (j - i + \delta))$ is obtained.
