@@ -1,7 +1,87 @@
-\chapter{Background and Related Work}
-\label{cha:backgr-relat-work}
+% chktex-file 24
+% chktex-file 44
 
-\fxwarning{Something about HMMs in general.}
+\chapter{Background}
+\label{cha:background}
+
+\fxnote{Meta text.}
+
+Hidden Markov models, from now on abbreviated HMMs, were first introduced and
+studied in the end of the 1960s and the beginning of the 1970s. Since then they
+have become very popular and have proven to be both effective and efficient in
+many applications. \fxnote{Move this to the section below?}
+
+\section{Hidden Markov Models}
+\label{sec:hidden-markov-models}
+
+Think of a system that can be described as a being in one of $N$ states and any
+time. Let the set states be notated as $\mathcal{H} = {h_1, h_2, \dots, h_N}$.
+In figure~\ref{fig:markov-chain} an example of a with three states is shown. In
+some discrete time steps denoted $t = 1, 2, \dots$ the system changes state to
+a new state or back to the same state. For each state there is a certain
+probability of making a transition to any other state. This may be represented
+as a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
+$\sum_{j = 1}^N a_{ij} = 1$. This is called a Markov process, or more precisely
+for discrete-time and finite state spaces: a Markov chain. The non-zero
+transition probabilities is shown as arrows in
+figure~\ref{fig:markov-chain}. The initial state, at time $t = 1$, is
+determined from a vector $\Pi = {(\pi_i)}_{1 \le i \le N}$ with
+$\sum_{i=1}^N \pi_i = 1$ being the probability of starting in each state.
+
+\begin{figure}
+  \centering
+  Figure here!
+  \caption{An example of a Markov chain.}
+  \label{fig:markov-chain}
+\end{figure}
+
+Having established the above system with $A$ and $\Pi$ given, one may ask
+questions like what the probability of observing a certain sequence of states
+$X_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example lets assume the
+model in figure~\ref{fig:markov-chain} is a model of the weather with $h_1$
+being rainy, $h_2$ being cloudy, and $h_3$ being sunny weather. The probability
+of a sequence of observations $X_{1:4} = x_1x_2x_3x_4$ with
+$x_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, may easily be computed
+by multiplying probabilities.
+
+The above formality is too limited for many applications, since the states do
+not correspond to the actual observable events. To overcome this problem a
+distinction between observables and states is made. The observables is made a
+probabilistic function of the state. Given
+$\mathcal{O} = {o_1, o_2, \dots, o_M}$ being a set of $M$ observables an
+emission matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$ with
+$\sum_{j=1}^M b_{ij} = 1$ is defined, where $b_{ij}$ is the probability of
+observing $o_j$ when the system is in state $h_i$. The set of states,
+$\mathcal{H}$, may now be called ``hidden'' states since they are not
+observable. An example of an HMM is shown in
+figure~\ref{fig:hidden-markov-model}. The figure is similar to
+figure~\ref{fig:markov-chain} except for the probabilities added for each
+hidden state.
+
+\begin{figure}
+  \centering
+  More figure here!
+  \caption{An example of a hidden Markov model.}
+  \label{fig:hidden-markov-model}
+\end{figure}
+
+For modelling weather we can now use the fact that the observables (rainy,
+cloudy, and sunny weather) depend on the air preasure. This may be modeled as
+$h_1$ being low preasure, $h_2$ being high preasure, $o_1$ being rainy, $o_2$
+being cloudy, and $o_3$ being sunny weather. As before the probability of a
+sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
+can be found.
+
+Be problem scetched above of finding to joint probability of a sequence of
+observations $Y_{1:T}$ is solved by the Forward algorithm. Another problem
+addressed in this thesis is to find the \emph{most likely} sequence of hidden
+states $X_{1:T}^* = x_1^*, x_2^*, \dots, x_T^*$ emitting $Y_{1:T}$. This is
+solved by the Viterbi algorithm. Finally, the posterior decoding algorithm
+solves the problem of finding the most likely state to be in at each timestep
+$t$. This is similar to the Viterbi decoding except that the sequence of hidden
+states may not be valid according to the model.
+
+\section{Related Work}
 
 \citet{lifshits2009speeding} present a method for speeding up the dynamic
 programming algorithms used with HMMs, namely the forward-backward algorithms
