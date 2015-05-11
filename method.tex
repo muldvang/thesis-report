@@ -582,14 +582,14 @@ decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
 $M$ typically is small, so it is expected that the assymptotic running times of
 the two algorithms in practice are comparable.
 
-\section{Subsequence Posterior Decoding}
+\section{Subpath Posterior Decoding}
 
 In the last section it was discussed that the posterior decoding for a sequence
 cannot be done assymptotically faster using the byte-pair compression. However,
 if only parts of the posterior decoding path are needed instead of the entire
 path, a speedup may be obtained.
 
-For subsequence posterior decoding not only an input sequence $Y_{1:T}$ and a
+For subpath posterior decoding not only an input sequence $Y_{1:T}$ and a
 model $\lambda$ is given as input, but also two indexes $i,j \in
 [1:T], i \ge j$. Instead of returning the posterior decoding path $X_{1:T}$ the
 subpath $X_{i:j}$ is returned.
@@ -655,7 +655,7 @@ found. The only thing missing for the computation is the substring for which
 $\alpha$ and $\beta$ should be computed.
 
 A simple way of doing this would be decompressing $Y_{k':l'}'$ to obtain
-$Y_{k:l}$, then compute columns corresponding to this subsequence and
+$Y_{k:l}$, then compute columns corresponding to $Y_{k:l}$ and
 afterwards remove columns $[k, i)$ and $(l, n]$. Decompressing $Y_{k':l'}'$
 entirely might be inefficient though. If the compressed sequence $Y_{1:T'}'$ is
 much compressed, i.e.\ $T' \ll T$, the length of $Y_{k:l}$ will be much larger

@@ -514,10 +514,10 @@ has a running time that is very comparable to the classical implementation of
 posterior decoding. For scenarios with large models and sequences the zipHMMlib
 is faster whereas the classical algorithm is a better for small models.
 
-\section{Subsequence Posterior Decoding}
+\section{Subpath Posterior Decoding}
 
-In this section experiments on the subsequence posterior decoding is
-made. Recall that subsequence posterior decoding also takes two indeces $i$ and
+In this section experiments on the subpath posterior decoding is
+made. Recall that subpath posterior decoding also takes two indeces $i$ and
 $j$ as input an only returns the posterior decoding for the subsequence
 $Y_{i:j}$.
 
@@ -550,7 +550,7 @@ this. \fxwarning{Make experiment for decompression?}
 
 \subsection{Comparison to the Classical Algorithm}
 
-The subsequence posterior decoding algorithm has been compared to the classical
+The subpath posterior decoding algorithm has been compared to the classical
 posterior decoding algorithm. For the classical algorithm the entire path as
 been found and then the path from index $i$ to $j$ has been extracted.
 
@@ -566,7 +566,7 @@ For the first experiment the length of the substring for which to compute the
 posterior decoding has been varied for random input sequences of length 10000
 and a model with 16 states.
 
-The running time of the subsequence posterior decoding is much dependent on the
+The running time of the subpath posterior decoding is much dependent on the
 size of the size of the interval for which to compute the path, i.e.\
 $j-i$. The value of $\delta$ depends heavily on the data and the
 compression. In general, for an increasing compression ratio the value of
