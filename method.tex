@@ -185,9 +185,10 @@ occurences. $o_i o_j$ is substituded by a new symbol $o_{M + 1}$ and the length
 of $Y_{1:T}$ is thereby reduced by $n_{o_i o_j}$. All $n_{o_i o_j}$ occurences
 of $C_{o_i} \odot C_{o_j}$ in equation~\eqref{eq:2} may be replaced by the new
 matrix
-\begin{equation*}
+\begin{equation}
+  \label{eq:7}
   C_{o_{M + 1}} = C_{o_i} \odot C_{o_j}.
-\end{equation*}
+\end{equation}
 Hence, the number of matrix multiplications is reduced by $n_{o_i o_j}$. The
 byte-pair encoding continues until $n_{o_i o_j}$ becomes too small to give a
 speed up. See section~\ref{sec:compr-stopp-crit} for a discussion of when this
@@ -226,9 +227,9 @@ $o_{M + 1}, \dots, o_{M' - M}$ defined as
     C_{l_i}(m, k) \odot C_{r_i}(k, n)
   \right).
 \end{equation*}
-This is looks like the definition of the $C_{o_i}$ matrices, but instead of
-storing the maximum value, the state that results in the maximum value is
-stored.
+This is looks like the definition of the $C_{o_i}$ matrices from
+equation~\eqref{eq:7}, but instead of storing the maximum value, the state that
+results in the maximum value is stored.
 
 Now, for each occurence of a new symbol $o_{M + i} = (l_i, r_i)$ where
 $l_i, r_i \in \mathcal{O}$ in $Y_{1:T'}'$ we know the start state $s_l$ and the
@@ -237,7 +238,7 @@ was emitted and $s_r$ is the state after $r_i$ was emitted. Hence, we need to
 find the most likely state where $l_i$ is emitted. This state is easily
 obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
 or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
-recursively.
+recursively to obtain $S$.
 
 Since $S'$ may be found in two different ways as discussed in
 section~\ref{sec:backtracking-1}, three different variations of the Viterbi
@@ -388,7 +389,7 @@ estimated is only for the computation of the likelihood. By letting the user
 specify whether backtracking is required, the time estimation could also
 involve an estimate on how much time will be spent on backtracking, by
 estimating the time it takes to allocate an array of size $T$ and
-``decompress'' \fxwarning{Decompress?} the compressed Viterbi path. This has
+infer the Viterbi path $S$ from the compressed path $S'$. This has
 not been implemented.
 
 \section{Classical Posterior Decoding}
