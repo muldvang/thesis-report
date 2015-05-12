@@ -132,8 +132,11 @@ where $\odot$ is the max-times matrix multiplication defined as ${(A \odot
   B)}_{ij} = \max_k A_{ik} \cdot B_{kj}$.
 
 The classical Viterbi algorithm corresponds to computing this from right to
-left, but since matrix multiplication and max-times matrix multiplication is
-associative the product may be computed in any order.
+left. This will also be most efficient, since $C_1$ is a vector that when
+multiplied by the matrix $C_2$ will result in a new vector. Hence, computing
+$\omega_t$ from left to right will result in $t$ matrix-matrix multiplications,
+while computing it from right to left will result in $t$ matrix-vector
+multiplications that are more effecient to compute.
 
 Backtracking is achieved in the same way as for the classical Viterbi algorithm
 as described in section~\ref{sec:class-viterbi-algor}.
@@ -177,6 +180,7 @@ replaced by used of characters or intergers. For example, the input sequence
 next iteration it would be encoded into 344 by substituding 32 by 4 etc.
 
 \subsection{Using Byte-Pair Encoding to Speed Up Viterbi}
+\label{sec:using-byte-pair}
 
 The Viterbi algorithm achieves a speed up using byte-pair encoding in the
 following way. Let $o_i o_j \in O \times O$ be the most frequently occuring
@@ -191,24 +195,37 @@ matrix
 \end{equation}
 Hence, the number of matrix multiplications is reduced by $n_{o_i o_j}$. The
 byte-pair encoding continues until $n_{o_i o_j}$ becomes too small to give a
-speed up. See section~\ref{sec:compr-stopp-crit} for a discussion of when this
-is. The result of this is a new sequence $Y_{1:T'}'$ over the new alphabet
+speed up. This is discussed later. The result of this is a new sequence
+$Y_{1:T'}'$ over the new alphabet
 $\mathcal{O}' = \{o_1, o_2, \dots, o_M, o_{M + 1} = (l_1, r_1), o_{M + 2} =
 (l_2, r_2), \dots, o_{M'} = (l_{M' - M}, r_{M' - M}) \}$,
 where $l_i, r_i \in \{ o_1, o_2, \dots, o_{i - 1} \}$.
 
-This method can be split up into two. First the preprocessing consisting the of
-encoding the sequence as just discussed is done. As the encoding of the
-sequence is independent of the HMM the encoded sequence may be saved to the
-disk for later use. The second part consist of the actual Viterbi algorithm
-and can be split into two stages. The first stage is the computation of
-$C_{o_i}$ for $i = 1, \dots, M$ and then $C_{o_i}$ for increasing
-$i = M + 1, \dots, M'$ by $C_{o_i} = C_{l_i} \odot C_{l_r}$. In the second
-stage $\omega_T$ is computed by
+This method can be split up into two separate computations. First the
+preprocessing consisting the of encoding the sequence as just discussed is
+done. As the encoding of the sequence is independent of the HMM the encoded
+sequence may be saved to the disk for later use. The second part consist of the
+actual Viterbi algorithm and can be split into two stages. The first stage is
+the computation of $C_{o_i}$ for $i = 1, \dots, M$ and then $C_{o_i}$ for
+increasing $i = M + 1, \dots, M'$ by $C_{o_i} = C_{l_i} \odot C_{l_r}$. In the
+second stage $\omega_T$ is computed by
 \begin{equation}
   \label{eq:3}
   \omega_T = C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot C_{y'_2} \odot C_1.
 \end{equation}
+
+A illustration of this method is given in
+figure~\ref{fig:exploiting-repetitions}. As seen, when the computation has
+finished, only a subset of the columns of $\alpha$ is computed.
+
+\begin{figure}
+  \centering
+  Figure from \citet{sand2013ziphmmlib} here. Also draw the columns that are
+  not computed.
+  \caption{Exploiting repetitions in the observed sequence to speed up the
+    Viterbi algorithm.}
+  \label{fig:exploiting-repetitions}
+\end{figure}
 
 \subsection{Backtracking}
 \label{sec:backtracking}
@@ -216,11 +233,12 @@ stage $\omega_T$ is computed by
 Obtaining the Viterbi path $S = s_1, s_2, \dots, s_T$ of $Y_{1:T}$ is no longer
 as simple as for the classical Viterbi algorithm. Using the standard
 backtracking methods, only the Viterbi path $S' = s_1', s_2', \dots, s_{T'}'$
-of the compressed sequence $Y'_{1:T'}$ may be found. However, it turns out that
-$S$ can be inferred from $S'$ since $S'$ is a subsequence of $S$ as described
-by \citet{lifshits2009speeding}. To do this a set of matrices $R_{o_i}$ is kept
-along the $C_{o_i}$ matrices for each of the new symbols
-$o_{M + 1}, \dots, o_{M' - M}$ defined as
+of the compressed sequence $Y'_{1:T'}$ may be found. The path corresponds to
+the columns in figure~\ref{fig:exploiting-repetitions} that have been
+computed. It turns out that $S$ can be inferred from $S'$ since $S'$
+is a subsequence of $S$ as described by \citet{lifshits2009speeding}. To do
+this a set of matrices $R_{o_i}$ is kept along the $C_{o_i}$ matrices for each
+of the new symbols $o_{M + 1}, \dots, o_{M' - M}$ defined as
 \begin{equation*}
   R_{o_{M + i}}(m, n) = \argmax_k
   \left(
@@ -239,6 +257,15 @@ find the most likely state where $l_i$ is emitted. This state is easily
 obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
 or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
 recursively to obtain $S$.
+
+This is illustrated in figure~\ref{fig:infering-viterbi-path}.
+
+\begin{figure}
+  \centering
+  Figure 3 here.
+  \caption{Infering the Viterbi path $S_T$ from the partial path $S_{T'}'$.}
+  \label{fig:infering-viterbi-path}
+\end{figure}
 
 Since $S'$ may be found in two different ways as discussed in
 section~\ref{sec:backtracking-1}, three different variations of the Viterbi
@@ -398,14 +425,16 @@ not been implemented.
 The Viterbi algorithm described above find the most likely path of hidden
 states through the HMM emitting the input sequence. Another kind of decoding is
 called posterior decoding. Posterior decoding finds the most likely state at
-the time the symbol is emitted. Formally the most likely state $s_t$ being in
-when emitting symbol $Y_t$ may be written as
+the time the symbol is emitted. Formally the most likely state
+$s_t \in \mathcal{H}$ being in when emitting symbol $y_t$ may be written as
+\fxwarning{Rename $s_t$ to something else to avoid confusion with Viterbi
+  path?}
 \begin{equation*}
-  s_t = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t | Y_{1:T} \right).
+  s_t = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t | Y_{1:T}, \lambda \right).
 \end{equation*}
-Hence, the posterior decoding path $X_{1:T}$ is a sequence of hidden states
-that might not be a valid path according to the transitions of the
-model. \fxnote{So\dots Why use it/what is it used for?}
+The posterior decoding $X_{1:T}$ is a sequence of hidden states that might not
+be a valid path according to the transitions of the model, like the Viterbi
+decoding, but it may still be useful for some applications.
 
 The posterior decoding may be efficiently computed using the forward-backward
 algorithms. The forward-backward algorithms are comparible to the Viterbi
@@ -430,26 +459,28 @@ is filled. As seen this is very similar to the Viterbi algorithm. Instead of
 taking the maximum over all previous states the sum is computed. Computing
 $\alpha$ may be done recursively column by column from left to right like the
 Viterbi algorithm using
-\begin{equation*}
+\begin{equation}
+  \label{eq:8}
   \begin{aligned}
     \alpha_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
     \alpha_t(x_t) &= b_{x_t, y_t} \sum_{x_{t - 1}} \alpha_{t - 1}(x_{t - 1})
     a_{x_{t - 1}, x_t}.
   \end{aligned}
-\end{equation*}
+\end{equation}
 
 Where the forward algorithm computes the table from left to right, i.e.\
 it computes the joint probability of emitting $y_t$ after having emitted
 $y_{1:t-1}$, the backward algorithm computes the joint probability of emmiting
 $y_t$ and then emitting $y_{t+1:T}$. This corresponds to filling the table from
 right to left. The backward table is called $\beta$. The recursion may be written as
-\begin{equation*}
+\begin{equation}
+  \label{eq:9}
   \begin{aligned}
     \beta_T(x_T) &= (1, 1, \dots, 1) \\
     \beta_t(x_t) &= b_{x_t, y_t} \sum_{x_{t + 1}} \beta_{t + 1}(x_{t + 1})
     a_{x_{t + 1}, x_t}.
   \end{aligned}
-\end{equation*}
+\end{equation}
 The rightmost column is filled with 1's, since the initial state is assumed
 given.
 
@@ -504,8 +535,8 @@ Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
 matrix multiplications no longer are max times multiplications but normal
 matrix multiplications.
 
-The running time and space consumption is equal to the running time and space
-consumption of the Viterbi algorithm.
+The assymptotic running time and space consumption is equal to the running time
+and space consumption of the Viterbi algorithm.
 
 \subsection{Numerical Stability}
 
@@ -522,12 +553,17 @@ that is they are scaled by the sum of the entries in the matrix. This may be
 reused in the backward algorithm as well, as the $C$ matrices are computed in
 the same way.
 
-For the computation of the forward table, $\alpha$, a similar approach is
-used. Each column is normalized by scaling with the sum of the entries. Since
-the magnitudes of the forward table and backward table entries are comparable,
-it is reasonable to use the same scalars in the computation of the backward
-table in equation~\eqref{eq:5}. \fxwarning{Isn't it also required that the scalars are equal for the
-  posterior decoding.}
+For the computation of the forward table, $\alpha$, the columns underflow when
+$T$ gets large, since the computation is defined by multiplications of
+probabilities. A similar approach is used to overcome this problem. Each column
+is normalized by scaling with the sum of the entries. This makes the forward
+table computation numerically stable. Since the magnitudes of the entries in
+the forward table and backward table entries are comparable, it is reasonable
+to use the scalars from the forward table in the computation of the backward
+table in equation~\eqref{eq:5}. Using the same scalars is also required for the
+result in equation~\eqref{eq:6} to be correct, since the use of different
+scalars for columns in the forward and backward tables could give arbitrary
+results.
 
 
 
@@ -540,12 +576,12 @@ section~\ref{sec:expl-repet} but do implement any kind of backtracking. Using
 the same method it is easy to also exploit repetetions in the backward
 algorithm.
 
-To compute the posterior decoding path of the uncompressed sequence from the
+To compute the posterior decoding of the uncompressed sequence from the
 forward and backward tables of the compressed sequence, either (1) the
 posterior decoding sequence may be computed using the partial path obtained
 from the compressed sequence, or (2) the entire forward and backward tables of
 the uncompressed sequence are required. For both approaches the running time of
-computing 1 state in the posterior decoding path must take strictly less than
+computing 1 state in the posterior decoding must take strictly less than
 $O(N^2)$ time to gain a speedup, since one else might as well compute the
 forward and backward tables without compressing the input sequence. The two
 approaches are now discussed in turn.
@@ -584,8 +620,13 @@ approaches are now discussed in turn.
 \begin{figure}
   \centering
   \input{figures/forward_table.tex}
-  \caption{Computing the full forward table from the partial table. The gray
-    boxes indicate columns filled during the when computing the table for the
+  \caption{Computing the full forward table from the partial table. Note that
+    in figures~\ref{fig:exploiting-repetitions}
+    and~\ref{fig:infering-viterbi-path} where the sequence was written from
+    right to left, i.e.\ the indices were increasing from right to left. In
+    this illustration the indicies in this illustration are increasing from
+    left to right, since it is more natural to think about. The gray boxes
+    indicate columns filled during the when computing the table for the
     compressed sequence. The white columns needs to be computed in less than
     $O(N^2)$ time per column.}
   \label{fig:full-forward-table}
@@ -593,7 +634,7 @@ approaches are now discussed in turn.
 
 Unfortunately no solution to this problem has been found. Hence, the posterior
 decoding cannot be speeded up by exploiting repetitions in the observed
-sequence. The running time of computing the posterior decoding path is then
+sequence. The running time of computing the posterior decoding is then
 $O(M N^3 + TN^2)$, which is assymptotically worse than the classical posterior
 decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
 $M$ typically is small, so it is expected that the assymptotic running times of
@@ -603,23 +644,24 @@ the two algorithms in practice are comparable.
 
 In the last section it was discussed that the posterior decoding for a sequence
 cannot be done assymptotically faster using the byte-pair compression. However,
-if only parts of the posterior decoding path are needed instead of the entire
+if only parts of the posterior decoding are needed instead of the entire
 path, a speedup may be obtained.
 
 For subpath posterior decoding not only an input sequence $Y_{1:T}$ and a
 model $\lambda$ is given as input, but also two indexes $i,j \in
-[1:T], i \ge j$. Instead of returning the posterior decoding path $X_{1:T}$ the
+[1:T], i < j$. Instead of returning the posterior decoding $X_{1:T}$ the
 subpath $X_{i:j}$ is returned.
 
-Recall from section (?)\fxwarning{Provide reference} that the columns of the
-forward and backward tables of the compressed sequence are a subset of columns
-in the tables of the uncompressed sequence. Furthermore, recall that a column
-may be computed using the column emmediately to the left or right for the
-forward and backward algorithms respectively. Using this, the forward and
-backward tables $\alpha$ and $\beta$ of the subsequence $Y_{i:j}$ may be found
-using existing columns from the forward and backward tables of the compressed
-sequence. An example of this situation is illustrated in
-figure~\ref{fig:subsequence-posterior}.
+Recall from section~\ref{sec:using-byte-pair} that the columns of the forward
+and backward tables, $\alpha'$ and $\beta'$ of the compressed sequence
+$Y_{1:T'}'$ are a subset of columns in the tables, $\alpha$ and $\beta$, of
+$Y_{1:T}$. Furthermore, recall that a column may be computed using the column
+emmediately to the left or right for the forward and backward algorithms
+respectively as seen in equation~\eqref{eq:8} and~\eqref{eq:9}. Using this, the
+columns $i$ to $j$ of the forward and backward tables, $\alpha$ and $\beta$,
+corresponding to the subsequence $Y_{i:j}$ may be found using existing columns
+from the forward and backward tables, $\alpha'$ and $\beta'$. An example of
+this situation is illustrated in figure~\ref{fig:subsequence-posterior}.
 
 \begin{figure}
   \centering
@@ -627,19 +669,19 @@ figure~\ref{fig:subsequence-posterior}.
   \caption{Illustration of the computation of the forward (or backward) table
     for a substring of the uncompressed sequence given by indices $i$ to $j$,
     given that the forward table for the compressed sequence, shown in grey,
-    has been computed in advance.}
+    have been computed in advance.}
   \label{fig:subsequence-posterior}
 \end{figure}
 
 Assume that the forward table $\alpha'$ and the backward table $\beta'$ for the
-compressed sequence has been computed. This is shown as grey columns.
+compressed sequence has been computed. This is shown as grey columns. To
+compute $\alpha$ and $\beta$ from index $i$ to $j$, the computed column at some
+index $k$ to the left of $i$ may be used as a starting point for the forward
+computation. In this example that is index 3 that corresponds to the column at
+index 2 in $\alpha'$. Likewise, some column $l$ with $l$ being to the right of
+$j$ can be used as a starting point for the computation of the backward table.
 
-To compute $\alpha$ and $\beta$ for $Y_{i:j}$, the computed column at some index
-$k$ to the left of index $i$ may be used as a starting point for the forward
-computation. In this example that is column 2 when using indexes from the
-compressed sequence. Likewise, some column $l$ with $l$ being to the right of
-$j$ can be used as a starting point for the computation of the backward
-table.
+\subsubsection{Finding the Starting Point Columns}
 
 To find the indicies $k$ and $l$ for the uncompressed sequence and the
 corresponding indicies $k'$ and $l'$ for the compressed sequence, a sorted
@@ -647,40 +689,50 @@ mapping \texttt{orig\_index2comp\_index} from uncompressed indices to
 compressed indices is created. In this example the map would consist of the
 mappings $1 \rightarrow 1, 3 \rightarrow 2, 7 \rightarrow 3$ and
 $10 \rightarrow 4$. To find the index $k$, a binary search is performed on the
-map to find the largest key less than $i$. The value corresponding to this key
-is the index to the column in the forward table of the compressed sequence that
-should be used as starting point for the forward computation of the
-uncompressed sequence.
+map to find the largest key less than or equal to $i$. The value corresponding
+to $k$ is $k'$. Likewise $l$ and $l'$ may be found by finding the smallest key
+larger than or equal to $j$.
 
-The mapping is computed as follows. First, another mapping
-\texttt{symbol2length} from each symbol in the new alphabet $\mathcal{O'}$ to
-its original length is created. This may be done iteratively by inserting first
-inserting each original symbol $o_1, \dots, o_M \in \mathcal{O}$ with length 1
-into the map. Next, $o_{M+1}, o_{M+2}, \dots, o_{M'} \in \mathcal{O'}$ is
-inserted in the specified order. As each new symbol $o_k \in \mathcal{O'}$ is
-created using two existing symbols $o_i$ and $o_j$ the length of $o_k$ can be
-computed by using the map to get the the lengths of $o_i$ and $o_j$ and add
-these.
+To compute this mapping, another mapping \texttt{symbol2length} from each
+symbol in the new alphabet $\mathcal{O'}$ to its original length is
+created. This may be done iteratively by inserting first inserting each
+original symbol $o_1, \dots, o_M \in \mathcal{O}$ with length 1 into the
+map. Next, $o_{M+1}, o_{M+2}, \dots, o_{M'} \in \mathcal{O'}$ is inserted in
+the specified order. As each new symbol $o_c \in \mathcal{O'}$ is created using
+two existing symbols $o_a$ and $o_b$ the length of $o_c$ can be computed by
+using the map to get the the lengths of $o_a$ and $o_b$ and add these two
+together.
 
-Next, \texttt{orig\_index2comp\_index} is computed by scanning through the
+Now \texttt{orig\_index2comp\_index} is computed by scanning through the
 compressed sequence one symbol at a time while incrementing the corresponding
 index in the uncompressed sequence by using the map of lengths.
 
-Now the first column of $\alpha$ is easily found by finding $k'$ using a binary
-search as just discussed. Similarly the last column of $\beta$ can be
+The starting columns for the forward and backward algorithms have now been
 found. The only thing missing for the computation is the substring for which
-$\alpha$ and $\beta$ should be computed.
+to compute the following (for forward) or preceding (for backward) columns.
 
-A simple way of doing this would be decompressing $Y_{k':l'}'$ to obtain
-$Y_{k:l}$, then compute columns corresponding to $Y_{k:l}$ and afterwards
-remove columns $[k, i)$ and $(l, n]$. Decompressing $Y_{k':l'}'$ entirely might
-be inefficient though. \fxwarning{Create much better description. E.g.\ pseudo
-  code for the simple decompression algorithm.} If the compressed sequence
-$Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the length of $Y_{k:l}$ will
-be much larger than $Y_{i:j}$. In the worst case of $T' = 1$, the decompression
-would result in the uncompressed sequence $Y_{1:T}$. Then and the algorithm
-will spend a lot of time computing columns and throwing these away
-afterwards. Hence, the decompression needs to be made smarter.
+\subsubsection{Finding the Substring}
+
+The simplest algorithm for finding a substring for which to compute the forward
+and backward tables, is to decompress $Y_{k':l'}'$ to obtain $Y_{k:l}$. This
+may be done by replacing the symbols $o_{M + 1}, \dots, o_{M'}$ by symbols from
+the original alphabet $\mathcal{O}$. An example of this algorithm is shown in
+algorithm~\ref{alg:simple-decompress}. The $\alpha$ and $\beta$ may be found by
+computing the columns corresponding to $Y_{k:l}$ and afterwards remove columns
+$[k, i)$ and $(l, n]$.
+
+\begin{algorithm}
+  \caption{Simple decompression algorithm.}
+  \label{alg:simple-decompress}
+  Algoritme 4 her!
+\end{algorithm}
+
+Decompressing $Y_{k':l'}'$ entirely might be inefficient though. If the
+compressed sequence $Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the
+length of $Y_{k:l}$ may be much larger than $Y_{i:j}$. In the worst case of
+$T' = 1$, the decompression would result in the uncompressed sequence
+$Y_{1:T}$. Hence, the algorithm will spend a lot of time computing columns that
+is thrown away afterwards. The decompression needs to be made smarter.
 
 Observe that only the symbols from index $[i,j]$ needs to be from the orignal
 alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
@@ -688,37 +740,37 @@ new alphabet, since each column in the these parts of $\alpha$ and $\beta$ are
 not needed for the posterior decoding computation. Hence, when decompressing
 $Y_{k':l'}'$ symbols that correspond to uncompressed symbols in the interval
 $[k, i)$ should not be decompressed and left as compressed symbols. Likewise,
-symbols corresponding to the interval $(j, l]$ should not be
-decompressed. Symbols corresponding to uncompressed symbols that overlap
-$[i, j]$ should be decompressed. The partially decompressed sequence $Z$ will
-then contain some symbols from $\mathcal{O'}$ a the beginning, then some
-symbols from $\mathcal{O}$ in the middle, being the symbols $Y_{i:j}$, and the
-some symbols from $\mathcal{O'}$ in the end.
+symbols corresponding to the interval $(j, l]$ should not be decompressed. As
+before, symbols corresponding to uncompressed symbols that overlap $[i, j]$
+should be decompressed. If this is done, the partially decompressed sequence
+$Z$ will then contain some symbols from $\mathcal{O'}$ at the beginning, then
+some symbols from $\mathcal{O}$ in the middle being the symbols $Y_{i:j}$, and
+then some symbols from $\mathcal{O'}$ again in the end.
 
 An algorithm for doing this takes as input a compressed sequence $Y'$ and the
 indicies $i, j, k, l, k'$ and $l'$. The symbols of substring $Y_{k':l'}'$ is
 pushed to a stack $Y^S$, such that $Y_{l'}'$ is at the bottom and $Y_{k'}'$ at
 the top. The algorithm may be implemented iteratively, by popping symbols one
-by one from $Y^S$, while the corresponding uncompressed index into the
-uncompressed sequence $Y$ is maintained by using the \texttt{symbol2length}
-map. When a symbol $c$ that overlap $[i, j]$ is encountered $c$ is either
-appended to $Z$ if $c \in \mathcal{O}$ or it is split into a pair and added to
-the front of $Y$, such that the left symbol of that pair will be removed in the
-next iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$
-is encountered, the index of that symbol in $Z$ is saved, as it must be used
-later for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is
-appended to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing
-is done, i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
+by one from $Y^S$, while the corresponding index into the uncompressed sequence
+$Y$ is maintained by using the \texttt{symbol2length} map. When a symbol $c$
+that overlap $[i, j]$ is encountered $c$ is either appended to $Z$ if
+$c \in \mathcal{O}$ or it is split into a pair and pushed to of $Y^S$,
+such that the left symbol of that pair will be popped in the next
+iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is
+encountered, the index of that symbol in $Z$ is saved, as it is used later
+for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is appended
+to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is done,
+i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
 algorithm~\ref{alg:decompress}.
 
 \begin{algorithm}
   \caption{Partially decompress the compressed sequence.}
   \label{alg:decompress}
   \begin{algorithmic}[1]
-    \Procedure{decompress\_substring}{$Y, i, j, k, l, k', l'$}
+    \Procedure{decompress\_substring}{$Y', i, j, k, l, k', l'$}
         \State{String $Z \gets $ nil}
         \State{Stack $Y^S \gets $ nil}
-        \State{Push $Y_{l'}, \dots, Y_{k'}$ to $Y^S$}
+        \State{Push $Y_{l'}', \dots, Y_{k'}'$ to $Y^S$}
         \State{start\_index $\gets$ nil}
         \State{index $\gets k - (\text{symbol2length[}Y^S\text{.top()]} - 1)$}
         \While{$Y^S$ is not empty}
@@ -734,18 +786,23 @@ algorithm~\ref{alg:decompress}.
                 \Else{}
                     \State{$c_l, c_r \gets$ get\_pair($c$)}
                     \State{Push $c_r, c_l$ to $Y^S$}
-                    \State{\textbf{continue}}
+                    \State{\textbf{continue}} \Comment{Don't update index}
                 \EndIf{}
             \ElsIf{$(\text{index} \le k \land \text{next\_index} > k) \lor
                        (\text{index} > k \land \text{index} \le l)$}
                 \State{$Z$.append($c$)} \Comment{$c$ overlaps $[k, l]$}
             \EndIf{}
-            \State{index $\gets$ next\_index}
+            \State{index $\gets$ next\_index} \Comment{Update index}
         \EndWhile{}
         \State{\Return{$Z$, start\_index}}
     \EndProcedure{}
 \end{algorithmic}
 \end{algorithm}
+
+This algorithm is in many cases much more effecient for very compressed
+sequences. \fxwarning{Make some kind of analysis? $O(\min \left\{ (l - k) \log
+    T, T \right\} )$. Observation: The number of parents can be at most 0.5
+  times the number of children + 2.}
 
 In the previous paragraphs the start columns from $\alpha'$ and $\beta'$, that
 is the columns at index $k'$ and $l'$ respectively, have been found. There are
