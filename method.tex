@@ -725,7 +725,16 @@ $[k, i)$ and $(l, n]$.
 \begin{algorithm}
   \caption{Simple decompression algorithm.}
   \label{alg:simple-decompress}
-  Algoritme 4 her!
+  \begin{algorithmic}[1]
+    \Procedure{decompress\_substring}{$Y', i, j, k, l, k', l'$}
+        \State{String $Z \gets Y_{k':l'}'$}
+        \For{$c = M'$ \textbf{down to} $M + 1$}
+          \State{$o_l, o_r \gets $ get\_pair($o_c$)}
+          \State{Replace $o_c$ by $o_lo_r$ in $Z$}
+        \EndFor{}
+        \State{\Return{$Z$}}
+    \EndProcedure{}
+  \end{algorithmic}
 \end{algorithm}
 
 Decompressing $Y_{k':l'}'$ entirely might be inefficient though. If the
@@ -799,7 +808,7 @@ algorithm~\ref{alg:decompress}.
         \EndWhile{}
         \State{\Return{$Z$, start\_index}}
     \EndProcedure{}
-\end{algorithmic}
+  \end{algorithmic}
 \end{algorithm}
 
 This algorithm is much more effecient for very compressed sequences.
