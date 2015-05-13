@@ -497,8 +497,7 @@ a constant result in the formula
   s_t = \argmax_{x_t \in \mathcal{H}} \alpha(x_t) \beta(x_t).
 \end{equation}
 
-\section{The Forward-Backward Algorithm as Linear Algebra}
-\fxnote{Section heading look ugly in page header.}
+\section{Posterior Decoding as Linear Algebra}
 
 The main part of the posterior decoding algorithm described in the previous
 section is computing the forward and backward tables. Once this is done it is
@@ -537,6 +536,8 @@ matrix multiplications.
 
 The assymptotic running time and space consumption is equal to the running time
 and space consumption of the Viterbi algorithm.
+
+\fxerror{Describe that the same approach as for classical posterior decoding is used.}
 
 \subsection{Numerical Stability}
 
@@ -681,7 +682,7 @@ computation. In this example that is index 3 that corresponds to the column at
 index 2 in $\alpha'$. Likewise, some column $l$ with $l$ being to the right of
 $j$ can be used as a starting point for the computation of the backward table.
 
-\subsubsection{Finding the Starting Point Columns}
+\subsubsection{Starting Point Columns}
 
 To find the indicies $k$ and $l$ for the uncompressed sequence and the
 corresponding indicies $k'$ and $l'$ for the compressed sequence, a sorted
@@ -711,7 +712,7 @@ The starting columns for the forward and backward algorithms have now been
 found. The only thing missing for the computation is the substring for which
 to compute the following (for forward) or preceding (for backward) columns.
 
-\subsubsection{Finding the Substring}
+\subsubsection{Substring}
 
 The simplest algorithm for finding a substring for which to compute the forward
 and backward tables, is to decompress $Y_{k':l'}'$ to obtain $Y_{k:l}$. This
@@ -732,7 +733,9 @@ compressed sequence $Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the
 length of $Y_{k:l}$ may be much larger than $Y_{i:j}$. In the worst case of
 $T' = 1$, the decompression would result in the uncompressed sequence
 $Y_{1:T}$. Hence, the algorithm will spend a lot of time computing columns that
-is thrown away afterwards. The decompression needs to be made smarter.
+is thrown away afterwards, and the running time is $O(M' N^3 + N^2 T)$ which is
+not an improvement over the classical posterior decoding .The decompression
+needs to be made smarter.
 
 Observe that only the symbols from index $[i,j]$ needs to be from the orignal
 alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
@@ -754,13 +757,13 @@ the top. The algorithm may be implemented iteratively, by popping symbols one
 by one from $Y^S$, while the corresponding index into the uncompressed sequence
 $Y$ is maintained by using the \texttt{symbol2length} map. When a symbol $c$
 that overlap $[i, j]$ is encountered $c$ is either appended to $Z$ if
-$c \in \mathcal{O}$ or it is split into a pair and pushed to of $Y^S$,
-such that the left symbol of that pair will be popped in the next
-iteration. The first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is
-encountered, the index of that symbol in $Z$ is saved, as it is used later
-for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is appended
-to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing is done,
-i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
+$c \in \mathcal{O}$ or it is split into a pair and pushed to of $Y^S$, such
+that the left symbol of that pair will be popped in the next iteration. The
+first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is encountered, the
+index (named \texttt{start\_index}) of that symbol in $Z$ is saved, as it is
+used later for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is
+appended to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing
+is done, i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
 algorithm~\ref{alg:decompress}.
 
 \begin{algorithm}
@@ -799,33 +802,104 @@ algorithm~\ref{alg:decompress}.
 \end{algorithmic}
 \end{algorithm}
 
-This algorithm is in many cases much more effecient for very compressed
-sequences. \fxwarning{Make some kind of analysis? $O(\min \left\{ (l - k) \log
-    T, T \right\} )$. Observation: The number of parents can be at most 0.5
-  times the number of children + 2.}
+This algorithm is much more effecient for very compressed sequences.
 
 In the previous paragraphs the start columns from $\alpha'$ and $\beta'$, that
-is the columns at index $k'$ and $l'$ respectively, have been found. There are
-used as the first column of the forward table $\alpha$ and the last column of
-the backward table $\beta$. Furthermore, the substring $Z$ for which to compute
-the the tables have been found. To complete the substring posterior decoding
-algorithm equation~\eqref{eq:6} is used.
+is the columns at index $k'$ and $l'$ respectively, have been found. They are
+used as the starting columns of forward table $\alpha$ at index $k$ and the
+starting column of the backward table $\beta$ in index $l$. Furthermore, the
+substring $Z$ for which to compute the the tables have been found. The forward
+and backward tables may now be computed from index $k$ to $l$. Then the
+substring posterior decoding algorithm equation~\eqref{eq:6} is used to compute
+a path of states. Finally, the path if stripped for states corresponding to the
+intervals $[k, i)$ and $(j, l]$ by returning only the subpath from \texttt{start\_index}
+to $\texttt{start\_index} + j - i$.
 
 \subsection{Running Time}
 \label{sec:running-time-2}
 
-As described the computation of the forward and backward tables, $\alpha$ and
-$\beta$, for the uncompressed subsequence depends on the tables $\alpha'$ and
-$\beta'$ of the compressed sequence. If preprocessing/compression of the input
-string $Y$ is not included it takes time $O(M' N^3 + N^2 T')$ to
-compute. Performing the binary search on the map to find the indicies
-$k, l, k'$ and $l'$ takes $O(\log T')$ time. Decompressing the subsequence
-takes time proportional to the length of the decompressed subsequence, that is
-$O(j - i + \delta)$, where $\delta$ is the number of symbols in the
-intervals $[k, i)$ and $(j, l]$.  Computing $\alpha$ and $\beta$ takes time
-$O(M N^3 + N^2 (j - i + \delta))$.  Summing this up a running time of
-$O(M' N^3 + N^2 T' + N^2 (j - i + \delta))$ is obtained.
+The analysis of the subpath posterior decoding may be split into a number of
+steps.
+\begin{enumerate}
+\item Compute $\alpha'$ and $\beta'$;
+\item Compute the starting point columns;
+\item Compute the substring corresponding to the columns;
+\item Compute the posterior decoding for the substring.
+\end{enumerate}
+These four steps are now analyzed in turn.
 
+\begin{enumerate}
+\item The running time of the forward and backward algorithms is the same as
+  for the Viterbi algorithm. If preprocessing/compression of the input string
+  $Y_{1:T}$ is not included it takes time $O(M' N^3 + N^2 T')$ to compute
+  $\alpha'$ and $\beta'$.
+
+\item Computing the starting point columns requires building the map
+  \texttt{symbol2length}. This takes time proportional to the number of
+  symbols, i.e.\ $O(M')$. Computing the \texttt{orig\_index2comp\_index}
+  requires a scan through the compressed sequence. That is $O(T')$. Performing
+  the binary search on the map to find the indicies $k, l, k'$ and $l'$ takes
+  $O(\log T')$ time. In total this becomes $O(M' + T')$.
+
+\item The analysis of algorithm~\ref{alg:decompress} is more complex. In the
+  worst case $Y_{1:T'}'$ has length 1, i.e.\ $T' = 1$. The compression of
+  $Y_{1:T'}'$ may be illustrated as a binary tree as seen in
+  figure~\ref{fig:decompression}. This is also seen in
+  figure~\ref{fig:exploiting-repetitions}. In this example the compression
+  corresponds to the observed sequence $Y_{1:16} = o_1o_1\dots{}o_1$. Assume
+  that the subpath posterior decoding is requested for index $i = 6$ to $j =
+  14$. Algorithm~\ref{alg:decompress} will begin at the root of the tree and
+  decompress it into two symbols: the children of the root. All nodes in the tree
+  marked in red or blue correspond to symbols that are introduced by
+  decompression. The running time of the algorithm is proportional to the
+  number of colored nodes, so to find the running time the number of nodes need
+  to be counted.
+
+  The colored nodes are split into two. The blue nodes correspond to symbols
+  that are decompressed into a symbol that is not further decompressed. At each
+  level in the tree there it a most two blue nodes, as these nodes correspond
+  to the boundary of $Y_{i:j}$. Hence, there is at most 2 times the height $h$
+  of the tree blue nodes. The red notes correspond to symbols that are fully
+  decompressed into symbols from the original alphabet $\mathcal{O}$. The
+  $j - i$ leaves have at most $\frac{j - i + 2}{2}$ parents, at most
+  $\frac{j - i + 2}{4}$ grand parents and so on. In this example the leaves
+  correspond to three subtrees in the tree, but in the worst case they
+  correspond to one single subtree. The size of a tree with $j - i + 2$ leaves
+  is $2(j - i + 2) - 1$, which is the worst case number of red nodes. Summing
+  the number of blue and red nodes we obtain
+  $2h + 2(j - i + 2) - 1 = O(h + (j - i))$.
+
+  The height, $h$, can also be bounded. The worst case height is obtained for
+  sequences that compresses well. They may be sequences like Fibonacci words
+  and unary sequences as just seen. The height of the obtained trees from the
+  compression of such sequences are no larger than $\log_2 T$. In general, if
+  it is required that the most common pair occurs more than one time, the
+  compression tree cannot be higher than $\log_2 T$. Hence, the number of
+  colored nodes becomes $O(\log T + (j - i))$, which is also the running time
+  of algorithm~\ref{alg:decompress}.
+
+\item Finally the posterior decoding is computed. This takes time proportional
+  to the length of the decompressed subsequence, that is $j - i + \delta$,
+  where $\delta$ is the number of symbols in the intervals $[k, i)$ and
+  $(j, l]$. Computing the forward and backward tables take time
+  $O(N^2 (j - i + \delta))$, and computing the posterior decoding using
+  equation~\eqref{eq:6} also takes $O(N^2 (j - i + \delta)$ time.
+\end{enumerate}
+By adding the running times of these four steps, a running time of
+\begin{gather*}
+    O(M' N^3 + N^2 T') + O(M' + T') + O(\log T + (j - i)) + O(N^2 (j - i +
+    \delta) \\
+    = O(M' N^3 + N^2 T' + \log T + N^2 (j - i + \delta))
+\end{gather*}
+is obtained for the subpath posterior decoding algorithm in total.
+
+\begin{figure}
+  \centering
+  Figure from whiteboard here. Make uncompressed nodes grey.
+  \caption{The decompression of $Y_{1:T'}'$ using
+    algorithm~\ref{alg:decompress} illustrated as a binary tree.}
+  \label{fig:decompression}
+\end{figure}
 
 
 %%% Local Variables:
