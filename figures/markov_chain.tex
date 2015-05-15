@@ -1,0 +1,34 @@
+\tikzsetnextfilename{markov_chain}
+\begin{tikzpicture} [
+  ->,
+  >=stealth',
+  auto,
+  node distance=2cm,
+  main node/.style={rectangle,draw,rounded corners},
+  ]
+
+  \node[main node] (h1) {$h_1$};
+  \node[main node, below of=h1, right of=h1] (h2) {$h_2$};
+  \node[main node, below of=h2, left of=h2] (h3) {$h_3$};
+  \node[left of=h1] (p1) {};
+  \node[right of=h2] (p2) {};
+  \node[left of=h3] (p3) {};
+
+  \path
+    (h1) edge[bend right]               node[right] {$a_{12}$} (h2)
+         edge                           node[left]  {$a_{13}$} (h3)
+    (h2) edge[bend right]               node[right] {$a_{21}$} (h1)
+         edge[bend right]               node        {$a_{23}$} (h3)
+    (h3) edge[bend right]               node[right] {$a_{32}$} (h2)
+         edge[loop below, looseness=20] node        {$a_{33}$} (h3);
+
+  \path
+    (p1) edge node {$\pi_1$} (h1)
+    (p2) edge node {$\pi_2$} (h2)
+    (p3) edge node {$\pi_3$} (h3);
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

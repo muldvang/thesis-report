@@ -1,0 +1,35 @@
+\tikzsetnextfilename{HMM}
+\begin{tikzpicture} [
+  ->,
+  >=stealth',
+  auto,
+  node distance=3cm,
+  main node/.style={rectangle,draw,rounded corners,align=center},
+  ]
+
+  \node[main node] (h1) {$h_1$\\{\scriptsize%
+    $\begin{aligned}
+        o_1 &= 0.5\\ o_2 &= 0.3\\ o_3 &= 0.2\\
+    \end{aligned}$}};
+  \node[main node, right of=h1] (h2) {$h_2$\\{\scriptsize%
+    $\begin{aligned}
+        o_1 &= 0.8\\ o_2 &= 0.1\\ o_3 &= 0.1\\
+    \end{aligned}$}};
+  \node[left of=h1] (p1) {};
+  \node[right of=h2] (p2) {};
+
+  \path
+    (h1) edge[bend right]               node[right] {$a_{12}$} (h2)
+         edge[loop below, looseness=10] node        {$a_{11}$} (h1)
+    (h2) edge[bend right]               node[right] {$a_{21}$} (h1)
+         edge[loop below, looseness=10] node        {$a_{22}$} (h2);
+
+  \path
+    (p1) edge node {$\pi_1$} (h1)
+    (p2) edge node {$\pi_2$} (h2);
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
