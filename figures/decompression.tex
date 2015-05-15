@@ -1,0 +1,72 @@
+\tikzsetnextfilename{decompression}
+\begin{tikzpicture}[
+  font=\footnotesize
+  ]
+  \tikzstyle{level 1}=[level distance=12mm, sibling distance=64mm]
+  \tikzstyle{level 2}=[level distance=12mm, sibling distance=32mm]
+  \tikzstyle{level 3}=[level distance=12mm, sibling distance=16mm]
+  \tikzstyle{level 4}=[level distance=12mm, sibling distance=8mm]
+  \tikzstyle{level 5}=[level distance=7mm, sibling distance=8mm]
+
+  \tikzset{
+    red/.style = {shape=circle, fill=Set1-8-1, draw=black, inner sep=0mm, minimum size=6mm},
+    blue/.style = {shape=circle, fill=Set1-8-2, draw=black, inner sep=0mm, minimum size=6mm},
+    white/.style = {shape=circle, fill=white, draw=black, inner sep=0mm, minimum size=6mm},
+  }
+
+  \node [blue] {}
+  child {node [blue]  {}
+    child {node [blue]  {}
+      child {node [white] {}
+        child {node [white] {$Y_1'$} }
+        child {node [white] {$Y_2'$} }
+      }
+      child {node [white] {}
+        child {node [white] {$Y_3'$} }
+        child {node [white] {$Y_4'$} }
+      }
+    }
+    child {node [red]  {}
+      child {node [red] {}
+        child {node [red] {$Y_5'$} }
+        child {node [red] {$Y_6'$}
+          child {node {\small $i$} edge from parent[draw=none]}
+        }
+      }
+      child {node [red] {}
+        child {node [red] {$Y_7'$} }
+        child {node [red] {$Y_8'$} }
+      }
+    }
+  }
+  child {node [blue]  {}
+    child {node [red]  {}
+      child {node [red] {}
+        child {node [red] {$Y_9'$} }
+        child {node [red] {$Y_{10}'$} }
+      }
+      child {node [red] {}
+        child {node [red] {$Y_{11}'$} }
+        child {node [red] {$Y_{12}'$} }
+      }
+    }
+    child {node [blue]  {}
+      child {node [red] {}
+        child {node [red] {$Y_{13}'$} }
+        child {node [red] {$Y_{14}'$}
+          child {node {\small $j$} edge from parent[draw=none]}
+        }
+      }
+      child {node [blue] {}
+        child {node [white]  {$Y_{15}'$}}
+        child {node [white]  {$Y_{16}'$}
+        }
+      }
+    }
+  };
+\end{tikzpicture}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-command-extra-options: "-shell-escape"
+%%% TeX-master: "../master"
+%%% End:
