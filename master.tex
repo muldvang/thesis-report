@@ -34,6 +34,7 @@
   legend cell align=left
 }
 \pgfplotsset{compat=1.11}
+\usetikzlibrary{colorbrewer}
 
 % Links
 \usepackage[hidelinks]{hyperref}
@@ -49,6 +50,10 @@
 \usepackage{refcheck}
 \norefnames{}
 \nocitenames{}
+
+% Code listings
+\usepackage{minted}
+\usemintedstyle{default}
 
 % Section numbering depth
 \setsecnumdepth{subsection}
@@ -100,5 +105,6 @@
 
 %%% Local Variables:
 %%% mode: latex
+%%% TeX-command-extra-options: "-shell-escape"
 %%% TeX-master: t
 %%% End:
