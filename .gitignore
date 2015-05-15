@@ -3,6 +3,7 @@ master.figlist
 master.makefile
 tikz/
 master.lox
+_minted-master/
 
 ### https://raw.github.com/github/gitignore/master/TeX.gitignore
 
