@@ -19,14 +19,14 @@
   \node[right of=h2] (p2) {};
 
   \path
-    (h1) edge[bend right]               node[right] {$a_{12}$} (h2)
+    (h1) edge[bend right]               node[below] {$a_{12}$} (h2)
          edge[loop below, looseness=10] node        {$a_{11}$} (h1)
-    (h2) edge[bend right]               node[right] {$a_{21}$} (h1)
+    (h2) edge[bend right]               node[above] {$a_{21}$} (h1)
          edge[loop below, looseness=10] node        {$a_{22}$} (h2);
 
   \path
-    (p1) edge node {$\pi_1$} (h1)
-    (p2) edge node {$\pi_2$} (h2);
+    (p1) edge node[above] {$\pi_1$} (h1)
+    (p2) edge node[above] {$\pi_2$} (h2);
 \end{tikzpicture}
 
 %%% Local Variables:
