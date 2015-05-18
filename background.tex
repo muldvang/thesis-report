@@ -43,11 +43,11 @@ model in figure~\ref{fig:markov-chain} is a model of the weather with $h_1$
 being rainy, $h_2$ being cloudy, and $h_3$ being sunny weather. The probability
 of a sequence of observations $X_{1:4} = x_1x_2x_3x_4$ with
 $x_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, may easily be computed
-by multiplying probabilities.
+by multiplying the initial probability to the transition probabilities.
 
 The above formality is too limited for many applications, since the states do
 not correspond to the actual observable events. To overcome this problem a
-distinction between observables and states is made. The observables is made a
+distinction between observables and states is made. The observables is a
 probabilistic function of the state. Given
 $\mathcal{O} = {o_1, o_2, \dots, o_M}$ being a set of $M$ observables an
 emission matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$ with
@@ -71,9 +71,9 @@ cloudy, and sunny weather) depend on the air preasure. This may be modeled as
 $h_1$ being low preasure, $h_2$ being high preasure, $o_1$ being rainy, $o_2$
 being cloudy, and $o_3$ being sunny weather. As before the probability of a
 sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
-can be found.
+can be found, but it is a bit harder than before.
 
-Be problem scetched above of finding to joint probability of a sequence of
+The problem scetched above of finding to joint probability of a sequence of
 observations $Y_{1:T}$ is solved by the Forward algorithm. Another problem
 addressed in this thesis is to find the \emph{most likely} sequence of hidden
 states $X_{1:T}^* = x_1^*, x_2^*, \dots, x_T^*$ emitting $Y_{1:T}$. This is
