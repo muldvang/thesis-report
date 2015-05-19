@@ -1,6 +1,57 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
+\citet{sand2013ziphmmlib} implements a library zipHMM---a library for working
+with hidden Markov models. It includes an efficient implementation of the forward
+algorithm that obtains a speedup compared to the classical implementation by
+exploiting repetitions in the input sequence.
+
+In this master's thesis the zipHMM library has been extended to include
+implementations of the Viterbi, the backward and two variants of the posterior
+decoding algorithms. This includes description of the theory behind the
+algorithm, efficient implementations of these, and experiments that evaluates
+the performance compared to the standard implementation.
+
+By exploiting repetitions in the observed sequence the running time of the
+Viterbi algorithm has changed from $O(N^2 T)$, with $N$ being the number of
+states and $T$ being the length of the observed sequence, to $O(N^2 T')$ for
+computing the likelihood of the most likely path and $O(N^2 T' + T)$ for also
+getting the path. This requires that the observed sequence has been
+preprocessed. This takes time $O(M' N^3)$ with $M'$ being the new alphabet size
+that is dependent on the data and a user provided estimate of how many times
+the Viterbi algorithm is executed afterwards.
+
+The experiments show that a possibly very large speedup may be gained. However,
+it is very dependent on how well the data compress, i.e.\ how many repetitions
+the observed sequence contains, and how many times the user estimates that the
+algorithm is executed after the compression. Furthermore, since the
+preprocessing is cubic in the number of states, a speedup is not obtained in
+the models used become too large.
+
+The backward algorithm has been implemented as part of the implementation for
+computing the posterior decoding. It has not been posible to find a method for
+exploiting repetitions in the observed sequence, so in practice it becomes a
+battle between constants whether the classical version or the zipHMMlib version
+is the fastest. In the experimental setup used in this thesis the constants are
+in favor of the zipHMMlib implementation, when the observed sequence length and
+model size are large enough.
+
+Exploting repetitions is however posible for posterior decoding if only a
+part of the posterior decoding is requested. In that case the running time
+becomes \fxfatal{Insert running time} with $j - i$ being the length of the
+requested subpath.
+
+\section{Future Work}
+
+\begin{itemize}
+\item Make bindings for R and Python.
+\item Implement compression stopping criterion based on whether backtracking is
+  enabled or not.
+\item Implement multiple subpath requests without having to recompute the
+  tables of the compressed sequence.
+\item Implement subpath Viterbi.
+\end{itemize}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master.tex"
