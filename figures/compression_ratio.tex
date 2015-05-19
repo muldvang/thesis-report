@@ -19,11 +19,11 @@
     \nextgroupplot[ymode=log, height=40mm, width=80mm]
 
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=T, y=compression_ratio, y error=compression_ratio_std]
+    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer4, error bars, y dir=both, y explicit]
-    table[x=T, y=compression_ratio, y error=compression_ratio_std]
+    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_1_sequence_transformed.data};
 
     \legend{Fibonacci words, Unary}
@@ -31,7 +31,7 @@
     \nextgroupplot[height=40mm, width=80mm, ylabel=Compression ratio]
 
     \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
-    table[x=T, skip coords between index={0}{1}, y=compression_ratio, y error=compression_ratio_std]
+    table[x=T, skip coords between index={0}{1}, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_2_sequence_transformed.data};
 
     \legend{Random ($\lvert{\mathcal{O}}\rvert = 2$)}
@@ -39,7 +39,7 @@
     \nextgroupplot[height=40mm, width=80mm,]
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=T, y=compression_ratio, y error=compression_ratio_std]
+    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \legend{Random ($\lvert{\mathcal{O}}\rvert = 4$)}

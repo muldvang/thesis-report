@@ -6,15 +6,15 @@
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=T', y=many_running_time/T', y error=many_running_time/T'_std]
+    table[x=many_T', y=many_running_time/T', y error=many_running_time/T'_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=T', y=many_path_running_time/T', y error=many_path_running_time/T'_std]
+    table[x=many_T', y=many_path_running_time/T', y error=many_path_running_time/T'_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
-    table[x=T', y=many_path_memory_running_time/T', y error=many_path_memory_running_time/T'_std]
+    table[x=many_T', y=many_path_memory_running_time/T', y error=many_path_memory_running_time/T'_std]
     {plot_data/viterbi_sequence_transformed.data};
 
     \legend{Viterbi\textsubscript{L}, Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}}

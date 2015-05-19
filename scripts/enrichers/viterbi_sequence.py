@@ -15,7 +15,8 @@ path = str(sys.argv[1])
 df = pd.io.parsers.read_table(path, sep=' ', header=None)
 df.columns = ["N",
               "T",
-              "T'",
+              "one_T'",
+              "many_T'",
 
               "simple_pre_time",
               "simple_running_time",
@@ -50,10 +51,10 @@ df['many_path_backtrack_time/T'] = (df['many_path_running_time'] - df['many_runn
 df['many_path_memory_running_time/T'] = df['many_path_memory_running_time'] / df['T']
 df['many_path_memory_backtrack_time/T'] = (df['many_path_memory_running_time'] - df['many_running_time']) / df['T']
 
-df["many_running_time/T'"] = df['many_running_time'] / df["T'"]
-df["many_path_running_time/T'"] = df['many_path_running_time'] / df["T'"]
-df["many_path_backtrack_time/T'"] = (df['many_path_running_time'] - df['many_running_time']) / df["T'"]
-df["many_path_memory_running_time/T'"] = df['many_path_memory_running_time'] / df["T'"]
+df["many_running_time/T'"] = df['many_running_time'] / df["many_T'"]
+df["many_path_running_time/T'"] = df['many_path_running_time'] / df["many_T'"]
+df["many_path_backtrack_time/T'"] = (df['many_path_running_time'] - df['many_running_time']) / df["many_T'"]
+df["many_path_memory_running_time/T'"] = df['many_path_memory_running_time'] / df["many_T'"]
 
 # Total = running time + preprocessing time
 df["simple_total_time"] = df["simple_running_time"] + df["simple_pre_time"]
@@ -106,7 +107,8 @@ df['many_path_total_ratio'] = 500 * df['simple_path_total_time'] / df['many_path
 df['many_path_memory_total_ratio'] = 500 * df['simple_path_total_time'] / df['many_path_memory_total_time']
 
 # Compression ratio
-df['compression_ratio'] = df['T'] / df["T'"]
+df['many_compression_ratio'] = df['T'] / df["many_T'"]
+df['one_compression_ratio'] = df['T'] / df["many_T'"]
 
 # Compute mean and std.
 res = pd.DataFrame()
