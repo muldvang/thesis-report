@@ -641,7 +641,8 @@ decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
 $M$ typically is small, so it is expected that the assymptotic running times of
 the two algorithms in practice are comparable.
 
-\section{Subpath Posterior Decoding}
+\section{Subpath Posterior Decoding} \fxfatal{Subpath is a bad name since
+  posterior decoding is not a path!}
 
 In the last section it was discussed that the posterior decoding for a sequence
 cannot be done assymptotically faster using the byte-pair compression. However,
@@ -890,7 +891,8 @@ These four steps are now analyzed in turn.
 \item Finally the posterior decoding is computed. This takes time proportional
   to the length of the decompressed subsequence, that is $j - i + \delta$,
   where $\delta$ is the number of symbols in the intervals $[k, i)$ and
-  $(j, l]$. Computing the forward and backward tables take time
+  $(j, l]$. \fxwarning{Is $\delta = \log T$?}
+  Computing the forward and backward tables take time
   $O(N^2 (j - i + \delta))$, and computing the posterior decoding using
   equation~\eqref{eq:6} also takes $O(N^2 (j - i + \delta)$ time.
 \end{enumerate}
