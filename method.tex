@@ -60,7 +60,7 @@ the recursion in equation~\eqref{eq:1} only needs the previous column to
 compute the new one. Hence, the space consumption of the algorithm will be the
 space needed for two columns and the input sequence, that is $O(N + T)$. To
 fill out a cell in $\omega$ Viterbi maximizes over all cells in the previous
-column resulting in a running time of $O(N^2 T)$.
+column resulting in a running time of $O\left(N^2 T \right)$.
 
 \subsection{Backtracking}
 \label{sec:backtracking-1}
@@ -78,7 +78,7 @@ which is $O(N T)$. Backtracking is done in $O(T)$ time using the table of pointe
 
 A space consumption of $O(N T)$ might be a problem in some scenarios. Another
 way to backtrack is described by \citet{Tarnas01061998}. By using this approach
-the space consumption can be reduced to $O(N \sqrt{T})$ while the assymptotic
+the space consumption can be reduced to $O\left(N \sqrt{T} \right)$ while the assymptotic
 running time of the algorithm is preserved.
 
 Instead of storing the entire $\omega$ table in memory only the last column of
@@ -90,9 +90,9 @@ be found as described above. The pointer tables are recomputed one at a time
 for each block from right to left. When a table for a block has been recomputed
 it is backtracked. Hence, only one block is kept in memory at a time. If
 $B = \sqrt{T}$ is chosen, the space consumption of this algorithm is
-$O(N \sqrt{T})$. The Viterbi computations are now done two times, so the
+$O\left(N \sqrt{T}\right)$. The Viterbi computations are now done two times, so the
 algorithm will be a bit slower, but it keeps having the same assymptotic
-running time of $O(N^2 T)$.
+running time of $O\left(N^2 T\right)$.
 
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
@@ -144,22 +144,22 @@ as described in section~\ref{sec:class-viterbi-algor}.
 The space consumption and running time of this algorithm has changed, compared
 to the classical Viterbi algorithm. For each symbol $o_i$ in the alphabet of
 observables the corresponding matrix $B_{o_i}$ is created, thus requiring
-$O(M N^2)$ space. The $C_{o_i}$ matrices require the same amount of space,
-$O(M N^2)$. $C_1$ is vector, thus only requiring $O(N)$ space. If
+$O\left(M N^2\right)$ space. The $C_{o_i}$ matrices require the same amount of space,
+$O\left(M N^2\right)$. $C_1$ is vector, thus only requiring $O\left(N\right)$ space. If
 equation~\eqref{eq:2} is evaluated from right to left it corresponds to a
 series of matrix-vector multiplications resulting in a vector of size
-$O(N)$. In total this requires $O(2 M N^2 + 2 N) = O(M N^2)$ space. If
+$O\left(N\right)$. In total this requires $O\left(2 M N^2 + 2 N\right) = O\left(M N^2\right)$ space. If
 backtracking is required the space consumption will be increased by the size of
-the table of point that has size $O(N T)$. The total the space consumption with
-backtracking enabled is $O(M N^2 + N T)$.
+the table of point that has size $O\left(N T\right)$. The total the space consumption with
+backtracking enabled is $O\left(M N^2 + N T\right)$.
 
 Likewise, the running time has changed. Creating the $B_{o_i}$ matrices takes
-$O(M N^2)$ time. Computing the $C_{o_i}$ matrices takes time $O(M N^3)$ due to
-the matrix multiplication. Computing $C_1$ takes $O(N^2)$ times. Again, if
+$O\left(M N^2\right)$ time. Computing the $C_{o_i}$ matrices takes time $O\left(M N^3\right)$ due to
+the matrix multiplication. Computing $C_1$ takes $O\left(N^2\right)$ times. Again, if
 equation~\eqref{eq:2} is evaluated from right to left, it will be matrix-vector
-multiplication requiring $O(N^2 T)$ time. Backtracking can be done in $O(NT)$
-time by using the table of pointers. In total this becomes $O(M N^2 + M N^3 +
-N^2 + N^2 T + NT) = O(M N^3 + N^2 T)$.
+multiplication requiring $O\left(N^2 T\right)$ time. Backtracking can be done in $O\left(NT\right)$
+time by using the table of pointers. In total this becomes $O\left(M N^2 + M N^3 +
+N^2 + N^2 T + NT\right) = O\left(M N^3 + N^2 T\right)$.
 
 \section{Exploiting Repetitions}
 \label{sec:expl-repet}
@@ -283,22 +283,22 @@ The same variations may be defined for the classical Viterbi algorithm.
 
 The space consumption is comparable to the Viterbi algorithm without
 compression enabled. The number of $C$ matrices has changed from $M$ to $M'$
-thus requiring $O(M' N^2)$ space. The introduction of the $R$ matrices does not
+thus requiring $O\left(M' N^2\right)$ space. The introduction of the $R$ matrices does not
 change this since the $C$ matrices are of similar size. The table used for the
-simple backtracking has decreased to size $O(N T')$. The Viterbi path has size
-$T$ resulting in a total space consumption of $O(M' N^2 + N T' + T)$ for
+simple backtracking has decreased to size $O\left(N T'\right)$. The Viterbi path has size
+$T$ resulting in a total space consumption of $O\left(M' N^2 + N T' + T\right)$ for
 Viterbi\textsubscript{P}. For Viterbi\textsubscript{PM} the space consumption will be
-$O(M' N^2 + N \sqrt{T'} + T)$.
+$O\left(M' N^2 + N \sqrt{T'} + T\right)$.
 
 With similar arguments the running time of computing the likelihood has changed
-to $O(M' N^3 +N^2 T')$. Using the the the $R$ matrices the Viterbi path can be
-obtained in $O(N^2 T' + T)$ time. Hence, the running time with backtracking
-enabled is $O(M' N^3 +N^2 T' + T)$.
+to $O\left(M' N^3 +N^2 T'\right)$. Using the the the $R$ matrices the Viterbi path can be
+obtained in $O\left(N^2 T' + T\right)$ time. Hence, the running time with backtracking
+enabled is $O\left(M' N^3 +N^2 T' + T\right)$.
 
-The running time of the preprocessing part is $O(
+The running time of the preprocessing part is $O\left(
 \left(
   \lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert
-\right) T)$, since one new symbol is introduced by scanning the input sequence for
+\right) T\right)$, since one new symbol is introduced by scanning the input sequence for
 pairs. Note that the $\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert$
 factor depends on the input. For sequences with many repetitions the byte-pair
 encoding will continue for more iterations than for sequences with few
@@ -316,12 +316,12 @@ table~\ref{tab:running-time}.
     \toprule
     Algorithm                   & Running time             & Space consumption             \\
     \midrule
-    Classical\textsubscript{L}  & $O(N^2 T)$               & $O(N + T)$                    \\
-    Classical\textsubscript{P}  & $O(N^2 T)$               & $O(NT)$                       \\
-    Classical\textsubscript{PM} & $O(N^2 T)$               & $O(N\sqrt{T})$                \\
-    Viterbi\textsubscript{L}    & $O(M' N^3 + N^2 T')$     & $O(M' N^2 + T')$              \\
-    Viterbi\textsubscript{P}    & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N T' + T)$        \\
-    Viterbi\textsubscript{PM}   & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N \sqrt{T'} + T)$ \\
+    Classical\textsubscript{L}  & $O\left(N^2 T\right)$               & $O\left(N + T\right)$                    \\
+    Classical\textsubscript{P}  & $O\left(N^2 T\right)$               & $O\left(NT\right)$                       \\
+    Classical\textsubscript{PM} & $O\left(N^2 T\right)$               & $O\left(N\sqrt{T}\right)$                \\
+    Viterbi\textsubscript{L}    & $O\left(M' N^3 + N^2 T'\right)$     & $O\left(M' N^2 + T'\right)$              \\
+    Viterbi\textsubscript{P}    & $O\left(M' N^3 + N^2 T' + T\right)$ & $O\left(M' N^2 + N T' + T\right)$        \\
+    Viterbi\textsubscript{PM}   & $O\left(M' N^3 + N^2 T' + T\right)$ & $O\left(M' N^2 + N \sqrt{T'} + T\right)$ \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -583,7 +583,7 @@ posterior decoding sequence may be computed using the partial path obtained
 from the compressed sequence, or (2) the entire forward and backward tables of
 the uncompressed sequence are required. For both approaches the running time of
 computing 1 state in the posterior decoding must take strictly less than
-$O(N^2)$ time to gain a speedup, since one else might as well compute the
+$O\left(N^2\right)$ time to gain a speedup, since one else might as well compute the
 forward and backward tables without compressing the input sequence. The two
 approaches are now discussed in turn.
 
@@ -593,7 +593,7 @@ approaches are now discussed in turn.
   Viterbi path from the partial path. This method makes use of the property
   that the Viterbi algorithm maximizes over all previous states. From the
   partial path the previous state that maximizes the likelihood is known. Using
-  this information the current state may be found using only $O(N)$ time, since
+  this information the current state may be found using only $O\left(N\right)$ time, since
   it is not necessary to maximize over all previous states. Using information
   about the next state it is possible to precompute the maximizing state for
   each symbol for all previous and all next states, and thus computing the
@@ -606,7 +606,7 @@ approaches are now discussed in turn.
   not dependent on partial path.
 \item Computing the full forward and backward tables is another approach. Since
   the full tables have have $N$ entries in each column the running time of
-  filling an entry must take strictly less than $O(N)$ time to gain a
+  filling an entry must take strictly less than $O\left(N\right)$ time to gain a
   speedup. It might be possible that some relation exist between missing
   columns in the partial tables that corresponds to the same symbol in the
   input sequence.
@@ -629,15 +629,15 @@ approaches are now discussed in turn.
     left to right, since it is more natural to think about. The gray boxes
     indicate columns filled during the when computing the table for the
     compressed sequence. The white columns needs to be computed in less than
-    $O(N^2)$ time per column.}
+    $O\left(N^2\right)$ time per column.}
   \label{fig:full-forward-table}
 \end{figure}
 
 Unfortunately no solution to this problem has been found. Hence, the posterior
 decoding cannot be speeded up by exploiting repetitions in the observed
 sequence. The running time of computing the posterior decoding is then
-$O(M N^3 + TN^2)$, which is assymptotically worse than the classical posterior
-decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
+$O\left(M N^3 + TN^2\right)$, which is assymptotically worse than the classical posterior
+decoding algorithm that runs in $O\left(TN^2\right)$. Note though that the alphabet size
 $M$ typically is small, so it is expected that the assymptotic running times of
 the two algorithms in practice are comparable.
 
@@ -731,7 +731,7 @@ $[k, i)$ and $(l, n]$.
         \State{String $Z \gets Y_{k':l'}'$}
         \For{$c = M'$ \textbf{down to} $M + 1$}
           \State{$o_l, o_r \gets $ get\_pair($o_c$)}
-          \State{Replace $o_c$ by $o_lo_r$ in $Z$}
+          \State{Replace $o_c$ by $o_{l}o_{r}$ in $Z$}
         \EndFor{}
         \State{\Return{$Z$}}
     \EndProcedure{}
@@ -743,8 +743,8 @@ compressed sequence $Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the
 length of $Y_{k:l}$ may be much larger than $Y_{i:j}$. In the worst case of
 $T' = 1$, the decompression would result in the uncompressed sequence
 $Y_{1:T}$. Hence, the algorithm will spend a lot of time computing columns that
-is thrown away afterwards, and the running time is $O(M' N^3 + N^2 T)$ which is
-not an improvement over the classical posterior decoding .The decompression
+is thrown away afterwards, and the running time is $O\left(M' N^3 + N^2 T\right)$ which is
+not an improvement over the classical posterior decoding. The decompression
 needs to be made smarter.
 
 Observe that only the symbols from index $[i,j]$ needs to be from the orignal
@@ -841,66 +841,95 @@ These four steps are now analyzed in turn.
 \begin{enumerate}
 \item The running time of the forward and backward algorithms is the same as
   for the Viterbi algorithm. If preprocessing/compression of the input string
-  $Y_{1:T}$ is not included it takes time $O(M' N^3 + N^2 T')$ to compute
+  $Y_{1:T}$ is not included it takes time $O\left(M' N^3 + N^2 T'\right)$ to compute
   $\alpha'$ and $\beta'$.
 
 \item Computing the starting point columns requires building the map
   \texttt{symbol2length}. This takes time proportional to the number of
-  symbols, i.e.\ $O(M')$. Computing the \texttt{orig\_index2comp\_index}
-  requires a scan through the compressed sequence. That is $O(T')$. Performing
+  symbols, i.e.\ $O\left(M'\right)$. Computing the \texttt{orig\_index2comp\_index}
+  requires a scan through the compressed sequence. That is $O\left(T'\right)$. Performing
   the binary search on the map to find the indicies $k, l, k'$ and $l'$ takes
-  $O(\log T')$ time. In total this becomes $O(M' + T')$.
+  $O\left(\log T'\right)$ time. In total this becomes $O\left(M' + T'\right)$.
 
 \item The analysis of algorithm~\ref{alg:decompress} is more complex. In the
   worst case $Y_{1:T'}'$ has length 1, i.e.\ $T' = 1$. The compression of
   $Y_{1:T'}'$ may be illustrated as a binary tree as seen in
   figure~\ref{fig:decompression}. This is also seen in
-  figure~\ref{fig:exploiting-repetitions}. In this example the compression
-  corresponds to the observed sequence $Y_{1:16} = o_1o_1\dots{}o_1$. Assume
-  that the subpath posterior decoding is requested for index $i = 6$ to $j =
-  14$. Algorithm~\ref{alg:decompress} will begin at the root of the tree and
-  decompress it into two symbols: the children of the root. All nodes in the tree
-  marked in red or blue correspond to symbols that are introduced by
-  decompression. The running time of the algorithm is proportional to the
-  number of colored nodes, so to find the running time the number of nodes need
-  to be counted.
+  figure~\ref{fig:exploiting-repetitions}. In this example the compression is
+  of the observed sequence $Y_{1:16} = o_1o_1\dots{}o_1$ and corresponds to a
+  perfectly balanced tree. Assume that the subpath posterior decoding is
+  requested for index $i = 6$ to $j = 14$. Algorithm~\ref{alg:decompress} will
+  begin at the root of the tree and decompress it into two symbols, namely the
+  children of the root. This decompression continues for all nodes that are
+  necessary to decompress to obtain $Y_{i:j}$. All nodes in the tree marked in
+  red or blue correspond to symbols that are introduced by decompression. The
+  running time of the algorithm is proportional to the number of colored nodes,
+  so to find the running time the number of nodes need to be counted.
 
   The colored nodes are split into two. The blue nodes correspond to symbols
-  that are decompressed into a symbol that is not further decompressed. At each
-  level in the tree there it a most two blue nodes, as these nodes correspond
-  to the boundary of $Y_{i:j}$. Hence, there is at most 2 times the height $h$
-  of the tree blue nodes. The red notes correspond to symbols that are fully
-  decompressed into symbols from the original alphabet $\mathcal{O}$. The
-  $j - i$ leaves have at most $\frac{j - i + 2}{2}$ parents, at most
-  $\frac{j - i + 2}{4}$ grand parents and so on. In this example the leaves
-  correspond to three subtrees in the tree, but in the worst case they
-  correspond to one single subtree. The size of a tree with $j - i + 2$ leaves
-  is $2(j - i + 2) - 1$, which is the worst case number of red nodes. Summing
-  the number of blue and red nodes we obtain
-  $2h + 2(j - i + 2) - 1 = O(h + (j - i))$.
+  that are created during the decompression and has decendants that are not
+  decompressed. At each level in the tree there are at most two blue nodes.
+  Hence, there is at most 2 times the height $h$ of the tree blue nodes. The
+  red notes correspond to symbols that are fully decompressed into symbols from
+  the original alphabet $\mathcal{O}$. To count the number of these, observe
+  that the $j - i$ leaves have at most $\frac{j - i + 2}{2}$ parents, at most
+  $\frac{j - i + 2}{4}$ grand parents and so on. In this example the leaves and
+  their red ancestors correspond to three subtrees in the tree, but in the
+  worst case they correspond to one, balanced subtree. The size of a balanced
+  binary tree with $j - i + 2$ leaves is $2(j - i + 2) - 1$, which is the worst
+  case number of red nodes. Summing the number of blue and red nodes we obtain
+  $2h + 2(j - i + 2) - 1 = O\left(h + (j - i)\right)$.
 
-  The height, $h$, can also be bounded. The worst case height is obtained for
-  sequences that compresses well. They may be sequences like Fibonacci words
-  and unary sequences as just seen. The height of the obtained trees from the
-  compression of such sequences are no larger than $\log_2 T$. In general, if
-  it is required that the most common pair occurs more than one time, the
-  compression tree cannot be higher than $\log_2 T$. Hence, the number of
-  colored nodes becomes $O(\log T + (j - i))$, which is also the running time
-  of algorithm~\ref{alg:decompress}.
+  The height of tree, $h$, can be bounded. The worst case height is obtained
+  for sequences that compresses well, that is Fibonacci words. For unary
+  sequences that are almost as bad the tree have height $h = \log_2 T$ as seen
+  in figure~\ref{fig:decompression}. For Fibonacci words, observe that the
+  number of leaves $T$ for a tree of height $h$ is the $h$'th Fibonacci number.
+  In general, the $n$'th Fibonacci number may be computed as
+  \begin{equation*}
+    F_n = \frac{1}{\sqrt{5}}
+    {\left(
+        \frac{1 + \sqrt{5}}{2}
+      \right)}^n
+  \end{equation*}
+  rounded to the closest integer value. Using this, the height $h$ can be
+  bounded in terms of $T$ by using that
+  \begin{gather*}
+      T = \frac{1}{\sqrt{5}} {\left( \frac{1 + \sqrt{5}}{2} \right)}^h \\
+      \begin{aligned}
+        &\implies
+        \begin{aligned}[t]
+          \log T & = \log \left( \frac{1}{\sqrt{5}} {\left( \frac{1 + \sqrt{5}}{2} \right)}^h \right) \\
+                 & = \log \frac{1}{\sqrt{5}} + \log {\left( \frac{1 + \sqrt{5}}{2} \right)}^h         \\
+                 & = \log \frac{1}{\sqrt{5}} + h \log  \frac{1 + \sqrt{5}}{2}                         \\
+        \end{aligned} \\
+        &\implies h = \frac{\log T - \log \frac{1}{\sqrt{5}}}{\log \frac{1 + \sqrt{5}}{2}} = O\left(\log T\right).
+      \end{aligned}
+  \end{gather*}
+  Hence, the number of colored nodes becomes $O\left(\log T + (j - i)\right)$, which is
+  also the running time of algorithm~\ref{alg:decompress}.
 
 \item Finally the posterior decoding is computed. This takes time proportional
-  to the length of the decompressed subsequence, that is $j - i + \delta$,
-  where $\delta$ is the number of symbols in the intervals $[k, i)$ and
-  $(j, l]$. \fxwarning{Is $\delta = \log T$?}
+  to the length of the decompressed subsequence. Of course, the subsequence
+  contains uncompressed symbols from index $i$ to $j$, but as previously
+  discussed the subsequence also contains some symbols corresponding to indices
+  $[k, i)$ and $(j, l]$ that may or may not have been decompressed. These are
+  drawn as nodes with a thick line in figure~\ref{fig:decompression}. The
+  number of these symbols may also be bounded in terms of $T$. Since the
+  algorithm does not decompress symbols that corresponds to decompressed
+  symbols in the interval $[k, i)$ and $(j, l]$, there is at most be two nodes
+  corresponding to these intervals at each layer in the tree. Hence, the number
+  of nodes in the intervals is bounded by the height of the tree that is
+  $O\left(\log T\right)$. The subsequence then has length $O\left(j - i + \log T\right)$.
+
   Computing the forward and backward tables take time
-  $O(N^2 (j - i + \delta))$, and computing the posterior decoding using
-  equation~\eqref{eq:6} also takes $O(N^2 (j - i + \delta)$ time.
+  $O\left(N^2 (j - i + \log T)\right)$, and computing the posterior decoding using
+  equation~\eqref{eq:6} also takes $O\left(N^2 (j - i + \log T)\right)$ time.
 \end{enumerate}
 By adding the running times of these four steps, a running time of
 \begin{gather*}
-    O(M' N^3 + N^2 T') + O(M' + T') + O(\log T + (j - i)) + O(N^2 (j - i +
-    \delta) \\
-    = O(M' N^3 + N^2 T' + \log T + N^2 (j - i + \delta))
+  O\left(M' N^3 + N^2 T'\right) + O\left(M' + T'\right) + O\left(\log T + (j - i)\right) + O\left(N^2 (j - i + \log T)\right) \\
+  = O\left(M' N^3 + N^2 T' + N^2 (j - i + \log T)\right)
 \end{gather*}
 is obtained for the subpath posterior decoding algorithm in total.
 
@@ -908,7 +937,9 @@ is obtained for the subpath posterior decoding algorithm in total.
   \centering
   \input{figures/decompression.tex}
   \caption{The decompression of $Y_{1:T'}'$ using
-    algorithm~\ref{alg:decompress} illustrated as a binary tree.}
+    algorithm~\ref{alg:decompress} illustrated as a binary tree. In this
+    example $Y_{1:T}$ have been compressed to a single character. Hence,
+    $T' = 1$}
   \label{fig:decompression}
 \end{figure}
 
