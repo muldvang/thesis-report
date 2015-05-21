@@ -5,7 +5,9 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \allowdisplaybreaks{}           % Allow pagebreaks in math environments.
-
+\makeatletter
+\g@addto@macro\bfseries{\boldmath} % Typeset bold math in headings.
+\makeatother
 
 % Font
 \usepackage[utf8]{inputenc}

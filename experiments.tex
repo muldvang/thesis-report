@@ -530,10 +530,10 @@ has a running time that is very comparable to the classical implementation of
 posterior decoding. For scenarios with large models and sequences the zipHMMlib
 is faster whereas the classical algorithm is a better for small models.
 
-\section{Subpath Posterior Decoding}
+\section{Indexed Posterior Decoding}
 
-In this section experiments on the subpath posterior decoding is
-made. Recall that subpath posterior decoding also takes two indeces $i$ and
+In this section experiments on the indexed posterior decoding is
+made. Recall that indexed posterior decoding also takes two indeces $i$ and
 $j$ as input an only returns the posterior decoding for the subsequence
 $Y_{i:j}$.
 
@@ -566,7 +566,7 @@ this. \fxwarning{Make experiment for decompression?}
 
 \subsection{Comparison to the Classical Algorithm}
 
-The subpath posterior decoding algorithm has been compared to the classical
+The indexed posterior decoding algorithm has been compared to the classical
 posterior decoding algorithm. For the classical algorithm the entire path as
 been found and then the path from index $i$ to $j$ has been extracted.
 
@@ -582,7 +582,7 @@ For the first experiment the length of the substring for which to compute the
 posterior decoding has been varied for random input sequences of length 10000
 and a model with 16 states.
 
-The running time of the subpath posterior decoding is much dependent on the
+The running time of the indexed posterior decoding is much dependent on the
 size of the size of the interval for which to compute the path, i.e.\
 $j-i$. The value of $\delta$ depends heavily on the data and the
 compression. In general, for an increasing compression ratio the value of
@@ -610,7 +610,7 @@ when $j - i$ gets closer to $T'$.
 \begin{figure}
   \centering
   \input{figures/assymptotic_indexed_posterior_subseq_length.tex}
-  \caption{The running time for indexed substring posterior decoding for
+  \caption{The running time for indexed indexed posterior decoding for
     varying substring lengths. Random sequences has been used.}
   \label{fig:assymptotic_indexed_posterior_subseq_length.tex}
   \fxnote{Why does the running time increase with almost a factor three?}
@@ -627,7 +627,7 @@ discussed in the previous paragraph.
 \begin{figure}
   \centering
   \input{figures/indexed_posterior_speedup_vs_subseq.tex}
-  \caption{The substring posterior decoding algorithm compared to the simple
+  \caption{The indexed posterior decoding algorithm compared to the simple
     algorithm for random data for varying substring lengths.}
   \label{fig:indexed_posterior_speedup_vs_subseq}
 \end{figure}
@@ -636,25 +636,25 @@ For the second experiment the length of the input sequence has been varied from
 small sequences of length $10^3$ to approximately $10^7$. As already seen in
 sections~\ref{sec:comp-ziphmml-viterbi} and~\ref{sec:comp-class-algor} the
 longer the input sequence, the better speedup for the Viterbi algorithm and the
-noncompressed posterior decoding. It is expected that the substring posterior
+noncompressed posterior decoding. It is expected that the indexed posterior
 decoding will be similar to the noncompressed posterior decoding algorithm. The
 result of this experiment is shown in
 figure~\ref{fig:indexed_posterior_speedup_vs_T}. The result is as
-expected. Again, the substring posterior decoding 1 algorithm is slower than
-the classical algorithm for smaller sequences. For the substring posterior
+expected. Again, the indexed posterior decoding 1 algorithm is slower than
+the classical algorithm for smaller sequences. For the indexed posterior
 decoding 500 algorithm however, speedups of up to factor 15 is seen in this
 example.
 
 \begin{figure}
   \centering
   \input{figures/indexed_posterior_speedup_vs_T.tex}
-  \caption{The substring posterior decoding algorithm compared to the simple
+  \caption{The indexed posterior decoding algorithm compared to the simple
     algorithm for random data for varying input sequence lengths.}
   \label{fig:indexed_posterior_speedup_vs_T}
 \end{figure}
 
 Finally, the number of states in the model has been varied. Sequences of length
-10000 were used and the posterior decoding has been computed for a substring of
+10000 were used and the posterior decoding has been computed for a indexed of
 length 200. As for the Viterbi algorithm experiments in
 section~\ref{sec:comp-ziphmml-viterbi} it is expected that the algorithm is
 most efficient for ``medium sized'' models. As seen in
@@ -665,7 +665,7 @@ and~\ref{fig:speedup_vs_N2}.
 \begin{figure}
   \centering
   \input{figures/indexed_posterior_speedup_vs_N.tex}
-  \caption{The substring posterior decoding algorithm compared to the simple
+  \caption{The indexed posterior decoding algorithm compared to the simple
     algorithm for random data for varying model sizes.}
   \label{fig:indexed_posterior_speedup_vs_N}
 \end{figure}
@@ -702,8 +702,8 @@ data. \fxerror{Explain this by e.g.\ measuring the length of $\delta$.}
 \begin{figure}
   \centering
   \input{figures/assymptotic_indexed_posterior_fib_subseq_length.tex}
-  \caption{The running time for indexed substring posterior decoding for
-    varying substring lengths. Fibonacci word has been used}
+  \caption{The running time for indexed indexed posterior decoding for
+    varying indexed lengths. Fibonacci word has been used}
   \label{fig:assymptotic_indexed_posterior_fib_subseq_length.tex}
 \end{figure}
 
@@ -717,7 +717,7 @@ better than for random data.
 \begin{figure}
   \centering
   \input{figures/fib_indexed_posterior_speedup_vs_subseq.tex}
-  \caption{The substring posterior decoding algorithm compared to the simple
+  \caption{The indexed posterior decoding algorithm compared to the simple
     algorithm for a Fibonacci word for varying substring lengths.}
   \label{fig:fib_indexed_posterior_speedup_vs_subseq}
 \end{figure}
@@ -726,14 +726,14 @@ As before the speedup factor has also been measured for varying sequence
 lengths. Again, a model with 16 states has been used and the posterior decoding
 has been computed for a substring of length 200. The result of this experiment
 is shown in figure~\ref{fig:indexed_posterior_fib_speedup_vs_T}. As seen, the
-speedup factor improves by a lot for the substring posterior 500 algorithm. For
-the substring posterior 1 algorithm the speedup factor is more modest. However,
+speedup factor improves by a lot for the indexed posterior 500 algorithm. For
+the indexed posterior 1 algorithm the speedup factor is more modest. However,
 the longer the input sequence, the better the speedup.
 
 \begin{figure}
   \centering
   \input{figures/indexed_posterior_fib_speedup_vs_T.tex}
-  \caption{The substring posterior decoding algorithm compared to the simple
+  \caption{The indexed posterior decoding algorithm compared to the simple
     algorithm for Fibonacci words of varying lengths.}
   \label{fig:indexed_posterior_fib_speedup_vs_T}
 \end{figure}

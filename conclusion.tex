@@ -39,7 +39,7 @@ model size are large enough.
 Exploting repetitions is however posible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
 becomes \fxfatal{Insert running time} with $j - i$ being the length of the
-requested subpath.
+requested substring.
 
 \section{Future Work}
 
@@ -47,9 +47,9 @@ requested subpath.
 \item Make bindings for R and Python.
 \item Implement compression stopping criterion based on whether backtracking is
   enabled or not.
-\item Implement multiple subpath requests without having to recompute the
+\item Implement multiple substring requests without having to recompute the
   tables of the compressed sequence.
-\item Implement subpath Viterbi.
+\item Implement substring Viterbi.
 \end{itemize}
 
 %%% Local Variables:

@@ -641,47 +641,47 @@ decoding algorithm that runs in $O\left(TN^2\right)$. Note though that the alpha
 $M$ typically is small, so it is expected that the assymptotic running times of
 the two algorithms in practice are comparable.
 
-\section{Subpath Posterior Decoding} \fxfatal{Subpath is a bad name since
-  posterior decoding is not a path!}
+\section{Indexed Posterior Decoding}
 
-In the last section it was discussed that the posterior decoding for a sequence
-cannot be done assymptotically faster using the byte-pair compression. However,
-if only parts of the posterior decoding are needed instead of the entire
-path, a speedup may be obtained.
+In the last section it was discussed that the posterior decoding for an
+observed sequence cannot be done assymptotically faster using the byte-pair
+compression. However, if only parts of the posterior decoding are needed
+instead of the entire path, a speedup may be obtained.
 
-For subpath posterior decoding not only an input sequence $Y_{1:T}$ and a
-model $\lambda$ is given as input, but also two indexes $i,j \in
-[1:T], i < j$. Instead of returning the posterior decoding $X_{1:T}$ the
-subpath $X_{i:j}$ is returned.
+For indexed posterior decoding not only an input sequence $Y_{1:T}$ and a model
+$\lambda$ is given as input, but also two indexes $i,j \in [1:T]$. Instead of
+returning the posterior decoding $X_{1:T}$ the only the part of the sequence
+from index $i$ to $j$ denoted $X_{i:j}$ is returned.
 
 Recall from section~\ref{sec:using-byte-pair} that the columns of the forward
-and backward tables, $\alpha'$ and $\beta'$ of the compressed sequence
+and backward tables, $\alpha'$ and $\beta'$, of the compressed sequence
 $Y_{1:T'}'$ are a subset of columns in the tables, $\alpha$ and $\beta$, of
 $Y_{1:T}$. Furthermore, recall that a column may be computed using the column
 emmediately to the left or right for the forward and backward algorithms
 respectively as seen in equation~\eqref{eq:8} and~\eqref{eq:9}. Using this, the
 columns $i$ to $j$ of the forward and backward tables, $\alpha$ and $\beta$,
-corresponding to the subsequence $Y_{i:j}$ may be found using existing columns
-from the forward and backward tables, $\alpha'$ and $\beta'$. An example of
-this situation is illustrated in figure~\ref{fig:subsequence-posterior}.
+corresponding to the \emph{subsequence} $Y_{i:j}$ may be found using existing
+columns from the forward and backward tables, $\alpha'$ and $\beta'$.
 
 \begin{figure}
   \centering
   \input{figures/subsequence_posterior.tex}
   \caption{Illustration of the computation of the forward (or backward) table
     for a substring of the uncompressed sequence given by indices $i$ to $j$,
-    given that the forward table for the compressed sequence, shown in grey,
-    have been computed in advance.}
+    given that the columns of the forward table for the compressed sequence,
+    shown in grey, have been computed in advance.}
   \label{fig:subsequence-posterior}
 \end{figure}
 
-Assume that the forward table $\alpha'$ and the backward table $\beta'$ for the
-compressed sequence has been computed. This is shown as grey columns. To
-compute $\alpha$ and $\beta$ from index $i$ to $j$, the computed column at some
-index $k$ to the left of $i$ may be used as a starting point for the forward
-computation. In this example that is index 3 that corresponds to the column at
-index 2 in $\alpha'$. Likewise, some column $l$ with $l$ being to the right of
-$j$ can be used as a starting point for the computation of the backward table.
+An example of the above is illustrated in
+figure~\ref{fig:subsequence-posterior}. Assume that the forward table $\alpha'$
+and the backward table $\beta'$ for the compressed sequence has been computed.
+This is shown as grey columns. To compute $\alpha$ and $\beta$ from index $i$
+to $j$, the computed column at some index $k$ with $k \le i$ may be used as a
+starting point for the forward computation. In this example that is index 3
+that corresponds to the column at index 2 in $\alpha'$. Likewise, some column
+$l$ with $l \ge j$ can be used as a starting point for the
+computation of the backward table.
 
 \subsubsection{Starting Point Columns}
 
@@ -710,18 +710,20 @@ compressed sequence one symbol at a time while incrementing the corresponding
 index in the uncompressed sequence by using the map of lengths.
 
 The starting columns for the forward and backward algorithms have now been
-found. The only thing missing for the computation is the substring for which
-to compute the following (for forward) or preceding (for backward) columns.
+found. The only thing missing for the computation is the sequence for which to
+compute the following (for forward) or preceding (for backward) columns.
 
-\subsubsection{Substring}
+\subsubsection{Sequence}
 
-The simplest algorithm for finding a substring for which to compute the forward
-and backward tables, is to decompress $Y_{k':l'}'$ to obtain $Y_{k:l}$. This
-may be done by replacing the symbols $o_{M + 1}, \dots, o_{M'}$ by symbols from
-the original alphabet $\mathcal{O}$. An example of this algorithm is shown in
-algorithm~\ref{alg:simple-decompress}. The $\alpha$ and $\beta$ may be found by
-computing the columns corresponding to $Y_{k:l}$ and afterwards remove columns
-$[k, i)$ and $(l, n]$.
+The simplest solution for finding a sequence for which to compute the forward
+and backward tables is to store the original sequence $Y_{1:T}$ and then
+extract the sequence $Y_{k:l}$ from that. Instead of storing $Y_{1:T}$,
+$Y_{k:l}$ may be found by decompressing $Y_{k':l'}'$. This may be done by
+replacing the symbols $o_{M + 1}, \dots, o_{M'}$ by symbols from the original
+alphabet $\mathcal{O}$. An example of this algorithm is shown in
+algorithm~\ref{alg:simple-decompress}. The $\alpha$ and $\beta$ tables may be
+found by computing the columns corresponding to $Y_{k:l}$ and afterwards remove
+columns $[k, i)$ and $(l, n]$.
 
 \begin{algorithm}
   \caption{Simple decompression algorithm.}
@@ -742,10 +744,10 @@ Decompressing $Y_{k':l'}'$ entirely might be inefficient though. If the
 compressed sequence $Y_{1:T'}'$ is much compressed, i.e.\ $T' \ll T$, the
 length of $Y_{k:l}$ may be much larger than $Y_{i:j}$. In the worst case of
 $T' = 1$, the decompression would result in the uncompressed sequence
-$Y_{1:T}$. Hence, the algorithm will spend a lot of time computing columns that
-is thrown away afterwards, and the running time is $O\left(M' N^3 + N^2 T\right)$ which is
-not an improvement over the classical posterior decoding. The decompression
-needs to be made smarter.
+$Y_{1:T}$. Hence, the indexed posterior decoding algorithm will spend a lot of
+time computing columns that is thrown away afterwards, and the running time is
+$O\left(M' N^3 + N^2 T\right)$ which is not an improvement over the classical
+posterior decoding. The decompression needs to be made smarter.
 
 Observe that only the symbols from index $[i,j]$ needs to be from the orignal
 alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
@@ -755,26 +757,27 @@ $Y_{k':l'}'$ symbols that correspond to uncompressed symbols in the interval
 $[k, i)$ should not be decompressed and left as compressed symbols. Likewise,
 symbols corresponding to the interval $(j, l]$ should not be decompressed. As
 before, symbols corresponding to uncompressed symbols that overlap $[i, j]$
-should be decompressed. If this is done, the partially decompressed sequence
-$Z$ will then contain some symbols from $\mathcal{O'}$ at the beginning, then
-some symbols from $\mathcal{O}$ in the middle being the symbols $Y_{i:j}$, and
-then some symbols from $\mathcal{O'}$ again in the end.
+should be decompressed. If this is done, the partial decompression of
+$Y_{k':l'}'$ resulting in a new sequence $Z$ will then contain some symbols
+from $\mathcal{O'}$ at the beginning, then some symbols from $\mathcal{O}$ in
+the middle being the symbols $Y_{i:j}$, and then some symbols from
+$\mathcal{O'}$ again in the end.
 
 An algorithm for doing this takes as input a compressed sequence $Y'$ and the
 indicies $i, j, k, l, k'$ and $l'$. The symbols of substring $Y_{k':l'}'$ is
 pushed to a stack $Y^S$, such that $Y_{l'}'$ is at the bottom and $Y_{k'}'$ at
-the top. The algorithm may be implemented iteratively, by popping symbols one
-by one from $Y^S$, while the corresponding index into the uncompressed sequence
-$Y$ is maintained by using the \texttt{symbol2length} map. When a symbol $c$
-that overlap $[i, j]$ is encountered $c$ is either appended to $Z$ if
-$c \in \mathcal{O}$ or it is split into a pair and pushed to of $Y^S$, such
-that the left symbol of that pair will be popped in the next iteration. The
-first time a symbol $c \in \mathcal{O}$ overlaps $[i, j]$ is encountered, the
-index (named \texttt{start\_index}) of that symbol in $Z$ is saved, as it is
-used later for computing the posterior decoding. If $c$ overlaps $[k, l]$ it is
-appended to $Z$. In case there is no overlap between $c$ and $[k, l]$ nothing
-is done, i.e.\ $c$ is thrown away. Pseudo code for this algorithm is given in
-algorithm~\ref{alg:decompress}.
+the top. The algorithm pops symbols one by one from $Y^S$, while the
+corresponding index into the uncompressed sequence $Y$ is maintained by using
+the \texttt{symbol2length} map. When a symbol $c$ that overlap $[i, j]$ is
+encountered $c$ is either appended to $Z$ if $c \in \mathcal{O}$ or it is split
+into a pair and pushed to of $Y^S$, such that the left symbol of that pair will
+be popped in the next iteration. The first time a symbol $c \in \mathcal{O}$
+overlaps $[i, j]$ is encountered, the index (named \texttt{start\_index}) of
+that symbol in $Z$ is saved, as it is used later for computing the posterior
+decoding. If $c$ overlaps $[k, l]$ it is appended to $Z$. In case there is no
+overlap between $c$ and $[k, l]$ nothing is done, i.e.\ $c$ is thrown away.
+Pseudo code for this algorithm is given in algorithm~\ref{alg:decompress}. This
+algorithm is much more effecient to use for very compressed sequences.
 
 \begin{algorithm}
   \caption{Partially decompress the compressed sequence.}
@@ -812,23 +815,21 @@ algorithm~\ref{alg:decompress}.
   \end{algorithmic}
 \end{algorithm}
 
-This algorithm is much more effecient for very compressed sequences.
-
 In the previous paragraphs the start columns from $\alpha'$ and $\beta'$, that
 is the columns at index $k'$ and $l'$ respectively, have been found. They are
 used as the starting columns of forward table $\alpha$ at index $k$ and the
 starting column of the backward table $\beta$ in index $l$. Furthermore, the
 substring $Z$ for which to compute the the tables have been found. The forward
 and backward tables may now be computed from index $k$ to $l$. Then the
-substring posterior decoding algorithm equation~\eqref{eq:6} is used to compute
+indexed posterior decoding algorithm equation~\eqref{eq:6} is used to compute
 a path of states. Finally, the path if stripped for states corresponding to the
-intervals $[k, i)$ and $(j, l]$ by returning only the subpath from \texttt{start\_index}
+intervals $[k, i)$ and $(j, l]$ by returning only the substring from \texttt{start\_index}
 to $\texttt{start\_index} + j - i$.
 
 \subsection{Running Time}
 \label{sec:running-time-2}
 
-The analysis of the subpath posterior decoding may be split into a number of
+The analysis of the indexed posterior decoding may be split into a number of
 steps.
 \begin{enumerate}
 \item Compute $\alpha'$ and $\beta'$;
@@ -857,7 +858,7 @@ These four steps are now analyzed in turn.
   figure~\ref{fig:decompression}. This is also seen in
   figure~\ref{fig:exploiting-repetitions}. In this example the compression is
   of the observed sequence $Y_{1:16} = o_1o_1\dots{}o_1$ and corresponds to a
-  perfectly balanced tree. Assume that the subpath posterior decoding is
+  perfectly balanced tree. Assume that the indexed posterior decoding is
   requested for index $i = 6$ to $j = 14$. Algorithm~\ref{alg:decompress} will
   begin at the root of the tree and decompress it into two symbols, namely the
   children of the root. This decompression continues for all nodes that are
@@ -931,7 +932,7 @@ By adding the running times of these four steps, a running time of
   O\left(M' N^3 + N^2 T'\right) + O\left(M' + T'\right) + O\left(\log T + (j - i)\right) + O\left(N^2 (j - i + \log T)\right) \\
   = O\left(M' N^3 + N^2 T' + N^2 (j - i + \log T)\right)
 \end{gather*}
-is obtained for the subpath posterior decoding algorithm in total.
+is obtained for the indexed posterior decoding algorithm in total.
 
 \begin{figure}
   \centering

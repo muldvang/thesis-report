@@ -8,7 +8,7 @@ thesis is intended as being an extension of the work made by zipHMMlib made by
 \citet{sand2013ziphmmlib}, from now on called the original library, the code
 itself is also an extension of the library.  By the work made in this thesis
 the library has been extended to include an efficient Viterbi implementation
-and a subpath posterior decoding implementation exploiting repetitions, as well
+and a indexed posterior decoding implementation exploiting repetitions, as well
 as a posterior decoding implementation that does not exploit repetitions.
 
 As zipHMMlib is written in C++ the additions made in this thesis have also been
@@ -37,7 +37,7 @@ for loops are used as BLAS does not support these operations.
 \section{Usage}
 
 In the following three sections the usage of the Viterbi algorithm, the
-posterior decoding algorithm, and the subpath posterior decoding algorithm from
+posterior decoding algorithm, and the indexed posterior decoding algorithm from
 within C++ is described. Lastly the programs added to the library are
 discussed.
 
@@ -123,12 +123,12 @@ The \texttt{HMM\_Suite.posterior\_decoding(\dots)} is a bit simpler than the
 Viterbi method and takes as parameters the matrices $\pi, A$, and $B$ and a
 vector in which the posterior decoding is saved.
 
-\subsection{Subpath Posterior Decoding}
+\subsection{Indexed Posterior Decoding}
 
-For the subpath posterior decoding compression may be enabled. The
-\texttt{HMM\_Suite::subpath\_posterior\_decoding(\dots)} takes as paramters the
+For the indexed posterior decoding compression may be enabled. The
+\texttt{HMM\_Suite::indexed\_posterior\_decoding(\dots)} takes as paramters the
 matrices $\pi, A$, and $B$, the indices $i$ and $j$ and a reference to a vector
-where the subpath posterior decoding is saved.
+where the indexed posterior decoding is saved.
 
 \subsection{Programs}
 
