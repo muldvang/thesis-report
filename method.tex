@@ -684,7 +684,7 @@ columns from the forward and backward tables, $\alpha'$ and $\beta'$.
   \centering
   \input{figures/subsequence_posterior.tex}
   \caption{Illustration of the computation of the forward (or backward) table
-    for a substring of the uncompressed sequence given by indices $i$ to $j$,
+    for a part of the uncompressed sequence given by indices $i$ to $j$,
     given that the columns of the forward table for the compressed sequence,
     shown in grey, have been computed in advance.}
   \label{fig:subsequence-posterior}
@@ -746,7 +746,7 @@ columns $[k, i)$ and $(l, n]$.
   \caption{Simple decompression algorithm.}
   \label{alg:simple-decompress}
   \begin{algorithmic}[1]
-    \Procedure{decompress\_substring}{$Y', i, j, k, l, k', l'$}
+    \Procedure{indexed\_decompression}{$Y', i, j, k, l, k', l'$}
         \State{String $Z \gets Y_{k':l'}'$}
         \For{$c = M'$ \textbf{down to} $M + 1$}
           \State{$o_l, o_r \gets $ get\_pair($o_c$)}
@@ -781,7 +781,7 @@ the middle being the symbols $Y_{i:j}$, and then some symbols from
 $\mathcal{O'}$ again in the end.
 
 An algorithm for doing this takes as input a compressed sequence $Y'$ and the
-indicies $i, j, k, l, k'$ and $l'$. The symbols of substring $Y_{k':l'}'$ is
+indicies $i, j, k, l, k'$ and $l'$. The symbols of subsequence $Y_{k':l'}'$ is
 pushed to a stack $Y^S$, such that $Y_{l'}'$ is at the bottom and $Y_{k'}'$ at
 the top. The algorithm pops symbols one by one from $Y^S$, while the
 corresponding index into the uncompressed sequence $Y$ is maintained by using
@@ -800,7 +800,7 @@ algorithm is much more effecient to use for very compressed sequences.
   \caption{Partially decompress the compressed sequence.}
   \label{alg:decompress}
   \begin{algorithmic}[1]
-    \Procedure{decompress\_substring}{$Y', i, j, k, l, k', l'$}
+    \Procedure{indexed\_partial\_decompression}{$Y', i, j, k, l, k', l'$}
         \State{String $Z \gets $ nil}
         \State{Stack $Y^S \gets $ nil}
         \State{Push $Y_{l'}', \dots, Y_{k'}'$ to $Y^S$}
@@ -834,14 +834,18 @@ algorithm is much more effecient to use for very compressed sequences.
 
 In the previous paragraphs the start columns from $\alpha'$ and $\beta'$, that
 is the columns at index $k'$ and $l'$ respectively, have been found. They are
-used as the starting columns of forward table $\alpha$ at index $k$ and the
-starting column of the backward table $\beta$ in index $l$. Furthermore, the
-substring $Z$ for which to compute the the tables have been found. The forward
-and backward tables may now be computed from index $k$ to $l$. Then the
-indexed posterior decoding algorithm equation~\eqref{eq:6} is used to compute
-a path of states. Finally, the path if stripped for states corresponding to the
-intervals $[k, i)$ and $(j, l]$ by returning only the substring from \texttt{start\_index}
-to $\texttt{start\_index} + j - i$.
+used as the first and last column of forward table and the backward table for
+the partially decompressed sequence $Z$. Furthermore, the sequence $Z$ have
+been found. The forward and backward tables of that sequence may now be
+computed using the equations~\eqref{eq:8} and~\eqref{eq:9}, but with omitting
+of the base cases as the first (or last) column of the tables have been
+computed. As the partially decompressed sequence $Z$ corresponds to the
+interval $[k, l]$, but only the posterior decoding for the interval $[i, j]$ is
+requested, the posterior decoding should only be computed for that interval.
+This is where the \texttt{start\_index} is used, as it is the index into $Z$
+that corresponds to the index $i$ in $Y_{i:j}$. Equation~\eqref{eq:6}
+is still used to compute the posterior decoding, but the computation starts at
+$t = \mathtt{start\_index}$ and ends at $t = \mathtt{start\_index} + j - i$.
 
 \subsection{Running Time}
 \label{sec:running-time-2}
@@ -850,9 +854,10 @@ The analysis of the indexed posterior decoding may be split into a number of
 steps.
 \begin{enumerate}
 \item Compute $\alpha'$ and $\beta'$;
-\item Compute the starting point columns;
-\item Compute the substring corresponding to the columns;
-\item Compute the posterior decoding for the substring.
+\item Compute the start columns;
+\item Compute the sequence $Z$ corresponding to the columns;
+\item Compute the forward and backward tables and the posterior decoding for
+  $Z$.
 \end{enumerate}
 These four steps are now analyzed in turn.
 
@@ -876,13 +881,14 @@ These four steps are now analyzed in turn.
   figure~\ref{fig:exploiting-repetitions}. In this example the compression is
   of the observed sequence $Y_{1:16} = o_1o_1\dots{}o_1$ and corresponds to a
   perfectly balanced tree. Assume that the indexed posterior decoding is
-  requested for index $i = 6$ to $j = 14$. Algorithm~\ref{alg:decompress} will
-  begin at the root of the tree and decompress it into two symbols, namely the
-  children of the root. This decompression continues for all nodes that are
-  necessary to decompress to obtain $Y_{i:j}$. All nodes in the tree marked in
-  red or blue correspond to symbols that are introduced by decompression. The
-  running time of the algorithm is proportional to the number of colored nodes,
-  so to find the running time the number of nodes need to be counted.
+  requested for index $i = 6$ to $j = 14$. Since $T' = 1$, $k' = 1$ and $l'$ =
+  1. Algorithm~\ref{alg:decompress} will begin at the root of the tree and
+  decompress it into two symbols, namely the children of the root. This
+  decompression continues for all nodes that are necessary to decompress to
+  obtain $Y_{i:j}$. All nodes in the tree marked in red or blue correspond to
+  symbols that are introduced by decompression. The running time of the
+  algorithm is proportional to the number of colored nodes, so to find the
+  running time the number of nodes need to be counted.
 
   The colored nodes are split into two. The blue nodes correspond to symbols
   that are created during the decompression and has decendants that are not
@@ -924,8 +930,8 @@ These four steps are now analyzed in turn.
         &\implies h = \frac{\log T - \log \frac{1}{\sqrt{5}}}{\log \frac{1 + \sqrt{5}}{2}} = O\left(\log T\right).
       \end{aligned}
   \end{gather*}
-  Hence, the number of colored nodes becomes $O\left(\log T + (j - i)\right)$, which is
-  also the running time of algorithm~\ref{alg:decompress}.
+  Hence, the number of colored nodes is no larger than $\log T + (j - i)$,
+  which is also the worst case running time of algorithm~\ref{alg:decompress}.
 
 \item Finally the posterior decoding is computed. This takes time proportional
   to the length of the decompressed subsequence. Of course, the subsequence
@@ -938,7 +944,17 @@ These four steps are now analyzed in turn.
   symbols in the interval $[k, i)$ and $(j, l]$, there is at most be two nodes
   corresponding to these intervals at each layer in the tree. Hence, the number
   of nodes in the intervals is bounded by the height of the tree that is
-  $O\left(\log T\right)$. The subsequence then has length $O\left(j - i + \log T\right)$.
+  $\log T$. The subsequence then has length $j - i + \log T$.
+
+  \begin{figure}
+    \centering
+    \input{figures/decompression.tex}
+    \caption{The decompression of $Y_{1:T'}'$ using
+      algorithm~\ref{alg:decompress} illustrated as a binary tree. In this
+      example $Y_{1:T}$ have been compressed to a single character. Hence,
+      $T' = 1$}
+    \label{fig:decompression}
+  \end{figure}
 
   Computing the forward and backward tables take time
   $O\left(N^2 (j - i + \log T)\right)$, and computing the posterior decoding using
@@ -951,16 +967,16 @@ By adding the running times of these four steps, a running time of
 \end{gather*}
 is obtained for the indexed posterior decoding algorithm in total.
 
-\begin{figure}
-  \centering
-  \input{figures/decompression.tex}
-  \caption{The decompression of $Y_{1:T'}'$ using
-    algorithm~\ref{alg:decompress} illustrated as a binary tree. In this
-    example $Y_{1:T}$ have been compressed to a single character. Hence,
-    $T' = 1$}
-  \label{fig:decompression}
-\end{figure}
-
+Note that this is a \emph{worst case} running time. For many practical
+applications the compression will not be as good and thus $T' > 1$. In that
+case the decompression may be illustrated as $T'$ trees. In many cases only
+some of these needs to be traversed and the height of them will often be much
+smaller than $\log T$. Furthermore, the $\log T$ term will most likely not
+dominate the $j - i$ term. As an example the human genome has length
+approximately $3,000,000,000$ basepairs and may be used as the observed sequence
+in some bioinformatics applications. As $\log_2 3,000,000,000 \approx 31$ and
+$j - i$ probably will be larger, the $\log T$ term does not contribute to much
+of the running time.
 
 %%% Local Variables:
 %%% mode: latex

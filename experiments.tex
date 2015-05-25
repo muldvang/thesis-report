@@ -1,3 +1,4 @@
+% chktex-file 9
 % chktex-file 24
 % chktex-file 44
 \chapter{Experiments}
@@ -538,27 +539,26 @@ $j$ as input an only returns the posterior decoding for the subsequence
 $Y_{i:j}$.
 
 Recall from section~\ref{sec:running-time-2} that the algorithm has a
-theoretical running time of $O(M' N^3 + N^2 T' + N^2 (j - i + \delta))$,
+theoretical running time of $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$,
 assuming the input sequence has already been compressed. This is very similar
 to both the Viterbi algorithm and the posterior decoding algorithm. Therefore
-the theoretical running time has not been verified as done in the two previous
-sections. However, the three terms of the running time are discussed in turn
-below.
+the verification of the theoretical running in practice has been omitted
+However, the three terms of the running time are still discussed in turn below.
 
 The first term $M' N^3$ comes from the computation of the $C$ matrices. This
 has already been experimented with for the Viterbi algorithm in
 section~\ref{sec:theor-runn-times}. Since the only difference between the
 computations for the Viterbi algorithm and the forward-backward algorithm has
 to do with nummerical stability, the theoretical running will be also hold for
-the posterior decoding.
+the indexed posterior decoding.
 
 The second term $N^2 T'$ comes from computing the forward and backward tables
 for the compressed sequence of length $T'$. In
 section~\ref{sec:asympt-runn-time} this was already verified the for posterior
 decoding algorithm.
 
-Finally the $N^2 (j - i + \delta)$ term comes from the decompression of the
-compressed subsequence that is linear in $j - i + \delta$ and from computing
+Finally the $N^2 (j - i + \log T)$ term comes from the decompression of the
+compressed subsequence that is linear in $j - i + \log T$ and from computing
 the posterior decoding for the subsequence. The running time of the posterior
 decoding has already been shown to match the theoretical running time. The
 decompression is quite simple and experiments have not been done for
@@ -573,34 +573,33 @@ been found and then the path from index $i$ to $j$ has been extracted.
 As for the discussion of the Viterbi algorithm, the comparison of to the
 classical implementation is first made for random data and then for Fibonacci
 words. Like for the Viterbi algorithm the algorithm is analyzed by varying the
-input sequence length and the model size, but the length of the substring also
-has an impact on the running time, so this has also been experimented with.
+input sequence length and the model size, but the length of the subsequence $Z$
+also has an impact on the running time, so this has also been experimented
+with.
 
 \subsection{Random Data}
 
-For the first experiment the length of the substring for which to compute the
-posterior decoding has been varied for random input sequences of length 10000
-and a model with 16 states.
+For the first experiment the distance between the two indices $i$ and $j$ has
+been varied for random input sequences of length $10,000$ and a model with 16
+states. For this experiment the ``extra'' symbols corresponding to the indices
+$[k, i)$ and $(j, l]$ can be left out as there is at most $\log 10,000$ of
+these, which is a small number compared to $j - i$.
 
 The running time of the indexed posterior decoding is much dependent on the
-size of the size of the interval for which to compute the path, i.e.\
-$j-i$. The value of $\delta$ depends heavily on the data and the
-compression. In general, for an increasing compression ratio the value of
-$\delta$ will increase. But if a part of a sequence is very compressible and
-another part is not compressible, the value of $\delta$ will also depend on the
-indices $i$ and $j$.
+size of the size of the interval for which to compute the path, i.e.\ $j-i$.
 
 Depending on how well the data compresses, the value of the length of the
 compressed sequence $T'$ will be larger or smaller than the length of
-subsequence for which the posterior decoding is computed, that is
-$j - i + \delta$.  For random data that only has a compression ratio of
-approximately 4 as seen section~\ref{sec:compression-ratio} $\delta$ will be
-small. Hence, when $j - i$ is small $j - i + \delta$ will also be small
-compared to $T'$. Therefore it is expected that $T'$ will dominate the running
-time and small increases of $j - i$ will not make major changes to the overall
-running time. However, for large values of $j - i$, the value will be close to
-or larger than $T'$ and the value will have a larger impact on the running
-time, thus making the running time higher.
+subsequence $Z$.
+
+ For random data that only has a compression ratio of
+approximately 4 as seen section~\ref{sec:compression-ratio} the number of
+``extra'' symbols will be small. Hence, when $j - i$ is small the length of $Z$
+will also be small compared to $T'$. Therefore it is expected that $T'$ will
+dominate the running time and small increases of $j - i$ will not make major
+changes to the overall running time. However, for large values of $j - i$, the
+value will be close to or larger than $T'$ and the value will have a larger
+impact on the running time, thus making the running time higher.
 
 This is seen in
 figure~\ref{fig:assymptotic_indexed_posterior_subseq_length.tex} where the
@@ -610,8 +609,8 @@ when $j - i$ gets closer to $T'$.
 \begin{figure}
   \centering
   \input{figures/assymptotic_indexed_posterior_subseq_length.tex}
-  \caption{The running time for indexed indexed posterior decoding for
-    varying substring lengths. Random sequences has been used.}
+  \caption{The running time of indexed posterior decoding for varying distances
+    between $i$ and $j$. Random sequences has been used.}
   \label{fig:assymptotic_indexed_posterior_subseq_length.tex}
   \fxnote{Why does the running time increase with almost a factor three?}
 \end{figure}
@@ -628,7 +627,7 @@ discussed in the previous paragraph.
   \centering
   \input{figures/indexed_posterior_speedup_vs_subseq.tex}
   \caption{The indexed posterior decoding algorithm compared to the simple
-    algorithm for random data for varying substring lengths.}
+    algorithm for random data for varying distances between $i$ and $j$.}
   \label{fig:indexed_posterior_speedup_vs_subseq}
 \end{figure}
 
@@ -687,13 +686,14 @@ section~\ref{sec:compr-stopp-crit} that the user specifies a parameter $e$ that
 is the expected number of executions of the algorithm following the
 compression. Since Fibonacci words compresses very well the compression is very
 dependent on this parameter. As seen in section~\ref{sec:compression-ratio},
-the compression ratio varies a lot. \fxerror{Make experiment!} As $\delta$
-depends on the compression ratio, $\delta$ will be large when $e$ is
-large. Therefore, if $e$ is large, the value of $j - i$ will not change the
-running time as $\delta$ is large anyways. In the case of Fibonacci words and
-$e = 500$, $T'$ will be only 2. Hence it is expected that $\delta$ will be
-large, and the length of the substring will not matter much for the running
-time. The result of this experiment is shown in
+the compression ratio varies a lot. \fxerror{Make experiment!} As the number of
+``extra'' symbols depends on the compression ratio, $Z$ will become larger when
+$e$ becomes larger. Therefore, if $e$ is large, the value of $j - i$ will not
+change the running time as $Z$ is large due to the ``extra'' symbols anyways.
+In the case of Fibonacci words and $e = 500$, $T'$ will be only 2. Hence it is
+expected that $Z$ will be large even when $j - i$ is small, and hence the
+running time will not change for small changes to $j - i$. The result of this
+experiment is shown in
 figure~\ref{fig:assymptotic_indexed_posterior_fib_subseq_length.tex}. As seen
 the result is not as expected as the length of the subsequence indeed has an
 impact on the running time. The plot is very similar to the case of random
