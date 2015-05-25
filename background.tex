@@ -16,6 +16,13 @@ studied in the end of the 1960s and the beginning of the 1970s. Since then they
 have become very popular and have proven to be both effective and efficient in
 many applications. \citep{rabiner1989tutorial}
 
+\begin{figure}
+  \centering
+  \input{figures/markov_chain.tex}
+  \caption{An example of a Markov chain.}
+  \label{fig:markov-chain}
+\end{figure}
+
 Think of a system that can be described as a being in one of $N$ states and any
 time. Let the set states be notated as $\mathcal{H} = {h_1, h_2, \dots, h_N}$.
 In figure~\ref{fig:markov-chain} an example with three states is shown. In some
@@ -29,13 +36,6 @@ transition probabilities is shown as arrows in
 figure~\ref{fig:markov-chain}. The initial state, at time $t = 1$, is
 determined from a vector $\Pi = {(\pi_i)}_{1 \le i \le N}$ with
 $\sum_{i=1}^N \pi_i = 1$ being the probability of starting in each state.
-
-\begin{figure}
-  \centering
-  \input{figures/markov_chain.tex}
-  \caption{An example of a Markov chain.}
-  \label{fig:markov-chain}
-\end{figure}
 
 Having established the above system with $A$ and $\Pi$ given, one may ask
 questions like what the probability of observing a certain sequence of states
@@ -93,16 +93,16 @@ The first problem of finding to joint probability of an observation sequence
 $Y_{1:T}$ is solved by the Forward algorithm. This was implemented in zipHMMlib
 by \citet{sand2013ziphmmlib}.
 
-For solving the second problem, many different methods may exist as it depends
-on how the optimality criterion is set. However, two widely used methods exist.
-One solution is to look at all possible sequences of states emitting the
-observation sequence and pick the most likely one. This problem is solved
-efficiently by the Viterbi algorithm. Another method is to choose the states
-$i_t$ that are individually most likely. In this way the expected number of
-correct states is maximized, but the state sequence may not be valid, since the
-transition probability from $i_t$ to $i_{t + 1}$ might be zero. This is also
-called the posterior decoding and is solved by using the Forward-Backward
-algorithm.
+For solving the second problem (also called HMM decoding), many different
+methods may exist as it depends on how the optimality criterion is set.
+However, two widely used methods exist. One solution is to look at all possible
+sequences of states emitting the observation sequence and pick the most likely
+one. This problem is solved efficiently by the Viterbi algorithm. Another
+method is to choose the states $i_t$ that are individually most likely. In this
+way the expected number of correct states is maximized, but the state sequence
+may not be valid, since the transition probability from $i_t$ to $i_{t + 1}$
+might be zero. This is also called the posterior decoding and is solved by
+using the Forward-Backward algorithm.
 
 Different solutions also exist to the third problem. One solution is Baum-Welch
 training that is an iterative procedure that maximizes the probability of the

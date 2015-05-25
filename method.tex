@@ -4,24 +4,25 @@
 \chapter{Method}
 \label{cha:method}
 
+This chapter describes the theory used and developed in this thesis. First, the
+notation for HMMs introduced in section~\ref{sec:hidden-markov-models} is
+written out as this is used extensively in the following sections. The next
+sections contains theory of decoding algorithms.
+
 As mentioned in section~\ref{sec:hidden-markov-models} an observation sequence
 $Y_{1:T}$ may be generated in different ways, since multiple hidden states can
 have a nonzero probability of omitting the same symbol. Given some model
 $\lambda$ and an observation sequence, an interesting question may be: of all
 posible paths of hidden sequences, which one is the most likely, and how likely
-is it? This question is solved the Viterbi algorithm.
+is it? This question is solved the Viterbi algorithm. This algorithm is first
+described in its classical formulation and then changed into using matrix
+multiplications. Then is it described how the compression using byte pair
+encoding may be used to exploit repetitions in the observation sequence and
+thereby gain a theoretical speedup.
 
-This chapter describes the theory used and developed in this thesis. First, the
-notation for HMMs introduced in section~\ref{sec:hidden-markov-models} is
-written out as this is used extensively in the following sections.
-
-Next the classical Viterbi algorithm is described and it is described how it
-may be reformulated to make use of the byte pair encoding and thereby gaining a
-theoretical speedup.
-
-The posterior decoding is then described, first the classical algorithm and
-then the reformulated version. As this version does not obtain at speedup from
-the byte pair encoding, theory for an \emph{indexed} posterior decoding
+Next, another decoding algorithm is described, namely the posterior decoding.
+As this classical version no algorithm for obtaining a speedup from the byte
+pair encoding has been found, theory for an \emph{indexed} posterior decoding
 algorithm is given. This algorithm gains a theoretical speedup compared to the
 classical formulation.
 
@@ -52,69 +53,95 @@ A HMM is parametrized by $\pi$, $A$, and $B$ and is denoted by $\lambda =
 
 \section{The Classical Viterbi Algorithm}
 \label{sec:class-viterbi-algor}
+\fxnote{Renamed classical to original?}
 
 The Viterbi algorithm finds the probability of the most likely sequence of
 hidden states given a model $\lambda$ and an observation sequence $Y_{1:T}$ by
 maximizing the probability of the observation and hidden sequences for all
-possible hidden sequences: $\Pr(Y_{1:T} \mid \lambda) = \max_{x_{1:T}}
-\Pr(Y_{1:T}, I_{1:T} = i_{1:T} \mid \lambda)$. This may be computed efficiently
-by filling out a table, $\omega$, with entries $\omega_t(i_t) = \Pr(Y_{1:t},
-I_t = i_t \mid \lambda) = \max_{i_{1:t-1}} \Pr(Y_{1:t}, I_{1:t} = i_{1:t} \mid
-\lambda)$ column by column from left to right, using the recursion
+possible hidden sequences, that is
+$\max_{i_{1:T}} \Pr(Y_{1:T}, I_{1:T} = i_{1:T} \mid \lambda)$.
+
+To compute this, consider the Viterbi variable $\delta_t(i_t)$ defined as
+\begin{equation*}
+  \delta_t(i_t) = \max_{i_{1:t}} \Pr(Y_{1:t}, I_{1:t} = i_{1:t} \mid \lambda).
+\end{equation*}
+This is the probability of the partial observation sequence $Y_{1:t}$ at time
+$t$ plus the probability of the most likely sequence of states $I_{1:t}$. Since
+the probability of making a transition to the next state is only dependent on
+the current state, this formula may be solved inductively by
 \begin{equation}
   \label{eq:1}
   \begin{aligned}
-    \omega_1(i_1) &= \pi_{i_1} b_{i_1, y_1} \\
-    \omega_t(i_t) &= b_{i_t, y_t} \max_{i_{t - 1}} \omega_{t - 1}(i_{t - 1})
-    a_{i_{t - 1}, i_t}.
+    \delta_1(i_1) &= \pi_{i_1} b_{i_1, y_1} \\
+    \delta_t(i_t) &= b_{i_t, y_t} \max_{i_{t - 1}} \delta_{t - 1}(i_{t - 1}) a_{i_{t - 1}, i_t}.
   \end{aligned}
 \end{equation}
-After filling out $\omega$, $\Pr(Y_{1:T} \mid \lambda)$ can be computed as
-$\Pr(Y_{1:T} \mid \lambda) = \max_{i_T} \omega_T(i_T)$.
+This may be computed efficiently by making $\delta$ a table of size
+$N \times T$ and by filling this table column by column from left to right
+using the recursion. After filling out $\delta$,
+the probability of the most likely sequence of states can be computed as
+$P^* = \max_{i_T} \delta_T(i_T)$.
 
-Note that only the last filled out column of $\omega$ needs to be stored, since
-the recursion in equation~\eqref{eq:1} only needs the previous column to
-compute the new one. Hence, the space consumption of the algorithm will be the
-space needed for two columns and the input sequence, that is $O(N + T)$. To
-fill out a cell in $\omega$ Viterbi maximizes over all cells in the previous
-column resulting in a running time of $O\left(N^2 T \right)$.
+To obtain the most likely sequence of hidden states
+$I_{1:T}^* = i_1^*i_2^*\dots{}i_T^*$, also known as the \emph{Viterbi path},
+another table of the same size as $\delta$ is computed along $\delta$ with
+pointers from each state in a column to the maximizing previous state:
+\begin{equation*}
+  \begin{aligned}
+    \Psi_1(i_1) &= 0 \\
+    \Psi_t(i_t) &= \argmax_{i_{t - 1}} \delta_{t - 1}(i_{t - 1}) a_{i_{t - 1}, i_t}.
+  \end{aligned}
+\end{equation*}
+When the last column has been computed in $\delta$ and $\Psi$, the last state
+in the Viterbi path may be found using
+\begin{equation*}
+  i_T^* = \argmax_{i_T} \delta_T(i_T).
+\end{equation*}
+From this state the entire Viterbi path $I_T^*$ can be found by backtracking
+the pointers in the table using
+\begin{equation*}
+  i_t^* = \Psi_{t + 1}(i_{t + 1}^*).
+\end{equation*}
 
-\subsection{Backtracking}
-\label{sec:backtracking-1}
+\subsection{Running Time}
 
-To obtain the most likely sequence of hidden states corresponding to the
-likelihood, $I_{1:T}^* = i_1^*, i_2^*, \dots, i_T^*$, also known as the
-\emph{Viterbi path}, another table of the same size as $\omega$ is stored with
-pointers from each state in a column to the maximizing previous state. When the
-last column has been computed in $\omega$, the last state in the Viterbi path
-may be found using $i_T^* = \argmax_{i_T} \omega_T(i_T)$. From this state the entire
-path can be found by following the pointers in the table.
+Note that if only the probability is needed, only the last filled out column of
+$\delta$ needs to be stored, since the recursion in equation~\eqref{eq:1} only
+needs the previous column to compute the new one. Hence, the space consumption
+of the algorithm will be the space needed for two columns and the observation
+sequence, that is $O(N + T)$. To fill out a cell in $\delta$ the algorithm
+maximizes over all cells in the previous column resulting in a running time of
+$O(N^2 T)$.
 
-The space consumption of this backtracking algorithm is the size of $\omega$
-which is $O(N T)$. Backtracking is done in $O(T)$ time using the table of pointers.
+The space consumption of this backtracking algorithm is the size of $\Psi$
+which is $O(N T)$. Backtracking is done in $O(T)$ time, since it is just a
+lookup in $\Psi$.
 
-A space consumption of $O(N T)$ might be a problem in some scenarios. Another
-way to backtrack is described by \citet{Tarnas01061998}. By using this approach
-the space consumption can be reduced to $O\left(N \sqrt{T} \right)$ while the assymptotic
-running time of the algorithm is preserved.
+A space consumption of $O(N T)$ might be a too large for some applications;
+especially the $T$ factor may become large. Another way to backtrack is
+described by \citet{Tarnas01061998}. By using this approach the space
+consumption can be reduced to $O(N \sqrt{T})$ while the assymptotic running
+time of the algorithm is preserved.
 
-Instead of storing the entire $\omega$ table in memory only the last column of
-blocks of some size $B$ is stored. These columns may be called checkpoints. A
-table of pointers corresponding to a block can be recomputed using the
-checkpoint of the previous block, since computing a column only requires the
-previous block as seen in equation~(\ref{eq:1}). When backtracking $i_T^*$ may
-be found as described above. The pointer tables are recomputed one at a time
-for each block from right to left. When a table for a block has been recomputed
-it is backtracked. Hence, only one block is kept in memory at a time. If
-$B = \sqrt{T}$ is chosen, the space consumption of this algorithm is
-$O\left(N \sqrt{T}\right)$. The Viterbi computations are now done two times, so the
-algorithm will be a bit slower, but it keeps having the same assymptotic
-running time of $O\left(N^2 T\right)$.
+The $\delta$ table is split into blocks of some size $B$. While computing
+$\delta$, the first column of each block in stored, while the rest is thrown
+away. These columns may be called checkpoints. Since computing a column only
+requires the previous column as seen in equation~(\ref{eq:1}), the table part
+of the $\delta$ table corresponding to a block can be computed using the
+checkpoint, and thereby $\Psi$ may also be computed. When the last columnn in
+$\delta$ has been computed, $i_T^*$ may be found as described above. The blocks
+are then recomputed one at a time from right to left. When the $\Psi$ table for
+a block has been recomputed it is backtracked as before. Hence, only one block
+is kept in memory at a time. If $B = \sqrt{T}$ is chosen, the space consumption
+of this algorithm is
+$O(N \frac{T}{B}) = O(N \frac{T}{\sqrt{T}}) = O(N \sqrt{T})$. The computation
+of $\delta$ is now done two times, so the algorithm will be a slower, but the
+algorithm keeps having the same assymptotic running time of $O(N^2 T)$.
 
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
 
-In this chapter the theory of making the Viterbi algorithm faster by exploring
+In this section the theory of making the Viterbi algorithm faster by exploring
 repetitions is discussed. First, the algorithm is reformulated into matrix
 operations; second, the use of byte pair encoding is explained; and finally
 a solution to make the computation numerically stable is explained.
@@ -134,15 +161,15 @@ matrix, having the emission probabilities of $o_i$ of the diagonal:
 \end{equation*}
 and let
 \begin{align*}
-  C_{o_i} &= B_{o_i} A^* \\
-  C_1 &= B_{y_1} \pi,
+  C_{o_i}      & = B_{o_i} A^*                    \\
+  C_1          & = B_{y_1} \pi,
 \end{align*}
 where $A^*$ is the transpose of $A$.
 
-Now $\omega_t$ can be computed using $C_{y_t}$ and $\omega_{t - 1}$ as
+Now $\delta_t$ can be computed using $C_{y_t}$ and $\delta_{t - 1}$ as
 \begin{equation}
   \label{eq:2}
-  \omega_t = C_{y_t} \odot \omega_{t - 1} = C_{y_t} \odot C_{y_{t-1}} \odot
+  \delta_t = C_{y_t} \odot \delta_{t - 1} = C_{y_t} \odot C_{y_{t-1}} \odot
   \dots \odot C_1,
 \end{equation}
 where $\odot$ is the max-times matrix multiplication defined as ${(A \odot
@@ -151,7 +178,7 @@ where $\odot$ is the max-times matrix multiplication defined as ${(A \odot
 The classical Viterbi algorithm corresponds to computing this from right to
 left. This will also be most efficient, since $C_1$ is a vector that when
 multiplied by the matrix $C_2$ will result in a new vector. Hence, computing
-$\omega_t$ from left to right will result in $t$ matrix-matrix multiplications,
+$\delta_t$ from left to right will result in $t$ matrix-matrix multiplications,
 while computing it from right to left will result in $t$ matrix-vector
 multiplications that are more effecient to compute.
 
@@ -225,10 +252,10 @@ sequence may be saved to the disk for later use. The second part consist of the
 actual Viterbi algorithm and can be split into two stages. The first stage is
 the computation of $C_{o_i}$ for $i = 1, \dots, M$ and then $C_{o_i}$ for
 increasing $i = M + 1, \dots, M'$ by $C_{o_i} = C_{l_i} \odot C_{l_r}$. In the
-second stage $\omega_T$ is computed by
+second stage $\delta_T$ is computed by
 \begin{equation}
   \label{eq:3}
-  \omega_T = C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot C_{y'_2} \odot C_1.
+  \delta_T = C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot C_{y'_2} \odot C_1.
 \end{equation}
 
 A illustration of this method is given in
@@ -285,7 +312,7 @@ This is illustrated in figure~\ref{fig:infering-viterbi-path}.
 \end{figure}
 
 Since $S'$ may be found in two different ways as discussed in
-section~\ref{sec:backtracking-1}, three different variations of the Viterbi
+section~\ref{sec:class-viterbi-algor}, three different variations of the Viterbi
 algorithm may be defined.
 \begin{description}
 \item[Viterbi\textsubscript{L}] that compresses the sequence and only computes the
@@ -364,15 +391,15 @@ describes how to avoid underflow in terms to the forward algorithm. It turns
 out that it is easier to avoid for the Viterbi algorithm.
 
 To circumvent underflow in the classical Viterbi algorithm all probabilities
-are converted to log-space. So, instead of computing $\omega_T$,
-$\log \omega_T$ is computed. By using the the property that
+are converted to log-space. So, instead of computing $\delta_T$,
+$\log \delta_T$ is computed. By using the the property that
 $\log(AB) = \log A + \log B$ the multiplications are turned into additions,
 which makes the algorithm much more stable to underflow.
 
 The same idea can be used for the matrix based approach, where
 equation~\eqref{eq:3} is rewritten as
 \begin{align*}
-  \log \omega_T &= \log \left(C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot
+  \log \delta_T &= \log \left(C_{y'_{T'}} \odot C_{y'_{T'-1}} \odot \dots \odot
                   C_{y'_2} \odot C_1 \right) \\
                 &= \log C_{y'_{T'}} \oplus \log C_{y'_{T'-1}} \oplus \dots \oplus
                   \log C_{y'_2} \oplus \log C_1,
