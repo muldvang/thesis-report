@@ -4,8 +4,9 @@
 \chapter{Background}
 \label{cha:background}
 
-In this section hidden Markov models are described and defined. Also, the work
-made by \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} is described.
+In this chapter preliminary theory of hidden Markov models is described. Also,
+the work made by \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} is
+described.
 
 \section{Hidden Markov Models}
 \label{sec:hidden-markov-models}
@@ -74,28 +75,40 @@ sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
 can be found, but it is a harder than before, since an observation sequence may be
 generated in many ways.
 
-\citet{rabiner1989tutorial} states three key problems to using hidden Markov
+\citet{rabiner1989tutorial} states three key problems for using hidden Markov
 models in real world applications, with the first one being the one just
 mentioned.
 \begin{enumerate}
 \item Given the observation sequence $Y_{1:T} = y_1y_2\dots{}y_T$, and the
-  model $\lambda = (A,B,\Pi)$, how we compute $\Pr(O \mid \lambda)$, the
+  model $\lambda = (A, B, \Pi)$, how we compute $\Pr(O \mid \lambda)$, the
   probability of the observation sequence.
 \item Given the observation sequence $Y_{1:T} = y_1y_2\dots{}y_T$, how do we
   choose a state sequence $I = i_1i_2\dots{}i_T$ which is optimal in some
   meaningful sense.
 \item How we adjust the model parameters $\lambda = (A, B, \Pi)$ to maximize
-  $\Pr(O \mid A)$.
+  $\Pr(O \mid \lambda)$.
 \end{enumerate}
 
-The problem scetched above of finding to joint probability of a sequence of
-observations $Y_{1:T}$ is solved by the Forward algorithm. Another problem
-addressed in this thesis is to find the \emph{most likely} sequence of hidden
-states $I_{1:T}^* = i_1^*, i_2^*, \dots, i_T^*$ emitting $Y_{1:T}$. This is
-solved by the Viterbi algorithm. Finally, the posterior decoding algorithm
-solves the problem of finding the most likely state to be in at each timestep
-$t$. This is similar to the Viterbi decoding except that the sequence of hidden
-states may not be valid according to the model.
+The first problem of finding to joint probability of an observation sequence
+$Y_{1:T}$ is solved by the Forward algorithm. This was implemented in zipHMMlib
+by \citet{sand2013ziphmmlib}.
+
+For solving the second problem, many different methods may exist as it depends
+on how the optimality criterion is set. However, two widely used methods exist.
+One solution is to look at all possible sequences of states emitting the
+observation sequence and pick the most likely one. This problem is solved
+efficiently by the Viterbi algorithm. Another method is to choose the states
+$i_t$ that are individually most likely. In this way the expected number of
+correct states is maximized, but the state sequence may not be valid, since the
+transition probability from $i_t$ to $i_{t + 1}$ might be zero. This is also
+called the posterior decoding and is solved by using the Forward-Backward
+algorithm.
+
+Different solutions also exist to the third problem. One solution is Baum-Welch
+training that is an iterative procedure that maximizes the probability of the
+observation sequence by iteratively reestimating the parameters such that the
+new model is more likely to generate the observation sequence than the previous
+model.
 
 \section{Related Work}
 
