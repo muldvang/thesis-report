@@ -1,0 +1,67 @@
+\tikzsetnextfilename{infering_path}
+\begin{tikzpicture}[
+  ->,
+  >=stealth',
+  auto,
+  ]
+  \tikzstyle{box} = [draw=black, minimum width=10mm, minimum height=10mm];
+  \tikzstyle{gray_box}  = [box, fill=gray];
+  \tikzstyle{white_box} = [box];
+  \tikzstyle{symbol} = [draw=black];
+
+
+  \node[symbol] (y10) at (0, 3) {1};
+  \node[symbol] (y9) at (1, 3) {0};
+  \node[symbol] (y8) at (2, 3) {0};
+  \node[symbol] (y7) at (3, 3) {1};
+  \node[symbol] (y6) at (4, 3) {0};
+  \node[symbol] (y5) at (5, 3) {0};
+  \node[symbol] (y4) at (6, 3) {0};
+  \node[symbol] (y3) at (7, 3) {1};
+  \node[symbol] (y2) at (8, 3) {0};
+  \node[symbol] (y1) at (9, 3) {1};
+
+  \node[symbol] (y+7) at (0, 2) {2};
+  \node[symbol] (y+6) at (2, 2) {0};
+  \node[symbol] (y+5) at (3, 2) {2};
+  \node[symbol] (y+4) at (5, 2) {0};
+  \node[symbol] (y+3) at (6, 2) {0};
+  \node[symbol] (y+2) at (7, 2) {2};
+  \node[symbol] (y+1) at (9, 2) {1};
+
+  \node[symbol] (y'5) at (0, 1) {3};
+  \node[symbol] (y'4) at (3, 1) {3};
+  \node[symbol] (y'3) at (6, 1) {0};
+  \node[symbol] (y'2) at (7, 1) {2};
+  \node[symbol] (y'1) at (9, 1) {1};
+
+  \path (y10) edge (y+7);
+  \path (y9) edge (y+7);
+
+  \path (y7) edge (y+5);
+  \path (y6) edge (y+5);
+
+  \path (y3) edge (y+2);
+  \path (y2) edge (y+2);
+
+  \path (y+7) edge (y'5);
+  \path (y+6) edge (y'5);
+
+  \path (y+5) edge (y'4);
+  \path (y+4) edge (y'4);
+
+  \node[white_box] at (0, 0) {$s_{10}$};
+  \node[white_box] at (1, 0) {};
+  \node[white_box] at (2, 0) {};
+  \node[white_box] at (3, 0) {$s_7$};
+  \node[white_box] at (4, 0) {};
+  \node[white_box] at (5, 0) {};
+  \node[white_box] at (6, 0) {$s_4$};
+  \node[white_box] at (7, 0) {$s_3$};
+  \node[white_box] at (8, 0) {};
+  \node[white_box] at (9, 0) {$s_1$};
+\end{tikzpicture}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
