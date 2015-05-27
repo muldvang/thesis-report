@@ -269,14 +269,26 @@ second stage $\delta_T$ is computed by
 
 A illustration of this method is given in
 figure~\ref{fig:exploiting-repetitions}. As seen, when the computation has
-finished, only a subset of the columns of $\alpha$ is computed.
+finished, only a subset of the columns of $\delta$ is computed.
 
 \begin{figure}
   \centering
-  Figure from \citet{sand2013ziphmmlib} here. Also draw the columns that are
-  not computed.
+  \input{figures/exploiting_repetitions.tex}
   \caption{Exploiting repetitions in the observation sequence to speed up the
-    Viterbi algorithm.}
+    Viterbi algorithm. The rectangles correspond to matrices and vectors. To
+    fit equation~\eqref{eq:3} the observation sequence is written from right to
+    left. Consider the observation sequence $Y_{1:10} = 1010001001$ over the
+    alphabet $\mathcal{O} = \{0, 1\}$. This is being compressed by first
+    replacing the pair $10$ by a new symbol $2$, and the replacing $20$ by $3$.
+    Hence, the original observation sequence of length 10, becomes compressed
+    to a sequence $Y_{1:5}'$ of length 5. Now, for each symbol in the new
+    alphabet $\mathcal{O'} = \{0, 1, 2, 3\}$ the $C_{o_i}$ matrices and the
+    $C_1$ matrix are constructed. These corresponds to the rectangles with a
+    thick line. The solid lines correspond to the matrix multplications
+    performed, while the dotted lines is the work saved due to redundancy.
+    Finally, some columns of the $\delta$ is computed by performing
+    matrix-vector multiplications from right to left, while the gray columns
+    correspond to the amount of work saved in the Viterbi computation.}
   \label{fig:exploiting-repetitions}
 \end{figure}
 
@@ -302,22 +314,34 @@ This is looks like the definition of the $C_{o_i}$ matrices from
 equation~\eqref{eq:7}, but instead of storing the maximum value, the state that
 results in the maximum value is stored.
 
-Now, for each occurence of a new symbol $o_{M + i} = (l_i, r_i)$ where
-$l_i, r_i \in \mathcal{O}$ in $Y_{1:T'}'$ we know the start state $s_l$ and the
-end state $s_r$ from $S'$, such that $s_l$ is the state immediatly before $l_i$
-was emitted and $s_r$ is the state after $r_i$ was emitted. Hence, we need to
-find the most likely state where $l_i$ is emitted. This state is easily
-obtained since it is stored at $R_{o_{M + i}}(s_l, s_r)$. In the case where one
-or both of $l_i, r_i \not \in \mathcal{O}$ we can apply this method
-recursively to obtain $S$.
-
-This is illustrated in figure~\ref{fig:infering-viterbi-path}.
+Now, for each occurence of a new symbol $o_{M + i} = (l_i, r_i)$ in $Y_{1:T'}'$
+we know the start state $s_l$ and the end state $s_r$ from $S'$, such that
+$s_l$ is the state immediatly before $l_i$ was emitted and $s_r$ is the state
+after $r_i$ was emitted. Hence, we need to find the most likely state where
+$l_i$ is emitted. This state is easily obtained since it is stored at
+$R_{o_{M + i}}(s_l, s_r)$. In the case where one or both of
+$l_i, r_i \not \in \mathcal{O}$ we can apply this method recursively to obtain
+$S_{1:T}$. This method is illustrated using an example in
+figure~\ref{fig:infering-viterbi-path}.
 
 \begin{figure}
   \centering
   \input{figures/infering_path.tex}
-  \caption{Infering the Viterbi path $S_T$ from the partial path
-    $S_{T'}'$.\fxerror{Figure isn't finished!}}
+  \caption{Infering the Viterbi path $S_{1:T}$ from the partial path
+    $S_{1:T'}'$. The example continues the example from
+    figure~\ref{fig:exploiting-repetitions}. When the $\delta$ table has been
+    computed for the compressed observation sequence $Y_{1:T'}'$, the sequence
+    of states $S_{1:T'}'$ may be found using the same backtracking methods as
+    for the classical Viterbi algorithm. The remaining part of the Viterbi path
+    may be computed from right to left by using the $R$ matrices. As an example
+    consider the computation of $s_5$ and $s_6$. When scanning through
+    $Y_{1:5}'$ from right to left, the symbol $Y_4' = 3$ is encountered at some
+    point. As $3 \not \in \mathcal{O}$ it is a new symbol introduced by the
+    compression, and in this case it corresponds to the pair $02$. The most
+    likely state when emitting 2 is $s_4'$ (corresponding to $s_7$) and the
+    most likely state before emitting 0 is $s_3'$ (corresponding to $s_4$). The
+    state when emitting 0 is stored in $R_3(s_4, s_7)$, since this cell in
+    $R_3$ resulted in the highest likelihood.}
   \label{fig:infering-viterbi-path}
 \end{figure}
 
