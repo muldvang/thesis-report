@@ -8,10 +8,10 @@ thesis is intended as being an extension of the work made by zipHMMlib made by
 \citet{sand2013ziphmmlib}, from now on called the original library, the code
 itself is also an extension of the library.  By the work made in this thesis
 the library has been extended to include an efficient Viterbi implementation
-and a indexed posterior decoding implementation exploiting repetitions, as well
+and an indexed posterior decoding implementation exploiting repetitions, as well
 as a posterior decoding implementation that does not exploit repetitions.
 
-As zipHMMlib is written in C++ the additions made in this thesis have also been
+As zipHMMlib is written in C++, the additions made in this thesis have also been
 written in C++.  This code can be downloaded from
 \url{users-cs.au.dk/muldvang}.  \fxerror{URL here.} The build procedure has not
 changed, so for instructions on how to build the project see
@@ -88,12 +88,12 @@ int main() {
 
 The \texttt{HMM\_Suite.read\_seq(\dots)} reads a sequence from a file. The user
 has to specify the alphabet size, since the sequence may not contain all
-symbols from the alphabet. Furthermore the user specifies that number of states
+symbols from the alphabet. Furthermore, the user specifies that number of states
 in the model $N_{\min}$ that will be used later and the number of executions
 $e$ of the Viterbi algorithm as discussed in
 section~\ref{sec:compr-stopp-crit}.
 
-If the compressed sequence will be reused later by another program it is saved
+If the compressed sequence will be reused later by another program, it is saved
 to the disk by \texttt{HMM\_Suite.write\_to\_directory(\dots)}. It may then be
 loaded using \texttt{HMM\_Suite.read\_from\_directory(\dots)}.
 
@@ -103,9 +103,9 @@ file.
 \texttt{HMM\_Suite.viterbi(\dots)} runs the Viterbi algorithm. A boolean
 \texttt{memory\_save} may be specified to choose whether to save memory or not
 as discussed in section~\ref{sec:class-viterbi-algor}. If the parameter is not
-specified the algorithm defaults to using memory saving. If the parameter
-\texttt{viterbi\_path} is provided the algorithm will backtrack to obtain the
-Viterbi path. If it is omitted only the likelihood of the most likely path is
+specified, the algorithm defaults to using memory saving. If the parameter
+\texttt{viterbi\_path} is provided, the algorithm will backtrack to obtain the
+Viterbi path. If it is omitted, only the likelihood of the most likely path is
 computed.
 
 \subsection{Posterior Decoding}
@@ -113,7 +113,7 @@ computed.
 As described in section~\ref{sec:probl-expl-repet}, exploiting repetitions will
 cannot speed up the execution of the posterior decoding algorithm. It may still
 be faster, due matrix multiplications being faster than the classical
-approach. The implementation find a posterior decoding of the same length as
+approach. The implementation finds a posterior decoding of the same length as
 the compressed sequence. Hence, to find the posterior decoding of the original
 observation sequence $Y_{1:T}$, compressed should be disabled. This may be done by
 specifying $e = 0$ when reading the sequence using

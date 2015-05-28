@@ -48,7 +48,7 @@ by multiplying the initial probability to the transition probabilities.
 
 The above formality is too limited for many applications, since the states do
 not correspond to the actual observable events. To overcome this problem a
-distinction between observables and states is made. The observables is a
+distinction between observables and states is made. The observables are a
 probabilistic function of the state. Given
 $\mathcal{O} = {o_1, o_2, \dots, o_M}$ being a set of $M$ observables an
 emission matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$ with
@@ -93,7 +93,7 @@ The first problem of finding to joint probability of an observation sequence
 $Y_{1:T}$ is solved by the Forward algorithm. This was implemented in zipHMMlib
 by \citet{sand2013ziphmmlib}.
 
-For solving the second problem (also called HMM decoding), many different
+For solving the second problem (also called HMM decoding), many
 methods may exist as it depends on how the optimality criterion is set.
 However, two widely used methods exist. One solution is to look at all possible
 sequences of states emitting the observation sequence and pick the most likely
@@ -115,17 +115,17 @@ model.
 \citet{lifshits2009speeding} present a method for speeding up the dynamic
 programming algorithms used with HMMs, namely the forward-backward algorithms
 and the Viterbi algorithm. The approach is based on finding repeated substrings
-in the observation input sequence. These substrings are found using five different
-algorithms: Four Russians method, run length encoding, Lempel-Ziv parsing,
-grammar-based compression and byte pair encoding. The forward-backward and the
-Viterbi algorithms are the reformulated into series of matrix
-multiplications. The overall idea is that the repeated substrings correspond to
-repeated matrix multiplications and by finding the repeated substrings the
-multiplications can be avoided. The article is primarily theoretical. A single
-experiment have been performed on some DNA sequences showing a speed up of the
-Viterbi algorithm when using an improved Lempel-Ziv parsing without
-backtracking. No experiments have been made for the other algorithms and no
-code has been made available.
+in the observation input sequence. These substrings are found using five
+different algorithms: Four Russians method, run length encoding, Lempel-Ziv
+parsing, grammar-based compression and byte pair encoding. In the article, the
+forward-backward and the Viterbi algorithms are the reformulated into series of
+matrix multiplications. The overall idea is that the repeated substrings
+correspond to repeated matrix multiplications and by finding the repeated
+substrings the multiplications can be avoided. A single experiment have been
+performed on some DNA sequences showing a speedup of the Viterbi algorithm when
+using an improved Lempel-Ziv parsing without backtracking. No further
+experiments have been made for the other algorithms and no code has been made
+available.
 
 \citet{sand2013ziphmmlib} present zipHMMlib, a highly optimized HMM library for
 speeding up the forward algorithm. The speed up is achieved by finding repeated
