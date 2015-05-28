@@ -67,9 +67,9 @@ hidden state.
   \label{fig:hidden-markov-model}
 \end{figure}
 
-For modelling weather we can now use the fact that the observables (rainy,
-cloudy, and sunny weather) depend on the air preasure. This may be modeled as
-$h_1$ being low preasure, $h_2$ being high preasure, $o_1$ being rainy, $o_2$
+For modeling weather we can now use the fact that the observables (rainy,
+cloudy, and sunny weather) depend on the air pressure. This may be modeled as
+$h_1$ being low pressure, $h_2$ being high pressure, $o_1$ being rainy, $o_2$
 being cloudy, and $o_3$ being sunny weather. As before the probability of a
 sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
 can be found, but it is a harder than before, since an observation sequence may be
@@ -106,7 +106,7 @@ using the Forward-Backward algorithm.
 
 Different solutions also exist to the third problem. One solution is Baum-Welch
 training that is an iterative procedure that maximizes the probability of the
-observation sequence by iteratively reestimating the parameters such that the
+observation sequence by iteratively re-estimating the parameters such that the
 new model is more likely to generate the observation sequence than the previous
 model.
 
@@ -117,7 +117,7 @@ programming algorithms used with HMMs, namely the forward-backward algorithms
 and the Viterbi algorithm. The approach is based on finding repeated substrings
 in the observation input sequence. These substrings are found using five different
 algorithms: Four Russians method, run length encoding, Lempel-Ziv parsing,
-grammer-based compression and byte pair encoding. The forward-backward and the
+grammar-based compression and byte pair encoding. The forward-backward and the
 Viterbi algorithms are the reformulated into series of matrix
 multiplications. The overall idea is that the repeated substrings correspond to
 repeated matrix multiplications and by finding the repeated substrings the

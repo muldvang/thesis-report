@@ -31,7 +31,7 @@ multiple sequences if either the forward or backward tables are requested and
 neither if the Viterbi path or posterior decoding is requested.
 
 For matrix multiplications a BLAS framework is used to make these as efficient
-as posible.  For the max times matrix multplication and addition simple nested
+as possible.  For the max times matrix multiplication and addition simple nested
 for loops are used as BLAS does not support these operations.
 
 \section{Usage}
@@ -102,7 +102,7 @@ file.
 
 \texttt{HMM\_Suite.viterbi(\dots)} runs the Viterbi algorithm. A boolean
 \texttt{memory\_save} may be specified to choose whether to save memory or not
-as discussed in section~\ref{sec:class-viterbi-algor}. If the paramter is not
+as discussed in section~\ref{sec:class-viterbi-algor}. If the parameter is not
 specified the algorithm defaults to using memory saving. If the parameter
 \texttt{viterbi\_path} is provided the algorithm will backtrack to obtain the
 Viterbi path. If it is omitted only the likelihood of the most likely path is
@@ -126,7 +126,7 @@ vector in which the posterior decoding is saved.
 \subsection{Indexed Posterior Decoding}
 
 For the indexed posterior decoding compression may be enabled. The
-\texttt{HMM\_Suite::indexed\_posterior\_decoding(\dots)} takes as paramters the
+\texttt{HMM\_Suite::indexed\_posterior\_decoding(\dots)} takes as parameters the
 matrices $\pi, A$, and $B$, the indices $i$ and $j$ and a reference to a vector
 where the indexed posterior decoding is saved.
 

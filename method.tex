@@ -13,7 +13,7 @@ As mentioned in section~\ref{sec:hidden-markov-models} an observation sequence
 $Y_{1:T}$ may be generated in different ways, since multiple hidden states can
 have a nonzero probability of omitting the same symbol. Given some model
 $\lambda$ and an observation sequence, an interesting question may be: of all
-posible paths of hidden sequences, which one is the most likely, and how likely
+possible paths of hidden sequences, which one is the most likely, and how likely
 is it? This question is solved the Viterbi algorithm. This algorithm is first
 described in its classical formulation and then changed into using matrix
 multiplications. Then is it described how the compression using byte pair
@@ -120,7 +120,7 @@ lookup in $\Psi$.
 A space consumption of $O(N T)$ might be a too large for some applications;
 especially the $T$ factor may become large. Another way to backtrack is
 described by \citet{Tarnas01061998}. By using this approach the space
-consumption can be reduced to $O(N \sqrt{T})$ while the assymptotic running
+consumption can be reduced to $O(N \sqrt{T})$ while the asymptotic running
 time of the algorithm is preserved.
 
 The $\delta$ table is split into blocks of some size $B$. While computing
@@ -128,7 +128,7 @@ $\delta$, the first column of each block in stored, while the rest is thrown
 away. These columns may be called checkpoints. Since computing a column only
 requires the previous column as seen in equation~(\ref{eq:1}), the table part
 of the $\delta$ table corresponding to a block can be computed using the
-checkpoint, and thereby $\Psi$ may also be computed. When the last columnn in
+checkpoint, and thereby $\Psi$ may also be computed. When the last column in
 $\delta$ has been computed, $i_T^*$ may be found as described above. The blocks
 are then recomputed one at a time from right to left. When the $\Psi$ table for
 a block has been recomputed it is backtracked as before. Hence, only one block
@@ -136,7 +136,7 @@ is kept in memory at a time. If $B = \sqrt{T}$ is chosen, the space consumption
 of this algorithm is
 $O(N T / B) = O(N T / \sqrt{T}) = O(N \sqrt{T})$. The computation
 of $\delta$ is now done two times, so the algorithm will be a slower, but the
-algorithm keeps having the same assymptotic running time of $O(N^2 T)$.
+algorithm keeps having the same asymptotic running time of $O(N^2 T)$.
 
 \section{Viterbi as Linear Algebra}
 \label{sec:algorithm-as-linear}
@@ -188,7 +188,7 @@ computing this from right to left, i.e.\ the $\delta$ table is computed for $t
 $C_1$ is a vector that when multiplied by the matrix $C_2$ will result in a new
 vector. Hence, computing $\delta_t$ from right to left will result in $t$
 matrix-vector multiplications, while computing it from left to right will
-result in $t$ matrix-matrix multiplications that are less effecient to compute.
+result in $t$ matrix-matrix multiplications that are less efficient to compute.
 
 Backtracking is achieved in the same way as for the classical Viterbi algorithm
 as described in section~\ref{sec:class-viterbi-algor}.
@@ -203,7 +203,7 @@ series of matrix-vector multiplications resulting in a vector of size $O(N)$.
 In total this requires $O(2 M N^2 + 2 N) = O(M N^2)$ space. If backtracking is
 required the space consumption will be increased by the size of the $\Psi$
 table that has size $O(N T)$. The total the space consumption with backtracking
-enabled is $O(M N^2 + N T)$, or if the checkpointing trick is used, $O(M N^2 +
+enabled is $O(M N^2 + N T)$, or if the checkpoint trick is used, $O(M N^2 +
 N \sqrt{T})$.
 
 Likewise, the running time has changed. Creating the $B_{o_i}$ matrices takes
@@ -228,18 +228,18 @@ Byte-pair encoding is a simple data compression method. The most common pair
 consecutive bytes in the data is replaced by a byte that do not exist in the
 data. This is repeated until either all new bytes are used or the most common
 pair do not appear frequently in the data. The use of bytes may easily be
-replaced by used of characters or intergers. For example, the input sequence
+replaced by used of characters or integers. For example, the input sequence
 01012012 would first be encoded into 33232 by substituting 01 with 3; in the
-next iteration it would be encoded into 344 by substituding 32 by 4 etc.
+next iteration it would be encoded into 344 by substituting 32 by 4 etc.
 
 \subsection{Using Byte-Pair Encoding to Speed Up Viterbi}
 \label{sec:using-byte-pair}
 
 The Viterbi algorithm achieves a speed up using byte-pair encoding in the
-following way. Let $o_i o_j \in O \times O$ be the most frequently occuring
+following way. Let $o_i o_j \in O \times O$ be the most frequently occurring
 pair of symbols in $Y_{1:T}$ and let $n_{o_i o_j}$ be the number of
-occurences. $o_i o_j$ is substituded by a new symbol $o_{M + 1}$ and the length
-of $Y_{1:T}$ is thereby reduced by $n_{o_i o_j}$. All $n_{o_i o_j}$ occurences
+occurrences. $o_i o_j$ is substituted by a new symbol $o_{M + 1}$ and the length
+of $Y_{1:T}$ is thereby reduced by $n_{o_i o_j}$. All $n_{o_i o_j}$ occurrences
 of $C_{o_i} \odot C_{o_j}$ in equation~\eqref{eq:2} may be replaced by the new
 matrix
 \begin{equation}
@@ -284,7 +284,7 @@ finished, only a subset of the columns of $\delta$ is computed.
     to a sequence $Y_{1:5}'$ of length 5. Now, for each symbol in the new
     alphabet $\mathcal{O'} = \{0, 1, 2, 3\}$ the $C_{o_i}$ matrices and the
     $C_1$ matrix are constructed. These corresponds to the rectangles with a
-    thick line. The solid lines correspond to the matrix multplications
+    thick line. The solid lines correspond to the matrix multiplications
     performed, while the dotted lines is the work saved due to redundancy.
     Finally, some columns of the $\delta$ is computed by performing
     matrix-vector multiplications from right to left, while the gray columns
@@ -314,9 +314,9 @@ This is looks like the definition of the $C_{o_i}$ matrices from
 equation~\eqref{eq:7}, but instead of storing the maximum value, the state that
 results in the maximum value is stored.
 
-Now, for each occurence of a new symbol $o_{M + i} = (l_i, r_i)$ in $Y_{1:T'}'$
+Now, for each occurrence of a new symbol $o_{M + i} = (l_i, r_i)$ in $Y_{1:T'}'$
 we know the start state $s_l$ and the end state $s_r$ from $S'$, such that
-$s_l$ is the state immediatly before $l_i$ was emitted and $s_r$ is the state
+$s_l$ is the state immediately before $l_i$ was emitted and $s_r$ is the state
 after $r_i$ was emitted. Hence, we need to find the most likely state where
 $l_i$ is emitted. This state is easily obtained since it is stored at
 $R_{o_{M + i}}(s_l, s_r)$. In the case where one or both of
@@ -327,7 +327,7 @@ figure~\ref{fig:infering-viterbi-path}.
 \begin{figure}
   \centering
   \input{figures/infering_path.tex}
-  \caption{Infering the Viterbi path $S_{1:T}$ from the partial path
+  \caption{Inferring the Viterbi path $S_{1:T}$ from the partial path
     $S_{1:T'}'$. The example continues the example from
     figure~\ref{fig:exploiting-repetitions}. When the $\delta$ table has been
     computed for the compressed observation sequence $Y_{1:T'}'$, the sequence
@@ -350,7 +350,7 @@ section~\ref{sec:class-viterbi-algor}, three different variations of the Viterbi
 algorithm may be defined.
 \begin{description}
 \item[Viterbi\textsubscript{L}] that compresses the sequence and only computes the
-  loglikelihood,
+  log-likelihood,
 \item[Viterbi\textsubscript{P}] that also backtracks using a table of pointers,
 \item[Viterbi\textsubscript{PM}] that saves memory on backtracking by using checkpoints.
 \end{description}
@@ -419,7 +419,7 @@ disk. This is useful if many sequences are used with one HMM.\
 
 All matrices contain probabilities, i.e.\ the are in range between 0 and
 1. Multiplying them together results in even smaller numbers. Since the value
-is stored as a IEEE 754 floating point format there is a limited precission,
+is stored as a IEEE 754 floating point format there is a limited precision,
 and the computations will quickly underflow. \citet{sand2013ziphmmlib}
 describes how to avoid underflow in terms to the forward algorithm. It turns
 out that it is easier to avoid for the Viterbi algorithm.
@@ -468,10 +468,10 @@ supplies an estimate $e$ of how many times the compressed sequence is going to
 be used. For a low $e$ the algorithm should not spend too much time on
 compressing the sequence while for a high value of $e$, the algorithm can
 ``afford'' spending more time on compression, since the time spent will be
-reearned again when running the actual algorithm.
+earned again when running the actual algorithm.
 
 Furthermore the user specifies a parameter $N_{\text{min}}$ that is the number
-of states in the model that will be used. In the compression phaze it is
+of states in the model that will be used. In the compression phase it is
 estimated how much time will be spent on the actual $e$ executions of the
 actual algorithm, by measuring the time it takes to do a matrix-matrix
 multiplication and a matrix-vector multiplication with matrices of size
@@ -483,7 +483,7 @@ $N_{\text{min}}$ cannot be found a list of parameters
 $(N_{\text{min}}^1, N_{\text{min}}^2, \dots)$ may be specified and the input
 sequence will be compressed for each of these model sizes. If no
 $N_{\text{min}}$ parameter is provided the compression continues until the
-frequency of the most common pair is the same in two consequtive iterations.
+frequency of the most common pair is the same in two consecutive iterations.
 
 This method may be reused for the Viterbi algorithm. Instead of measuring the
 time it takes to do matrix-matrix multiplications and matrix-vector
@@ -515,7 +515,7 @@ be a valid path according to the transitions of the model, like the Viterbi
 decoding, but it may still be useful for some applications.
 
 The posterior decoding may be efficiently computed using the forward-backward
-algorithms. The forward-backward algorithms are comparible to the Viterbi
+algorithms. The forward-backward algorithms are comparable to the Viterbi
 algorithm. Instead of computing the probability of most likely path, they
 compute the joint probability of all paths, that is
 \begin{equation*}
@@ -548,7 +548,7 @@ Viterbi algorithm using
 
 Where the forward algorithm computes the table from left to right, i.e.\
 it computes the joint probability of emitting $y_t$ after having emitted
-$y_{1:t-1}$, the backward algorithm computes the joint probability of emmiting
+$y_{1:t-1}$, the backward algorithm computes the joint probability of emitting
 $y_t$ and then emitting $y_{t+1:T}$. This corresponds to filling the table from
 right to left. The backward table is called $\beta$. The recursion may be written as
 \begin{equation}
@@ -612,7 +612,7 @@ Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
 matrix multiplications no longer are max times multiplications but normal
 matrix multiplications.
 
-The assymptotic running time and space consumption is equal to the running time
+The asymptotic running time and space consumption is equal to the running time
 and space consumption of the Viterbi algorithm.
 
 \fxerror{Describe that the same approach as for classical posterior decoding is used.}
@@ -652,7 +652,7 @@ results.
 \citet{sand2013ziphmmlib} exploits repetitions for the forward algorithm using
 byte-pair encoding similarly to the description in
 section~\ref{sec:expl-repet} but do implement any kind of backtracking. Using
-the same method it is easy to also exploit repetetions in the backward
+the same method it is easy to also exploit repetitions in the backward
 algorithm.
 
 To compute the posterior decoding of the uncompressed sequence from the
@@ -667,7 +667,7 @@ approaches are now discussed in turn.
 
 \begin{enumerate}
 \item For the Viterbi algorithm it is in section~\ref{sec:backtracking}
-  described how the $R$ matriced can be precomputed to retrieve the full
+  described how the $R$ matrices can be precomputed to retrieve the full
   Viterbi path from the partial path. This method makes use of the property
   that the Viterbi algorithm maximizes over all previous states. From the
   partial path the previous state that maximizes the likelihood is known. Using
@@ -692,7 +692,7 @@ approaches are now discussed in turn.
   Looking at figure~\ref{fig:full-forward-table}, assume the columns $i$ and
   $j$ has been computed using the compressed sequence. The columns $i + 1$ and
   $j + 1$  that correspond to the same symbol needs to be computed. It is an
-  open question whether it is posible to compute those faster than the naïve
+  open question whether it is possible to compute those faster than the naive
   approach that takes $2N^2$ time.
 \end{enumerate}
 
@@ -703,7 +703,7 @@ approaches are now discussed in turn.
     in figures~\ref{fig:exploiting-repetitions}
     and~\ref{fig:infering-viterbi-path} where the sequence was written from
     right to left, i.e.\ the indices were increasing from right to left. In
-    this illustration the indicies in this illustration are increasing from
+    this illustration the indices in this illustration are increasing from
     left to right, since it is more natural to think about. The gray boxes
     indicate columns filled during the when computing the table for the
     compressed sequence. The white columns needs to be computed in less than
@@ -712,17 +712,17 @@ approaches are now discussed in turn.
 \end{figure}
 
 Unfortunately no solution to this problem has been found. Hence, the posterior
-decoding cannot be speeded up by exploiting repetitions in the observation
+decoding cannot be sped up by exploiting repetitions in the observation
 sequence. The running time of computing the posterior decoding is then
-$O(M N^3 + TN^2)$, which is assymptotically worse than the classical posterior
+$O(M N^3 + TN^2)$, which is asymptotically worse than the classical posterior
 decoding algorithm that runs in $O(TN^2)$. Note though that the alphabet size
-$M$ typically is small, so it is expected that the assymptotic running times of
+$M$ typically is small, so it is expected that the asymptotic running times of
 the two algorithms in practice are comparable.
 
 \section{Indexed Posterior Decoding}
 
 In the last section it was discussed that the posterior decoding for an
-observation sequence cannot be done assymptotically faster using the byte-pair
+observation sequence cannot be done asymptotically faster using the byte-pair
 compression. However, if only parts of the posterior decoding are needed
 instead of the entire path, a speedup may be obtained.
 
@@ -735,7 +735,7 @@ Recall from section~\ref{sec:using-byte-pair} that the columns of the forward
 and backward tables, $\alpha'$ and $\beta'$, of the compressed sequence
 $Y_{1:T'}'$ are a subset of columns in the tables, $\alpha$ and $\beta$, of
 $Y_{1:T}$. Furthermore, recall that a column may be computed using the column
-emmediately to the left or right for the forward and backward algorithms
+immediately to the left or right for the forward and backward algorithms
 respectively as seen in equation~\eqref{eq:8} and~\eqref{eq:9}. Using this, the
 columns $i$ to $j$ of the forward and backward tables, $\alpha$ and $\beta$,
 corresponding to the \emph{subsequence} $Y_{i:j}$ may be found using existing
@@ -747,14 +747,14 @@ columns from the forward and backward tables, $\alpha'$ and $\beta'$.
   \caption{Illustration of the computation of the forward (or backward) table
     for a part of the uncompressed sequence given by indices $i$ to $j$,
     given that the columns of the forward table for the compressed sequence,
-    shown in grey, have been computed in advance.}
+    shown in gray, have been computed in advance.}
   \label{fig:subsequence-posterior}
 \end{figure}
 
 An example of the above is illustrated in
 figure~\ref{fig:subsequence-posterior}. Assume that the forward table $\alpha'$
 and the backward table $\beta'$ for the compressed sequence has been computed.
-This is shown as grey columns. To compute $\alpha$ and $\beta$ from index $i$
+This is shown as gray columns. To compute $\alpha$ and $\beta$ from index $i$
 to $j$, the computed column at some index $k$ with $k \le i$ may be used as a
 starting point for the forward computation. In this example that is index 3
 that corresponds to the column at index 2 in $\alpha'$. Likewise, some column
@@ -763,8 +763,8 @@ computation of the backward table.
 
 \subsubsection{Starting Point Columns}
 
-To find the indicies $k$ and $l$ for the uncompressed sequence and the
-corresponding indicies $k'$ and $l'$ for the compressed sequence, a sorted
+To find the indices $k$ and $l$ for the uncompressed sequence and the
+corresponding indices $k'$ and $l'$ for the compressed sequence, a sorted
 mapping \texttt{orig\_index2comp\_index} from uncompressed indices to
 compressed indices is created. In this example the map would consist of the
 mappings $1 \rightarrow 1, 3 \rightarrow 2, 7 \rightarrow 3$ and
@@ -827,7 +827,7 @@ time computing columns that is thrown away afterwards, and the running time is
 $O(M' N^3 + N^2 T)$ which is not an improvement over the classical
 posterior decoding. The decompression needs to be made smarter.
 
-Observe that only the symbols from index $[i,j]$ needs to be from the orignal
+Observe that only the symbols from index $[i,j]$ needs to be from the original
 alphabet $\mathcal{O}$. The symbols from $[k, i)$ and $(j, l]$ may be from the
 new alphabet, since each column in the these parts of $\alpha$ and $\beta$ are
 not needed for the posterior decoding computation. Hence, when decompressing
@@ -842,7 +842,7 @@ the middle being the symbols $Y_{i:j}$, and then some symbols from
 $\mathcal{O'}$ again in the end.
 
 An algorithm for doing this takes as input a compressed sequence $Y'$ and the
-indicies $i, j, k, l, k'$ and $l'$. The symbols of subsequence $Y_{k':l'}'$ is
+indices $i, j, k, l, k'$ and $l'$. The symbols of subsequence $Y_{k':l'}'$ is
 pushed to a stack $Y^S$, such that $Y_{l'}'$ is at the bottom and $Y_{k'}'$ at
 the top. The algorithm pops symbols one by one from $Y^S$, while the
 corresponding index into the uncompressed sequence $Y$ is maintained by using
@@ -855,7 +855,7 @@ that symbol in $Z$ is saved, as it is used later for computing the posterior
 decoding. If $c$ overlaps $[k, l]$ it is appended to $Z$. In case there is no
 overlap between $c$ and $[k, l]$ nothing is done, i.e.\ $c$ is thrown away.
 Pseudo code for this algorithm is given in algorithm~\ref{alg:decompress}. This
-algorithm is much more effecient to use for very compressed sequences.
+algorithm is much more efficient to use for very compressed sequences.
 
 \begin{algorithm}
   \caption{Partially decompress the compressed sequence.}
@@ -932,7 +932,7 @@ These four steps are now analyzed in turn.
   \texttt{symbol2length}. This takes time proportional to the number of
   symbols, i.e.\ $O(M')$. Computing the \texttt{orig\_index2comp\_index}
   requires a scan through the compressed sequence. That is $O(T')$. Performing
-  the binary search on the map to find the indicies $k, l, k'$ and $l'$ takes
+  the binary search on the map to find the indices $k, l, k'$ and $l'$ takes
   $O(\log T')$ time. In total this becomes $O(M' + T')$.
 
 \item The analysis of algorithm~\ref{alg:decompress} is more complex. In the
@@ -952,7 +952,7 @@ These four steps are now analyzed in turn.
   running time the number of nodes need to be counted.
 
   The colored nodes are split into two. The blue nodes correspond to symbols
-  that are created during the decompression and has decendants that are not
+  that are created during the decompression and has descendants that are not
   decompressed. At each level in the tree there are at most two blue nodes.
   Hence, there is at most 2 times the height $h$ of the tree blue nodes. The
   red notes correspond to symbols that are fully decompressed into symbols from
@@ -1034,7 +1034,7 @@ case the decompression may be illustrated as $T'$ trees. In many cases only
 some of these needs to be traversed and the height of them will often be much
 smaller than $\log T$. Furthermore, the $\log T$ term will most likely not
 dominate the $j - i$ term. As an example the human genome has length
-approximately $3,000,000,000$ basepairs and may be used as the observation sequence
+approximately $3,000,000,000$ base pairs and may be used as the observation sequence
 in some bioinformatics applications. As $\log_2 3,000,000,000 \approx 31$ and
 $j - i$ probably will be larger, the $\log T$ term does not contribute to much
 of the running time.

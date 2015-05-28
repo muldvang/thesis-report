@@ -43,7 +43,7 @@ from 2 to 512.
 The experiments have been run on a PC with an Intel Xeon W3550 $3.07$ GHz CPU
 and 4 GB RAM running GNU/Linux 3.13. Each point in the plots in this chapter
 corresponds to the mean of multiple runs. For all experiments, the executions
-of a program with some paramters have been repeated five times and the mean
+of a program with some parameters have been repeated five times and the mean
 computed to even out fluctuations in the running time. Furthermore, in the case
 of random sequences, 20 random sequences of the same length has been generated
 and the mean of the measure calculated, since especially for short sequences
@@ -140,7 +140,7 @@ three variations of the Viterbi algorithm corresponding to the backtracking
 discussed in section~\ref{sec:backtracking}. They are named as follows.
 \begin{description}
 \item[Viterbi\textsubscript{L}] compresses the sequence and only computes the
-  loglikelihood,
+  log-likelihood,
 \item[Viterbi\textsubscript{P}] also backtracks,
 \item[Viterbi\textsubscript{PM}] also saves memory on backtracking.
 \end{description}
@@ -206,9 +206,9 @@ Recall that the running time is cubic in $N$ is due to the computation of the
 $C$ matrices. The multiplication of the matrices can be done in time
 proportional to $N^2$ as stated in section~\ref{sec:running-time}. When the
 size of the new alphabet $M'$ is small compared to the length of the compressed
-seuence, the $N^3$ term vanishes in practice when compared to the $N^2$
+sequence, the $N^3$ term vanishes in practice when compared to the $N^2$
 term. Hence, it may be seen that the running time of the matrix multiplication
-(and the backtracking) is propotional to $N^2$ by not compressing the
+(and the backtracking) is proportional to $N^2$ by not compressing the
 sequence. This is shown in figure~\ref{fig:assymptotic_viterbi_N} where
 $\lvert M' \rvert = 4$ and $\lvert T' \rvert = 10.000$.
 
@@ -232,7 +232,7 @@ First the zipHMMlib Viterbi algorithm is compared to the classical
 implementation of the Viterbi algorithm. Recall that the preprocessing may be
 saved to disk for later use. For some problems one might only need to run
 Viterbi once for a sequence. As described in section~\ref{sec:compr-stopp-crit}
-the preprocessesing uses an estimate of how many times the Viterbi algorithm is
+the preprocessing uses an estimate of how many times the Viterbi algorithm is
 run to compress the sequence appropriately. Experiments have been made with one
 and with 500 executions of Viterbi. In total, six variations of the Viterbi
 algorithm have been measured:
@@ -243,11 +243,11 @@ algorithm have been measured:
 % \item[Uncompressed Path Memory] that also saves memory in the
 %   backtracking process,
 \item[Viterbi\textsubscript{L} 1] that compresses the sequence and only computes the
-  loglikelihood once,
+  log-likelihood once,
 \item[Viterbi\textsubscript{P} 1] that also backtracks,
 \item[Viterbi\textsubscript{PM} 1] that also saves memory on backtracking.
 \item[Viterbi\textsubscript{L} 500] that compresses the sequence and computes the
-  loglikelihood 500 times,
+  log-likelihood 500 times,
 \item[Viterbi\textsubscript{P} 500] that also backtracks 500 times,
 \item[Viterbi\textsubscript{PM} 500] that also saves memory on backtracking.
 \end{description}
@@ -275,7 +275,7 @@ sequences. \fxnote{Should this be avoided by the compression stopping
   criterion?} \fxwarning{Discuss that the speedup factor of the backtracking
   algorithms has a greater speedup factor than the likelihood computing.} This
 is not seen for the Viterbi 500 algorithms, where the speedup factor keeps
-increasing for larger sequences. This is because the preprocessesing does not
+increasing for larger sequences. This is because the preprocessing does not
 dominate the running time as it does for the Viterbi 1 algorithms.
 
 As expected, computing the path limits the speedup factor since the running
@@ -331,7 +331,7 @@ In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
 random data given the right circumstances. In all cases a much larger speedup
 is obtained if the Viterbi path is not needed. The Viterbi\textsubscript{PM}
 algorithm is slower noticeably slower than the Viterbi\textsubscript{P} algorithm. Which
-of the algorithms to use is a tradeoff between memory usage and speed of the
+of the algorithms to use is a trade-off between memory usage and speed of the
 program. If one only needs to run the algorithm once, compression should be
 either enabled or disabled depending on whether the path is requested or
 not. If the Viterbi algorithm is run for multiple models, a speedup is gained
@@ -534,7 +534,7 @@ is faster whereas the classical algorithm is a better for small models.
 \section{Indexed Posterior Decoding}
 
 In this section experiments on the indexed posterior decoding is
-made. Recall that indexed posterior decoding also takes two indeces $i$ and
+made. Recall that indexed posterior decoding also takes two indices $i$ and
 $j$ as input an only returns the posterior decoding for the subsequence
 $Y_{i:j}$.
 
@@ -549,7 +549,7 @@ The first term $M' N^3$ comes from the computation of the $C$ matrices. This
 has already been experimented with for the Viterbi algorithm in
 section~\ref{sec:theor-runn-times}. Since the only difference between the
 computations for the Viterbi algorithm and the forward-backward algorithm has
-to do with nummerical stability, the theoretical running will be also hold for
+to do with numerical stability, the theoretical running will be also hold for
 the indexed posterior decoding.
 
 The second term $N^2 T'$ comes from computing the forward and backward tables
@@ -635,8 +635,8 @@ For the second experiment the length of the input sequence has been varied from
 small sequences of length $10^3$ to approximately $10^7$. As already seen in
 sections~\ref{sec:comp-ziphmml-viterbi} and~\ref{sec:comp-class-algor} the
 longer the input sequence, the better speedup for the Viterbi algorithm and the
-noncompressed posterior decoding. It is expected that the indexed posterior
-decoding will be similar to the noncompressed posterior decoding algorithm. The
+uncompressed posterior decoding. It is expected that the indexed posterior
+decoding will be similar to the uncompressed posterior decoding algorithm. The
 result of this experiment is shown in
 figure~\ref{fig:indexed_posterior_speedup_vs_T}. The result is as
 expected. Again, the indexed posterior decoding 1 algorithm is slower than
@@ -671,7 +671,7 @@ and~\ref{fig:speedup_vs_N2}.
 
 \subsubsection{Fibonacci Words}
 
-The results of the experiments using random data showed potitial for speedups
+The results of the experiments using random data showed potential for speedups
 in some cases whereas in other cases slowdowns were obtained. As seen for the
 Viterbi algorithm much better results were obtained by using Fibonacci words,
 due to their repetitive nature.

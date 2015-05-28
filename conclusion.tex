@@ -29,16 +29,16 @@ preprocessing is cubic in the number of states, a speedup is not obtained in
 the models used become too large.
 
 The backward algorithm has been implemented as part of the implementation for
-computing the posterior decoding. It has not been posible to find a method for
+computing the posterior decoding. It has not been possible to find a method for
 exploiting repetitions in the observation sequence, so in practice it becomes a
 battle between constants whether the classical version or the zipHMMlib version
 is the fastest. In the experimental setup used in this thesis the constants are
 in favor of the zipHMMlib implementation, when the observation sequence length and
 model size are large enough.
 
-Exploting repetitions is however posible for posterior decoding if only a
+Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
-becomes \fxfatal{Insert running time} with $j - i$ being the length of the
+becomes \fxerror{Insert running time} with $j - i$ being the length of the
 requested substring.
 
 \section{Future Work}
