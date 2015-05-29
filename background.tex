@@ -39,11 +39,11 @@ $\sum_{i=1}^N \pi_i = 1$ being the probability of starting in each state.
 
 Having established the above system with $A$ and $\Pi$ given, one may ask
 questions like what the probability of observing a certain sequence of states
-$I_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example lets assume the
+$V_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example lets assume the
 model in figure~\ref{fig:markov-chain} is a model of the weather with $h_1$
 being rainy, $h_2$ being cloudy, and $h_3$ being sunny weather. The probability
-of a sequence of observations $I_{1:4} = i_1i_2i_3i_4$ with
-$i_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, may easily be computed
+of a sequence of observations $V_{1:4} = v_1v_2v_3v_4$ with
+$v_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, may easily be computed
 by multiplying the initial probability to the transition probabilities.
 
 The above formality is too limited for many applications, since the states do
@@ -83,7 +83,7 @@ mentioned.
   model $\lambda = (A, B, \Pi)$, how we compute $\Pr(O \mid \lambda)$, the
   probability of the observation sequence.
 \item Given the observation sequence $Y_{1:T} = y_1y_2\dots{}y_T$, how do we
-  choose a state sequence $I = i_1i_2\dots{}i_T$ which is optimal in some
+  choose a state sequence $I = v_1v_2\dots{}v_T$ which is optimal in some
   meaningful sense.
 \item How we adjust the model parameters $\lambda = (A, B, \Pi)$ to maximize
   $\Pr(O \mid \lambda)$.
@@ -98,9 +98,9 @@ methods may exist as it depends on how the optimality criterion is set.
 However, two widely used methods exist. One solution is to look at all possible
 sequences of states emitting the observation sequence and pick the most likely
 one. This problem is solved efficiently by the Viterbi algorithm. Another
-method is to choose the states $i_t$ that are individually most likely. In this
+method is to choose the states $v_t$ that are individually most likely. In this
 way the expected number of correct states is maximized, but the state sequence
-may not be valid, since the transition probability from $i_t$ to $i_{t + 1}$
+may not be valid, since the transition probability from $v_t$ to $v_{t + 1}$
 might be zero. This is also called the posterior decoding and is solved by
 using the Forward-Backward algorithm.
 
