@@ -610,11 +610,14 @@ Viterbi algorithm in section~\ref{sec:algorithm-as-linear}, except that the
 matrix multiplications no longer are max times multiplications but normal
 matrix multiplications.
 
+To compute the posterior decoding equation~\eqref{eq:6} is used. Hence, the
+matrix formulation is only used to compute the forward and backward tables,
+while the computation of the posterior decoding itself has not changed from the
+classical formulation.
+
 The asymptotic running time and space consumption is equal to the running time
 and space consumption of the Viterbi algorithm, since the algorithms only
 differ on the type of matrix multiplication used.
-
-\fxerror{Describe that the same approach as for classical posterior decoding is used.}
 
 \subsection{Numerical Stability}
 

@@ -289,8 +289,6 @@ gain a speedup as good as the Viterbi\textsubscript{P}. \fxwarning{Elaborate.}
     running time for sequences of varying lengths using
     a HMM with 16 states.}
   \label{fig:compressed_1_speedup_vs_sequence_length}
-\fxnote{It should not be decreasing when the compression criterion is set for
-  Viterbi explicitly.}
 \end{figure}
 
 \begin{figure}
@@ -612,7 +610,9 @@ when $j - i$ gets closer to $T'$.
   \caption{The running time of indexed posterior decoding for varying distances
     between $i$ and $j$. Random sequences has been used.}
   \label{fig:assymptotic_indexed_posterior_subseq_length.tex}
-  \fxnote{Why does the running time increase with almost a factor three?}
+  \fxnote{Mention that the running time increases with almost a factor three
+    due to the computation of almost the entire observation sequence that is
+    much slower than doing it on the compressed sequence.}
 \end{figure}
 
 In figure~\ref{fig:indexed_posterior_speedup_vs_subseq} the running time is
@@ -697,7 +697,7 @@ experiment is shown in
 figure~\ref{fig:assymptotic_indexed_posterior_fib_subseq_length.tex}. As seen
 the result is not as expected as the length of the subsequence indeed has an
 impact on the running time. The plot is very similar to the case of random
-data. \fxerror{Explain this by e.g.\ measuring the length of $\delta$.}
+data. \fxerror{Explain this.}
 
 \begin{figure}
   \centering
