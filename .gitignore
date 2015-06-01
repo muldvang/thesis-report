@@ -4,6 +4,8 @@ master.makefile
 tikz/
 master.lox
 _minted-master/
+_minted-tikz/
+master.auxlock
 
 ### https://raw.github.com/github/gitignore/master/TeX.gitignore
 
