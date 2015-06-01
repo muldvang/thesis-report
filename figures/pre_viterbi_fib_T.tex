@@ -1,14 +1,13 @@
-\tikzsetnextfilename{pre_viterbi_T}
+\tikzsetnextfilename{pre_viterbi_fib_T}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Sequence length $T$,
-    ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
-    width=\textwidth
+    width=\textwidth,
     ]
     \addplot[only marks, color=black, error bars, y dir=both, y explicit]
     table[x=T, y=many_pre_time/T, y error=many_pre_time/T_std]
-    {plot_data/viterbi_sequence_transformed.data};
+    {plot_data/viterbi_fib_sequence_transformed.data};
   \end{axis}
 \end{tikzpicture}
 

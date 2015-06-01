@@ -1,22 +1,26 @@
-\tikzsetnextfilename{assymptotic_viterbi_backtrack_T}
+\tikzsetnextfilename{assymptotic_viterbi_fib_backtrack_T}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Sequence length $T$,
-    ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
     width=\textwidth,
+    legend entries={% Viterbi\textsubscript{L},
+      Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}},
+    legend to name=test2,
+    legend columns=-1,
+    legend style={/tikz/every even column/.append style={column sep=10pt}},
     ]
     % \addplot[only marks, color=red, error bars, y dir=both, y explicit]
     % table[x=T, y=many_running_time/T, y error=many_running_time/T_std]
-    % {plot_data/viterbi_sequence_transformed.data};
+    % {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=blue, error bars, y dir=both, y explicit]
     table[x=T, y=many_path_running_time/T, y error=many_path_running_time/T_std]
-    {plot_data/viterbi_sequence_transformed.data};
+    {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=green, error bars, y dir=both, y explicit]
     table[x=T, y=many_path_memory_running_time/T, y error=many_path_memory_running_time/T_std]
-    {plot_data/viterbi_sequence_transformed.data};
+    {plot_data/viterbi_fib_sequence_transformed.data};
   \end{axis}
 \end{tikzpicture}
 

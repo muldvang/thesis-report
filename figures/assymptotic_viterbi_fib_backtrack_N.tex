@@ -1,11 +1,14 @@
-\tikzsetnextfilename{assymptotic_viterbi_backtrack_N}
+\tikzsetnextfilename{assymptotic_viterbi_fib_backtrack_N}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
     xlabel=Model size $N$,
-    ylabel=$\frac{\text{Running time}}{N^3}$,
     xmode=log,
     % ymode=log,
-    ymax=0.00005,
+    width=\textwidth,
+    legend entries={Viterbi\textsubscript{L}, Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}},
+    legend to name=test3,
+    legend columns=-1,
+    legend style={/tikz/every even column/.append style={column sep=10pt}},
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
     table[x=N, y=many_running_time/N^3, y error=many_running_time/N^3_std]

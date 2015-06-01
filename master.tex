@@ -34,6 +34,10 @@
 \usetikzlibrary{pgfplots.colorbrewer}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz/,mode=list and make]
+\pgfplotsset{invoke before crossref tikzpicture={\tikzexternaldisable},
+  invoke after crossref tikzpicture={\tikzexternalenable}} % Cross reference
+                                % tikzpicture, e.g. named legends does not work
+                                % properly with externalization.
 \pgfplotsset{%
   colorbrewer cycle list=Set1,
   legend style={at={(1, 1)},anchor=north west,draw=none,fill=none},
