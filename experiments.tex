@@ -93,8 +93,15 @@ experiments. This corresponds to DNA sequences that HMM's are often used with
 in the field of bioinformatics.
 
 \begin{figure}
-  \centering
-  \input{figures/compression_ratio.tex}
+  \centering\ref{compression_legend}
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering \input{figures/compression_ratio_one.tex}
+    \caption{Estimate $e = 1$.}
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering \input{figures/compression_ratio.tex}
+    \caption{Estimate $e = 500$.}
+  \end{subfigure}
   \caption{The compression ratio of Fibonacci words, random sequences of
     alphabet size 2, random sequences of alphabet size 4, and single character
     sequences.}
@@ -197,7 +204,7 @@ compression ratio is much better and the Viterbi\textsubscript{P} and
 Viterbi\textsubscript{PM} algorithms are clearly not linear in $T'$.
 
 \begin{figure}
-  \centering
+  \centering\ref{test}
   \begin{subfigure}[b]{0.5\textwidth}
     \centering \input{figures/assymptotic_viterbi_T}
     \captionsetup{margin=10pt}
@@ -210,7 +217,6 @@ Viterbi\textsubscript{PM} algorithms are clearly not linear in $T'$.
     \caption{For the very repetitive Fibonacci words, $T' = 2$. This exploits
       that the backtracking algorithms are far from linear in $T'$.}
   \end{subfigure}
-  \ref{test}
   \caption{The running time of Viterbi algorithms divided by the compressed
     sequence length $T'$. The running time of Viterbi\textsubscript{L} is
     linear in $T'$ whereas Viterbi\textsubscript{P} and
@@ -225,7 +231,7 @@ figure~\ref{fig:assymptotic_viterbi_backtrack_T}. As seen, it is indeed linear
 in $T$.
 
 \begin{figure}
-  \centering
+  \centering\ref{test2}
   \begin{subfigure}[b]{0.5\textwidth}
     \centering \input{figures/assymptotic_viterbi_backtrack_T}
     \caption{Random sequences.}
@@ -234,7 +240,6 @@ in $T$.
     \centering \input{figures/assymptotic_viterbi_fib_backtrack_T}
     \caption{Fibonacci words.}
   \end{subfigure}
-  \ref{test2}
   \caption{The running time of Viterbi as a function of the original sequence
     length $T$. The running time of all three variations of the Viterbi
     algorithm are linear in $T$.}
@@ -296,12 +301,13 @@ running time is confirmed.
 \label{sec:comp-ziphmml-viterbi}
 
 First the zipHMMlib Viterbi algorithm is compared to the classical
-implementation of the Viterbi algorithm. Recall that the preprocessing may be
-saved to disk for later use. For some problems one might only need to run
-Viterbi once for a sequence. As described in section~\ref{sec:compr-stopp-crit}
-the preprocessing uses an estimate of how many times the Viterbi algorithm is
-run to compress the sequence appropriately. Experiments have been made with one
-and with 500 executions of Viterbi. In total, six variations of the Viterbi
+implementation of the Viterbi algorithm. Recall that the compressed sequence
+from the preprocessing may be saved to disk for later use. For some problems
+though one might only need to run Viterbi once for a sequence. As described in
+section~\ref{sec:compr-stopp-crit} the preprocessing uses an estimate of how
+many times the Viterbi algorithm is run to compress the sequence appropriately.
+To experiment with this, experiments have been made with an estimate of one and
+with 500 executions of Viterbi. In total, six different setups of the Viterbi
 algorithm have been measured:
 \begin{description}
 % \item[Uncompressed] that does not compress the sequence and only find the
@@ -315,7 +321,7 @@ algorithm have been measured:
 \item[Viterbi\textsubscript{PM} 1] that also saves memory on backtracking.
 \item[Viterbi\textsubscript{L} 500] that compresses the sequence and computes the
   log-likelihood 500 times,
-\item[Viterbi\textsubscript{P} 500] that also backtracks 500 times,
+\item[Viterbi\textsubscript{P} 500] that also backtracks the 500 times,
 \item[Viterbi\textsubscript{PM} 500] that also saves memory on backtracking.
 \end{description}
 
@@ -323,9 +329,9 @@ The algorithms are compared to their respective counterpart of the classical
 algorithm, e.g.\ for Viterbi\textsubscript{L} algorithms the classical
 algorithm without backtracking has been used. In the following plots a
 ``speedup factor'' is shown on the y-axis. The speedup factor is calculated as
-the running time of the classical algorithm (with or out without backtracking
+the running time of the classical algorithm (with or without without backtracking
 enabled) divided by the running time of algorithm being measured, including the
-time it takes to do the compression. Hence, any speedup factor larger than one
+time it takes to do the preprocessing. Hence, any speedup factor larger than one
 means that the algorithm being measured is faster than the classical algorithm.
 
 \subsubsection{Random Data}
@@ -335,19 +341,28 @@ The first experiments have been made using random sequences.
 In figures~\ref{fig:compressed_1_speedup_vs_sequence_length}
 and~\ref{fig:compressed_500_speedup_vs_sequence_length} the speedup factor for
 the Viterbi 1 algorithms and Viterbi 500 algorithms is shown for sequences of
-varying length. A model with 16 states was used for this experiment. As seen
-the speedup factor decreases as the length of the sequence increases. This is
-due to the preprocessing that takes more time for longer
-sequences. \fxnote{Should this be avoided by the compression stopping
-  criterion?} \fxwarning{Discuss that the speedup factor of the backtracking
-  algorithms has a greater speedup factor than the likelihood computing.} This
-is not seen for the Viterbi 500 algorithms, where the speedup factor keeps
-increasing for larger sequences. This is because the preprocessing does not
-dominate the running time as it does for the Viterbi 1 algorithms.
-
-As expected, computing the path limits the speedup factor since the running
-time is linear in $T$ instead of $T'$. The Viterbi\textsubscript{PM} does not
-gain a speedup as good as the Viterbi\textsubscript{P}. \fxwarning{Elaborate.}
+varying length. A model with 16 states was used for these experiments. As
+expected, computing the Viterbi path limits the speedup factor since the
+running time is linear in $T$ instead of $T'$ as it is for only computing the
+log-likelihood. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain
+a similar speedup. This is expected as the main part of the memory saving in
+Viterbi\textsubscript{PM} essentially consists in computing the Viterbi twice.
+Since this is done for both the zipHMM implementation and the classical
+implementation, the speedup becomes the same as for the
+Viterbi\textsubscript{P}. For small sequences the speedup factor is smaller
+than for it is for large sequences. This is due to the zipHMM Viterbi
+algorithm computes the $C_{o_i}$ matrices before starting the actual Viterbi
+computation. As the sequences gets longer this computation becomes a smaller
+fraction of the sequence and the speedup factor stabalizes at approximate 32
+for this example of the Viterbi\textsubscript{L} algorithm. At sequence length
+from $10^5$ to $10^6$ there is a sudden jump in the running time of the
+backtracking algorithms. No explanation for this has been found. \fxnote{Then
+  find one!} The speedup factors are surprisingly good. Eventhough the
+compression ratio is only around four, a speedup of more than a factor of 100
+is seen in figure~\ref{fig:compressed_500_speedup_vs_sequence_length}. So even
+if the data used with the algorithm does not compress very well large speedup
+may still by gained from using matrix multiplications instead of the classical
+formulation.
 
 \begin{figure}
   \centering
@@ -359,6 +374,7 @@ gain a speedup as good as the Viterbi\textsubscript{P}. \fxwarning{Elaborate.}
 \end{figure}
 
 \begin{figure}
+  \fxnote{Why does this not look exactly like figure~\ref{fig:compressed_1_speedup_vs_sequence_length}?}
   \centering
   \input{figures/compressed_500_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi\textsubscript{L} 500 algorithms of the total
@@ -367,14 +383,20 @@ gain a speedup as good as the Viterbi\textsubscript{P}. \fxwarning{Elaborate.}
   \label{fig:compressed_500_speedup_vs_sequence_length}
 \end{figure}
 
-Finally, instead of viewing the speedup factor as a function of the sequence
-length, the model size is used. Recall that the running time of Viterbi is
-$O(M' N^3 + N^2 T')$. Hence, the cubic factor might become a problem as $N$
-grows. The speedup factor as function of model size $N$ is plotted in
-figures~\ref{fig:speedup_vs_N} and~\ref{fig:speedup_vs_N2}. As expected the
-speedup continues growing until a certain number of states and then starts to
-become smaller again. It is noticeable though that the good speedup factors are
-gained for quite large models of hundreds of states.
+Instead of presenting the speedup factor as a function of the sequence length,
+the model size is used in the next experiment. So while the size of the model
+is varied the length of the observation sequence is kept constant at length
+10000. Recall that the running time of Viterbi is $O(M' N^3 + N^2 T')$. The
+cubic term might become a problem as $N$ grows. The speedup factor as function
+of model size $N$ is plotted in figures~\ref{fig:speedup_vs_N}
+and~\ref{fig:speedup_vs_N2} for the Viterbi 1 and Viterbi 500 algorithms
+respectively. As seen the speedup factor is growing in the beginning as the
+number of states increases. This is probably due to the matrix representation
+of the algorithm making it more efficient. However, for larger matrices, the
+cubed $N$ term becomes a limiting factor and the speedup factor drops below 1.
+For the Viterbi 500 experiment the peak is seen for a smaller number of states
+than for the Viterbi 1 experiment. This is due to the new alphabet size
+$\mathcal{O'}$ in being bigger in the Viterbi 500 experiment.
 
 \begin{figure}
   \centering
@@ -392,21 +414,10 @@ gained for quite large models of hundreds of states.
   \label{fig:speedup_vs_N2}
 \end{figure}
 
-In conclusion the zipHMMlib implementation of Viterbi obtains a speedup on
-random data given the right circumstances. In all cases a much larger speedup
-is obtained if the Viterbi path is not needed. The Viterbi\textsubscript{PM}
-algorithm is slower noticeably slower than the Viterbi\textsubscript{P} algorithm. Which
-of the algorithms to use is a trade-off between memory usage and speed of the
-program. If one only needs to run the algorithm once, compression should be
-either enabled or disabled depending on whether the path is requested or
-not. If the Viterbi algorithm is run for multiple models, a speedup is gained
-by compressing the sequence. If the model becomes too large though, the
-algorithm fails at gaining a speedup.
-
 \subsubsection{Fibonacci Words}
 
-Even though good speedup factors were gained for random data, it is expected
-that much greater speedups may be obtained by using repetitive
+Even though a good speedup were gained for many cases using random data, it is
+expected that much greater speedups may be obtained by using repetitive
 sequences. Thus, experiments similar to the ones for random data has been
 conducted. In figures~\ref{fig:fib_compressed_1_speedup_vs_sequence_length}
 and~\ref{fig:fib_compressed_500_speedup_vs_sequence_length} the speedup factor
@@ -432,12 +443,12 @@ is shown for sequences of varying length using 1 or 500 runs respectively.
 
 As seen, the speedup factors are much greater than for random data. For random
 data the computation of the Viterbi path limited the speedup factor. This
-limitation only becomes larger for Fibonacci words. This may e.g.\ be seen
-in figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length}, where the
+limitation becomes larger for Fibonacci words. This may e.g.\ be seen in
+figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length}, where the
 computation of the Viterbi path makes the computation orders of magnitudes
 slower than just computing the likelihood. However, the speedup factor for the
-Viterbi\textsubscript{P} algorithms still perform better on Fibonacci words than on
-random sequences.
+Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} algorithms still perform
+better on Fibonacci words than on random sequences.
 
 \subsubsection{Future Work}
 
@@ -448,12 +459,12 @@ has only been made using random data and only the Viterbi\textsubscript{L}
 algorithm have been used. Similar results may be obtained using the
 Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} algorithms. Again, for
 the Viterbi 1 the preprocessing has been done and then Viterbi has been
-executed once. For Viterbi 500 the preprocessing has been done follow by 500
+executed once. For Viterbi 500 the preprocessing has been done followed by 500
 executions of Viterbi. The result can be seen in
 figure~\ref{fig:pre_vs_running}.
 
 \begin{figure}
-  \centering
+  \centering\ref{named}
   \begin{subfigure}{0.5\textwidth}
     \centering \input{figures/viterbi_pre_vs_running_one.tex}
     \caption{Viterbi\textsubscript{L} 1}
@@ -462,7 +473,6 @@ figure~\ref{fig:pre_vs_running}.
     \centering \input{figures/viterbi_pre_vs_running_many.tex}
     \caption{Viterbi\textsubscript{L} 500}
   \end{subfigure}
-  \ref{named}
 
   % \begin{subfigure}{0.5\textwidth}
   %   \centering \input{figures/viterbi_pre_vs_running_one_path_memory.tex}
@@ -480,11 +490,11 @@ figure~\ref{fig:pre_vs_running}.
   \label{fig:pre_vs_running}
 \end{figure}
 
-For the Viterbi\textsubscript{L} 1 experiment it is seen that a major part of the running time
+For the Viterbi\textsubscript{L} 1 experiment it is seen that a large part of the running time
 is spent on the preprocessing. However, as the number of executions is
 increased the time of the preprocessing vanishes. In terms of performance
 gains, making the preprocessing more efficient will only give a gain in speedup
-when the number of executions of the Viterbi algorithm is slow, while higher
+when the number of executions of the Viterbi algorithm is low, while higher
 efficiency in the Viterbi algorithm or in the effectiveness of the compression
 will make the running time smaller for many executions.
 
@@ -495,9 +505,8 @@ that the compression of sequences does indeed speed up the execution time of
 the Viterbi algorithm. The best results are of course found for repetitive data
 with the Viterbi algorithm run multiple times. Speedup factors in the order of
 thousands were found, so for these kinds of problems this method has a great
-potential. I other scenarios with random data and only a few hidden states a
-speedup factor much lower is obtained such that the execution only is a couple
-of times faster.
+potential. In other scenarios with random data a more modest speedup was
+obtained, depending on the size of the model.
 
 \section{Posterior Decoding}
 

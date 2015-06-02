@@ -695,7 +695,7 @@ approaches are now discussed in turn.
   $j$ has been computed using the compressed sequence. The columns $i + 1$ and
   $j + 1$  that correspond to the same symbol needs to be computed. It is an
   open question whether it is possible to compute those faster than the naive
-  approach that takes $2N^2$ time.
+  approach that takes $2N^2$ time. \fxnote{Open question? Are you sure?}
 \end{enumerate}
 
 \begin{figure}
@@ -1033,7 +1033,7 @@ is obtained for the indexed posterior decoding algorithm in total.
 Note that this is a \emph{worst case} running time. For many practical
 applications the compression will not be as good and thus $T' > 1$. In that
 case the decompression may be illustrated as $T'$ trees. In many cases only
-some of these needs to be traversed and the height of them will often be much
+some of these needs to be traversed and the height of them will be
 smaller than $\log T$. Furthermore, the $\log T$ term will most likely not
 dominate the $j - i$ term. As an example the human genome has length
 approximately $3,000,000,000$ base pairs and may be used as the observation sequence
