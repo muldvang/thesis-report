@@ -2,7 +2,8 @@
 
 set code_dir ~/Repositories/thesis-code
 set report_dir ~/Repositories/thesis-report
-set results_file $report_dir/plot_data/(basename -s .fish (status -f)).data
+set results_file $report_dir/plot_data/(basename (status -f) .fish).data
+echo $results_file
 rm $results_file
 for j in (seq -w 20)
         echo $j
