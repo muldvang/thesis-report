@@ -6,15 +6,15 @@
     xmode=log,
     ]
     \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
-    table[x=N, y=many_running_ratio, y error=many_running_ratio_std]
+    table[x=N, y=many_total_ratio, y error=many_total_ratio_std]
     {plot_data/viterbi_model_transformed.data};
 
     \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
-    table[x=N, y=many_path_running_ratio, y error=many_path_running_ratio_std]
+    table[x=N, y=many_path_total_ratio, y error=many_path_total_ratio_std]
     {plot_data/viterbi_model_transformed.data};
 
     \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
-    table[x=N, y=many_path_memory_running_ratio, y error=many_path_memory_running_ratio_std]
+    table[x=N, y=many_path_memory_total_ratio, y error=many_path_memory_total_ratio_std]
     {plot_data/viterbi_model_transformed.data};
 
     \legend{Viterbi\textsubscript{L} 500, Viterbi\textsubscript{P} 500, Viterbi\textsubscript{PM} 500}

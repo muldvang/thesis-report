@@ -1,4 +1,4 @@
-\tikzsetnextfilename{compression_ratio}
+\tikzsetnextfilename{compression_ratio_one}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{groupplot}[
     group style={
@@ -15,39 +15,28 @@
     xlabel=Sequence length,
     xmode=log,
     width=\textwidth,
-    legend to name=compression_legend,
-    legend entries={Fibonacci words, Unary, Random ($\lvert{\mathcal{O}}\rvert
-      = 2$), Random ($\lvert{\mathcal{O}}\rvert = 4$)},
-    legend columns=-1,
-    legend style={/tikz/every even column/.append style={column sep=10pt}},
     ]
 
     \nextgroupplot[ymode=log, height=40mm, width=\textwidth]
 
     \addplot[only marks, color=red, error bars, y dir=both, y explicit]
-    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
+    table[x=T, y=one_compression_ratio, y error=one_compression_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
 
     \addplot[only marks, color=blue, error bars, y dir=both, y explicit]
-    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
+    table[x=T, y=one_compression_ratio, y error=one_compression_ratio_std]
     {plot_data/viterbi_1_sequence_transformed.data};
 
-    \nextgroupplot[height=40mm, width=\textwidth]
+    \nextgroupplot[height=40mm, width=\textwidth, ylabel=Compression ratio]
 
     \addplot[only marks, color=green, error bars, y dir=both, y explicit]
-    table[x=T, skip coords between index={0}{1}, y=many_compression_ratio, y error=many_compression_ratio_std]
+    table[x=T, skip coords between index={0}{1}, y=one_compression_ratio, y error=one_compression_ratio_std]
     {plot_data/viterbi_2_sequence_transformed.data};
 
-    \nextgroupplot[height=40mm, width=\textwidth]
-
-    % Begin legend hack.
-    \addplot[only marks,color=red] coordinates {(2,0)};
-    \addplot[only marks,color=blue] coordinates {(2,0)};
-    \addplot[only marks,color=green] coordinates {(2,0)};
-    % End legend hack.
+    \nextgroupplot[height=40mm, width=\textwidth,]
 
     \addplot[only marks, color=yellow, error bars, y dir=both, y explicit]
-    table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
+    table[x=T, y=one_compression_ratio, y error=one_compression_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
   \end{groupplot}
