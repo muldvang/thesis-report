@@ -108,7 +108,7 @@ df['many_path_memory_total_ratio'] = 500 * df['simple_path_total_time'] / df['ma
 
 # Compression ratio
 df['many_compression_ratio'] = df['T'] / df["many_T'"]
-df['one_compression_ratio'] = df['T'] / df["many_T'"]
+df['one_compression_ratio'] = df['T'] / df["one_T'"]
 
 # Compute mean and std.
 res = pd.DataFrame()

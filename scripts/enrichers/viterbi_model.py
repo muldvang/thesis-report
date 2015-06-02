@@ -15,7 +15,8 @@ path = str(sys.argv[1])
 df = pd.io.parsers.read_table(path, sep=' ', header=None)
 df.columns = ["N",
               "T",
-              "T'",
+              "one_T'",
+              "many_T'",
 
               "simple_pre_time",
               "simple_running_time",
@@ -48,9 +49,9 @@ df['uncompressed_path_memory_total_time'] = df['uncompressed_path_pre_time'] + d
 df['one_total_time'] = df['one_pre_time'] + df['one_running_time']
 df['one_path_total_time'] = df['one_path_pre_time'] + df['one_path_running_time']
 df['one_path_memory_total_time'] = df['one_path_pre_time'] + df['one_path_memory_running_time']
-df['many_total_time'] = df['many_pre_time'] + 500 * df['many_running_time']
-df['many_path_total_time'] = df['many_path_pre_time'] + 500 * df['many_path_running_time']
-df['many_path_memory_total_time'] = df['many_path_pre_time'] + 500 * df['many_path_memory_running_time']
+df['many_total_time'] = df['many_pre_time'] / 500 + df['many_running_time']
+df['many_path_total_time'] = df['many_path_pre_time'] / 500 + df['many_path_running_time']
+df['many_path_memory_total_time'] = df['many_path_pre_time'] / 500 + df['many_path_memory_running_time']
 
 # Compare total time to simple.
 df['uncompressed_total_ratio'] = df['simple_total_time'] / df['uncompressed_total_time']
