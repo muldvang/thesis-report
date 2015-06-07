@@ -24,29 +24,29 @@
 
     \nextgroupplot[ymode=log, height=40mm, width=\textwidth]
 
-    \addplot[only marks, color=red, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=my-red, error bars, y dir=both, y explicit]
     table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
 
-    \addplot[only marks, color=blue, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=my-blue, error bars, y dir=both, y explicit]
     table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_1_sequence_transformed.data};
 
     \nextgroupplot[height=40mm, width=\textwidth]
 
-    \addplot[only marks, color=green, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=my-green, error bars, y dir=both, y explicit]
     table[x=T, skip coords between index={0}{1}, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_2_sequence_transformed.data};
 
     \nextgroupplot[height=40mm, width=\textwidth]
 
     % Begin legend hack.
-    \addplot[only marks,color=red] coordinates {(2,0)};
-    \addplot[only marks,color=blue] coordinates {(2,0)};
-    \addplot[only marks,color=green] coordinates {(2,0)};
+    \addplot[only marks,color=my-red] coordinates {(2,0)};
+    \addplot[only marks,color=my-blue] coordinates {(2,0)};
+    \addplot[only marks,color=my-green] coordinates {(2,0)};
     % End legend hack.
 
-    \addplot[only marks, color=yellow, error bars, y dir=both, y explicit]
+    \addplot[only marks, color=my-purple, error bars, y dir=both, y explicit]
     table[x=T, y=many_compression_ratio, y error=many_compression_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 

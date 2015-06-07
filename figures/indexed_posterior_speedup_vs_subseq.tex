@@ -5,15 +5,15 @@
     ylabel=Speedup factor,
     xmode=log,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[indexed-one, error bars, y dir=both, y explicit]
     table[x=subseq_length, y=one_total_ratio, y error=one_total_ratio_std]
     {plot_data/indexed_posterior_subseq_length_transformed.data};
 
-    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    \addplot[indexed-many, error bars, y dir=both, y explicit]
     table[x=subseq_length, y=many_total_ratio, y error=many_total_ratio_std]
     {plot_data/indexed_posterior_subseq_length_transformed.data};
 
-    \legend{Indexed posterior 1, Indexed posterior 500}
+    \legend{Indexed posterior $e = 1$, Indexed posterior $e = 500$}
   \end{axis}
 \end{tikzpicture}
 

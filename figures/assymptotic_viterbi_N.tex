@@ -6,15 +6,15 @@
     xmode=log,
     % ymode=log,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=N, y=uncompressed_running_time/N^2, y error=uncompressed_running_time/N^2_std]
     {plot_data/viterbi_model_transformed.data};
 
-    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    \addplot[viterbi-p, error bars, y dir=both, y explicit]
     table[x=N, y=uncompressed_path_running_time/N^2, y error=uncompressed_path_running_time/N^2_std]
     {plot_data/viterbi_model_transformed.data};
 
-    \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
+    \addplot[viterbi-pm, error bars, y dir=both, y explicit]
     table[x=N, y=uncompressed_path_memory_running_time/N^2, y error=uncompressed_path_memory_running_time/N^2_std]
     {plot_data/viterbi_model_transformed.data};
 

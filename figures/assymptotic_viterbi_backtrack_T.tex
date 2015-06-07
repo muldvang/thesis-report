@@ -5,16 +5,17 @@
     ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
     width=\textwidth,
+    plot/.style={only marks, mark=\viterbipmark, color=viterbi-p, error bars, y dir=both, y explicit},
     ]
     % \addplot[only marks, color=red, error bars, y dir=both, y explicit]
     % table[x=T, y=many_running_time/T, y error=many_running_time/T_std]
     % {plot_data/viterbi_sequence_transformed.data};
 
-    \addplot[only marks, color=blue, error bars, y dir=both, y explicit]
+    \addplot[viterbi-p]
     table[x=T, y=many_path_running_time/T, y error=many_path_running_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
 
-    \addplot[only marks, color=green, error bars, y dir=both, y explicit]
+    \addplot[viterbi-pm, error bars, y dir=both, y explicit]
     table[x=T, y=many_path_memory_running_time/T, y error=many_path_memory_running_time/T_std]
     {plot_data/viterbi_sequence_transformed.data};
   \end{axis}

@@ -3,21 +3,23 @@
   \begin{axis}[
     xlabel=Sequence length $T$,
     ylabel=Speedup factor,
+    ymax=3,
+    enlarge y limits=true,
     xmode=log,
     ]
-    \addplot[only marks, color=colorbrewer1, error bars, y dir=both, y explicit]
+    \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=T, y=one_total_ratio, y error=one_total_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
-    \addplot[only marks, color=colorbrewer2, error bars, y dir=both, y explicit]
+    \addplot[viterbi-p, error bars, y dir=both, y explicit]
     table[x=T, y=one_path_total_ratio, y error=one_path_total_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
-    \addplot[only marks, color=colorbrewer3, error bars, y dir=both, y explicit]
+    \addplot[viterbi-pm, error bars, y dir=both, y explicit]
     table[x=T, y=one_path_memory_total_ratio, y error=one_path_memory_total_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
 
-    \legend{Viterbi\textsubscript{L} 1, Viterbi\textsubscript{P} 1, Viterbi\textsubscript{PM} 1}
+    \legend{Viterbi\textsubscript{L}, Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}}
   \end{axis}
 \end{tikzpicture}
 

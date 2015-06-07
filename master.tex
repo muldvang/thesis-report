@@ -13,7 +13,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{babel}
-\usepackage{pxfonts}
+\usepackage{newpxtext}
+\usepackage{newpxmath}
 \usepackage{microtype}
 \usepackage[autostyle=true,danish=quotes]{csquotes}
 \MakeOuterQuote{"}
@@ -70,6 +71,14 @@
 % Calc package
 \usepackage{calc}
 
+% Colors
+\usepackage{color}
+\definecolor{my-red}{HTML}{E41A1C}
+\definecolor{my-green}{HTML}{4DAF4A}
+\definecolor{my-blue}{HTML}{377EB8}
+\definecolor{my-purple}{HTML}{984EA3}
+\definecolor{my-orange}{HTML}{FF7F00}
+
 % Section numbering depth
 \setsecnumdepth{subsection}
 
@@ -79,12 +88,32 @@
 
 \begin{document}
 
+\tikzset{%
+    viterbi-l/.style={%
+      only marks, mark=*, color=my-red
+    },
+    viterbi-p/.style={%
+      only marks, mark=square*, color=my-green
+    },
+    viterbi-pm/.style={%
+      only marks, mark=triangle*, color=my-blue
+    },
+    indexed-one/.style={%
+      only marks, mark=*, color=my-purple
+    },
+    indexed-many/.style={%
+      only marks, mark=square*, color=my-orange
+    },
+}
+
 \frontmatter{}
 
 \include{titling_page}
 
-\fxnote{Use languagetool}
-\fxnote{Use after the deadline}
+\fxnote{Use languagetool.}
+\fxnote{Use after the deadline.}
+
+\fxwarning{Use better symbols for points in plots.}
 
 \listoffixmes{}
 
