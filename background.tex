@@ -25,10 +25,10 @@ many applications \citep{rabiner1989tutorial}.
 
 Think of a system that can be described as a being in one of $N$ states at any
 time. Let the set of states be notated as $\mathcal{H} = \{h_1, h_2, \dots, h_N\}$.
-In figure~\ref{fig:markov-chain} an example with three states is shown. In some
+In figure~\ref{fig:markov-chain} an example with three states is shown. In
 discrete time steps denoted $t = 1, 2, \dots$ the system changes state to a new
 state or back to the same state. For each state there is a certain probability
-of making a transition to any other state. This may be represented as a matrix
+of making a transition to any other state. This can be represented as a matrix
 $A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
 $\sum_{j = 1}^N a_{ij} = 1$. This is called a Markov process, or more precisely
 for discrete-time and finite state spaces: a Markov chain. The non-zero
@@ -38,13 +38,13 @@ determined from a vector $\Pi = {(\pi_i)}_{1 \le i \le N}$ where
 $\sum_{i=1}^N \pi_i = 1$ with $\pi_i$ being the probability of starting in
 state $\pi_i$.
 
-Having established the above system with $A$ and $\Pi$ given, one may ask
+Having established the above system with $A$ and $\Pi$ given, one might ask
 questions like what the probability of observing a certain sequence of states
 $V_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example lets assume the
 model in figure~\ref{fig:markov-chain} is a model of the weather with $h_1$
 being rainy, $h_2$ being cloudy, and $h_3$ being sunny weather. The probability
 of a sequence of observations $V_{1:4} = v_1v_2v_3v_4$ with
-$v_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, may easily be computed
+$v_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, can easily be computed
 by multiplying the initial probability to the transition probabilities.
 
 The above formality is too limited for many applications since the states do
@@ -55,7 +55,7 @@ $\mathcal{O} = {o_1, o_2, \dots, o_M}$ being a set of $M$ observables an
 emission matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$ with
 $\sum_{j=1}^M b_{ij} = 1$ is defined, where $b_{ij}$ is the probability of
 observing $o_j$ when the system is in state $h_i$. The set of states,
-$\mathcal{H}$, may now be called ``hidden'' states since they are not
+$\mathcal{H}$, can now be called ``hidden'' states since they are not
 observable. An example of an HMM is shown in
 figure~\ref{fig:hidden-markov-model}. The figure is similar to
 figure~\ref{fig:markov-chain} except for the probabilities added for each
@@ -69,11 +69,11 @@ hidden state.
 \end{figure}
 
 For modeling weather we can now use the fact that the observables (rainy,
-cloudy, and sunny weather) depend on the air pressure. This may be modeled as
+cloudy, and sunny weather) depend on the air pressure. This can be modeled as
 $h_1$ being low pressure, $h_2$ being high pressure, $o_1$ being rainy, $o_2$
 being cloudy, and $o_3$ being sunny weather. As before the probability of a
 sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
-can be found, but it is a harder than before since an observation sequence may be
+can be found, but it is a harder than before since an observation sequence can be
 generated in many ways.
 
 \citet{rabiner1989tutorial} states three key problems for using hidden Markov
@@ -101,7 +101,7 @@ sequences of states emitting the observation sequence and pick the most likely
 one. This problem is solved efficiently by the Viterbi algorithm. Another
 method is to choose the states $v_t$ that are individually most likely. In this
 way the expected number of correct states is maximized, but the state sequence
-may not be valid, since the transition probability from $v_t$ to $v_{t + 1}$
+might not be valid, since the transition probability from $v_t$ to $v_{t + 1}$
 might be zero. This is also called the posterior decoding and is solved by
 Forward-Backward algorithm.
 
@@ -122,7 +122,7 @@ parsing, grammar-based compression and byte pair encoding. In the article the
 forward-backward and the Viterbi algorithms are reformulated into a series of
 matrix multiplications. The overall idea is that the repeated substrings
 correspond to repeated matrix multiplications and by finding the repeated
-substrings multiplications can be avoided. A single experiment has been
+substrings multiplications are avoided. A single experiment has been
 performed on DNA sequences showing a speedup of the Viterbi algorithm when
 using an improved Lempel-Ziv parsing without backtracking. No further
 experiments have been made for the other algorithms and no code has been made
