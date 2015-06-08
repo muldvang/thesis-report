@@ -256,7 +256,7 @@ in $T$.
 
 The theoretical running times of all three variations of the Viterbi algorithm
 are cubic in the number of states $N$. To verify this an experiment with random
-sequences of length 10000 have been run for models with between 2 and 1024
+sequences of length 10\,000 have been run for models with between 2 and 1024
 states. Fibonacci words has not been used in this experiment since the running
 time does not change with the compression. The running time divided by $N^3$ is
 shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. It is expected that
@@ -369,18 +369,11 @@ Fibonacci words, due to the compression ratio being larger for larger sequences.
 Instead of presenting the speedup factor as a function of the sequence length,
 the model size is used in the next experiment. So while the size of the model
 is varied the length of the observation sequence is kept constant at length
-10000. Recall that the running time of Viterbi is $O(M' N^3 + N^2 T')$. The
+10\,000. Recall that the running time of Viterbi is $O(M' N^3 + N^2 T')$. The
 cubic term might become a problem as $N$ grows. The speedup factor as function
 of model size $N$ is plotted in figures~\ref{fig:speedup_vs_N}
 and~\ref{fig:speedup_vs_N2} for $e = 1$ and $e = 500$,
-respectively. As seen the speedup factor is growing in the beginning as the
-number of states increases. This is due to the matrix representation
-of the algorithm making it more efficient. However, for larger matrices, the
-cubed $N$ term becomes a limiting factor and the speedup factor drops below 1.
-For $e = 500$ the peak is seen for a smaller number of states
-than for $e = 1$. This is due to the new alphabet size
-$\mathcal{O'}$ in being bigger when $e = 500$. \fxwarning{Check this when
-  experiment has finished.}
+respectively.
 
 \begin{figure}
   \centering
@@ -397,6 +390,16 @@ $\mathcal{O'}$ in being bigger when $e = 500$. \fxwarning{Check this when
     algorithms and $e=500$.}
   \label{fig:speedup_vs_N2}
 \end{figure}
+
+For $e = 1$ the speedup factor is growing in the beginning as the number of
+states increases. This is due to the matrix representation of the algorithm
+making it more efficient. However, for larger matrices, the cubed $N$ term
+becomes a limiting factor and the speedup factor drops below 1. This is also
+seen for $e = 500$. For $e = 500$ however, the best result is obtained for very
+small models. This is due to the new alphabet size $\mathcal{O'}$ in being
+bigger when $e = 500$. Hence, the $M' N^3$ term of the running time becomes
+more dominating and the speedup becomes smaller even for small increases of the
+model size.
 
 \subsubsection{Fibonacci Words}
 
@@ -596,7 +599,7 @@ being very efficient due to the BLAS framework. \fxwarning{Why are is the
   \centering
   \input{figures/posterior_speedup_vs_N.tex}
   \caption{The speed up factor as function of the model size using a sequence
-    of length 10000.}
+    of length 10\,000.}
   \label{fig:posterior_speedup_vs_N}
 \end{figure}
 
@@ -660,9 +663,9 @@ has also been experimented with.
 \subsection{Random Data}
 
 For the first experiment the distance between the two indices $i$ and $j$ has
-been varied for random input sequences of length $10000$ and a model with 16
+been varied for random input sequences of length 10\,000 and a model with 16
 states. For this experiment the ``extra'' symbols corresponding to the indices
-$[k, i)$ and $(j, l]$ can be left out as there is at most $2 \times \log 10000$
+$[k, i)$ and $(j, l]$ can be left out as there is at most $2 \times \log 10\,000$
 of these according to the analysis in section~\ref{sec:running-time-2}, which
 is a small number compared to $j - i$.
 
@@ -731,7 +734,7 @@ example.
 \end{figure}
 
 Finally, the number of states in the model has been varied. Sequences of length
-10000 were used and the posterior decoding has been computed for an indexed of
+10\,000 were used and the posterior decoding has been computed for an indexed of
 length 200. As for the Viterbi algorithm experiments in
 section~\ref{sec:comp-ziphmml-viterbi} it is expected that the algorithm is
 most efficient for ``medium sized'' models. As seen in

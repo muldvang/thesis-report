@@ -4,6 +4,8 @@
     xlabel=Number of states $N$,
     ylabel=Speedup factor,
     xmode=log,
+    ymax=12,
+    enlarge y limits=true,
     ]
     \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=N, y=many_total_ratio, y error=many_total_ratio_std]
