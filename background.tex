@@ -26,11 +26,12 @@ many applications \citep{rabiner1989tutorial}.
 Think of a system that can be described as a being in one of $N$ states at any
 time. Let the set of states be notated as $\mathcal{H} = \{h_1, h_2, \dots, h_N\}$.
 In figure~\ref{fig:markov-chain} an example with three states is shown. In
-discrete time steps denoted $t = 1, 2, \dots$ the system changes state to a new
-state or back to the same state. For each state there is a certain probability
+discrete time steps denoted $t = 1, 2, \dots$ the system changes from one state
+to another. For each state there is a certain probability
 of making a transition to any other state. This can be represented as a matrix
 $A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
-$\sum_{j = 1}^N a_{ij} = 1$. This is called a Markov process, or more precisely
+$\sum_{j = 1}^N a_{ij} = 1$. A system like this where the next state is only
+dependent on the current is called a Markov process, or more precisely
 for discrete-time and finite state spaces: a Markov chain. The non-zero
 transition probabilities are shown as arrows in
 figure~\ref{fig:markov-chain}. The initial state, at time $t = 1$, is
@@ -90,7 +91,7 @@ mentioned.
   $\Pr(O \mid \lambda)$.
 \end{enumerate}
 
-The first problem of finding to joint probability of an observation sequence
+The first problem of finding the joint probability of an observation sequence
 $Y_{1:T}$ is solved by the Forward algorithm. This was implemented in zipHMMlib
 by \citet{sand2013ziphmmlib}.
 

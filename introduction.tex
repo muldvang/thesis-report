@@ -2,16 +2,22 @@
 \chapter{Introduction}
 
 Hidden Markov models are statistical models that during many years have proven
-to be useful in many areas such as speech recognition
-\citep{rabiner1989tutorial}, optical recognition such as character recognition
-\citep{agazzi1993hidden} and face recognition \citep{nefian1998hidden}, and
-various areas of bioinformatics, where it has been used for e.g.\ gene finding
-\citep{burge1997prediction}, modeling protein structures and sequence alignment
-\citep{eddy1998profile}.
+to be useful in many areas such as speech recognition, optical recognition such
+as character recognition and face recognition, and various areas of
+bioinformatics, where it has been used for e.g.\ gene finding, modeling protein
+structures and sequence alignment. Examples of this can be found in
+\citet{rabiner1989tutorial}, \citet{agazzi1993hidden},
+\citet{nefian1998hidden}, \citet{burge1997prediction}, and
+\citet{eddy1998profile}.
 
 In general, hidden Markov models are efficient and can be used for large data
 sets in e.g.\ genome wide analysis, but the running time of the analysis is
-still measured in hours or days. As the amount of biological data has
+still measured in hours or days. Since the introduction of next generation
+sequencing has been introduced the amount of available biological data has
+increased tremendously, and making faster algorithms for hidden Markov models
+is thus of great value.
+
+As the amount of biological data has
 rapidly increased since the introduction of next generation sequencing, faster
 algorithms for making the hidden Markov models analysis is important.
 
@@ -19,10 +25,10 @@ algorithms for making the hidden Markov models analysis is important.
 the input data and minor changes in the algorithms to speedup the
 analysis. While \citet{lifshits2009speeding} mainly analyze their method
 theoretically, \citet{sand2013ziphmmlib} experimentally proves that the method
-has a great potential for analysis using the forward algorithm.
+has a great potential for analyses using the forward algorithm.
 
-The goal of this thesis is to extend the work made by \citet{sand2013ziphmmlib}
-by adding theory and implementation of the Viterbi and posterior decoding
+The goal of this thesis is to complent the work made by \citet{sand2013ziphmmlib}
+by extending the theory and implementation to include the Viterbi and posterior decoding
 algorithms and by making experiments validating the performance of the method
 and the implementations.
 
@@ -31,19 +37,19 @@ and the implementations.
 The thesis is structured as follows.
 
 \begin{description}
-\item[Chapter~\ref{cha:background}] In this short chapter an overview of
-  the work made by \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib}
-  and the difference between these.
-\item[Chapter~\ref{cha:method}] Theoretical descriptions of the Viterbi and
-  posterior decoding algorithms are given in this chapter after having
-  described the compression used in \citet{sand2013ziphmmlib}.
-\item[Chapter~\ref{cha:implementation}] This is a short chapter providing an
-  overview of the implementation and instructions on how to use the library.
-\item[Chapter~\ref{cha:experiments}] The implemented algorithms are compared to
-  the theoretical asymptotic running times to ensure that the implementation
-  is consistent with the theory.
-\item[Chapter~\ref{cha:conclusion}] In the end a conclusion of the theory and
-  the results of the experiments in the thesis is made. Ideas on how to
+\item[Chapter~\ref{cha:background}] provides an overview of the work made by
+  \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} and the difference
+  between these.
+\item[Chapter~\ref{cha:method}] contains theory of the classical formulations
+  of the Viterbi and posterior decoding algorithms along with theoretical
+  descriptions and analyses of these algorithms using compression.
+\item[Chapter~\ref{cha:implementation}] gives an overview of the implementation
+  and instructions on how to use the library.
+\item[Chapter~\ref{cha:experiments}] checks that the implementation of the
+  algorithms fit the theoretical running time and shows the performance gain
+  obtained from the compression.
+\item[Chapter~\ref{cha:conclusion}] provides an overview of the developed
+  theory, the experiments and the results of these. Ideas on how to
   make the framework better are also given.
 \end{description}
 
