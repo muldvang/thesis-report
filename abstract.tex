@@ -1,9 +1,27 @@
 \chapter{Abstract}
-"Abstract goes here."
 
-in English\dots
+This master's thesis describes the theory, implementation and evaluation of
+algorithms for hidden Markov model decoding. The classical algorithms used
+for decoding is the Viterbi algorithm and the posterior decoding algorithm.
+These are reformulated into series of matrix multiplications. By finding
+repeated substrings in the observation sequence multiplications can be
+avoided and thereby a potential speedup is obtained.
 
+\citet{sand2013ziphmmlib} present zipHMMlib that uses byte-pair encoding to
+exploit repetitions and by using and efficient implementation of matrix
+multiplication a speedup is gained for the forward algorithm. Theory of
+reformulated versions of the Viterbi algorithm, the posterior decoding
+algorithm, and a so-called \emph{indexed} posterior decoding algorithm is
+presented in the context of zipHMMlib and the software library has been
+extended to include implementations of these algorithms.
+
+The experiments show that a speedup can be gained in some situations. The
+best results are obtained for large repetitive observation sequences and
+small models. Also, the overall speedup becomes greater if the sequences are
+compressed once and used with different models afterwards.
+\fxnote{Is this ok?}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
+%%% TeX-command-extra-options: "-shell-escape"
 %%% End:
