@@ -44,7 +44,7 @@ a HMM is defined as
   h_i)$ is the probability of the model starting in hidden state $h_i$;
 \item a matrix $A = {\{a_{ij}\}}_{1 \le i \le N}$, where $a_{ij} = \Pr(v_t
   = h_j \mid v_{t - 1} = h_i)$ is the probability of a transition from state
-  $h_i$ to state $h_j$; \fxnote{Synes det er en lidt kluntet formuleret måske bare kan kaldes transition property from state hi to hj}
+  $h_i$ to state $h_j$;
 \item a matrix $B = {\{b_{ij}\}}_{1 \le i \le N}^{1 \le j \le M}$, where
   $b_{ij} = \Pr(y_t = o_j \mid v_t = h_i)$ is the probability of state
   $h_i$ emitting $o_j$.
@@ -60,9 +60,7 @@ The Viterbi algorithm finds the probability of the most likely sequence of
 hidden states emitting an observation sequence $Y_{1:T}$ given a model
 $\lambda$. This can be expressed as maximizing the probability of the
 observation and hidden sequences for all possible hidden sequences, that is
-$\max_{v_{1:T}} \Pr(Y_{1:T}, V_{1:T} = v_{1:T} \mid \lambda)$. \fxwarning{Does
-  this correspond to finding the likelihood $L(\lambda \mid Y_{1:T})$ or is
-  this likelihood corresponding to the posterior decoding?}
+$\max_{v_{1:T}} \Pr(Y_{1:T}, V_{1:T} = v_{1:T} \mid \lambda)$.
 
 To compute this, consider the Viterbi variable $\delta_t(v_t)$ defined as
 \begin{equation*}
@@ -114,8 +112,7 @@ needs the previous column to compute the new one. Hence, the space consumption
 of the algorithm will be the space needed for two columns and the observation
 sequence, that is $O(N + T)$. To compute a cell in $\delta$ the algorithm
 maximizes over all cells in the previous column resulting in a running time of
-$O(N^2 T)$. \fxwarning{Man behøver vel ikke have hele sekvensen i hukommelsen,
-  men bare to karakterer af gangen?}
+$O(N^2 T)$.
 
 The space consumption of this backtracking algorithm is the size of $\Psi$
 which is $O(N T)$. Backtracking is computed in $O(T)$ time, since it is only
@@ -318,9 +315,9 @@ of the new symbols $o_{M + 1}, \dots, o_{M' - M}$ defined as
     C_{l_i}(m, k) \odot C_{r_i}(k, n)
   \right).
 \end{equation*}
-This looks like the definition of the $C_{o_i}$ matrices from
+This definition is similar to the definition of the $C_{o_i}$ matrices from
 equation~\eqref{eq:7}, but instead of storing the maximum value, the state that
-results in the maximum value is stored. \fxnote{This looks like er talesprog.}
+results in the maximum value is stored.
 
 Now, for each occurrence of a new symbol $o_{M + i} = (l_i, r_i)$ in
 $Y_{1:T'}'$ we know the start state $p_l$ and the end state $p_r$ from $S'$
@@ -343,7 +340,7 @@ in this case it corresponds to the pair $02$. The most likely state when
 emitting 2 is $p_4'$ (corresponding to $p_7$) and the most likely state before
 emitting 0 is $p_3'$ (corresponding to $p_4$). The state when emitting 0 is
 stored in $R_3(p_4, p_7)$, since this cell in $R_3$ resulted in the highest
-likelihood.
+probability.
 
 \begin{figure}
   \centering
@@ -358,7 +355,7 @@ section~\ref{sec:class-viterbi-algor}, three different variations of the Viterbi
 algorithm are defined.
 \begin{description}
 \item[Viterbi\textsubscript{L}] compresses the sequence and only computes the
-  log-likelihood,
+  probability,
 \item[Viterbi\textsubscript{P}] also backtracks using a table of pointers,
 \item[Viterbi\textsubscript{PM}] saves memory on backtracking by using checkpoints.
 \end{description}
@@ -376,10 +373,8 @@ has size $T$ resulting in a total space consumption of $O(M' N^2 + N T' + T)$
 for Viterbi\textsubscript{P}. For Viterbi\textsubscript{PM} the space
 consumption is $O(M' N^2 + N \sqrt{T'} + T)$.
 
-With similar arguments the running time of computing the likelihood has changed
-to $O(M' N^3 +N^2 T')$. \fxnote{Første gang du bruger ordet likelihood, mener
-  du rent faktisk likelihood fra statistik eller var det bare en tvetydig
-  sprogblomst?} Using standard backtracking methods from the classical
+With similar arguments the running time of computing the probability has changed
+to $O(M' N^3 +N^2 T')$. Using standard backtracking methods from the classical
 algorithm part of the Viterbi path is found in $O(N^2 T')$ time and using the
 $R$ matrices the rest can be obtained in $O(T)$ time. Hence, the
 running time with backtracking enabled is $O(M' N^3 +N^2 T' + T)$.
@@ -520,7 +515,7 @@ time it takes to do matrix-matrix multiplications and matrix-vector
 multiplications, the time measured for max-times multiplications is used.
 
 This simple algorithm does not take backtracking into account since the time
-estimated is only for the computation of the likelihood. By letting the user
+estimated is only for the computation of the probability. By letting the user
 specify whether backtracking is required the time estimation could also
 involve an estimate on how much time will be spent on backtracking by
 estimating the time it takes to allocate an array of size $T$ and
@@ -545,7 +540,7 @@ decoding, but it is useful for some applications.
 The posterior decoding is efficiently computed using the forward-backward
 algorithms. The forward-backward algorithms are comparable to the Viterbi
 algorithm. Instead of computing the probability of the most likely path they
-compute the joint probability of all paths, that is \fxnote{Skal du et eller andet sted nævne at en optimal løsning ikke nødvendigvis er unik?}
+compute the joint probability of all paths, that is
 \begin{equation*}
   \Pr
   \left(
@@ -704,7 +699,7 @@ approaches are now discussed in turn.
   described how the $R$ matrices can be precomputed to retrieve the full
   Viterbi path from the partial path. This method makes use of the property
   that the Viterbi algorithm maximizes over all previous states. From the
-  partial path the previous state that maximizes the likelihood is known. Using
+  partial path the previous state that maximizes the probability is known. Using
   this information the current state can be found using only $O(N)$ time, since
   it is not necessary to maximize over all previous states. Using information
   about the next state it is possible to precompute the maximizing state for
@@ -975,17 +970,20 @@ These four steps are now analyzed in turn.
   worst case $Y_{1:T'}'$ has length 1, i.e.\ $T' = 1$. The compression of
   $Y_{1:T'}'$ is illustrated as a binary tree seen in
   figure~\ref{fig:decompression}. This is also seen in
-  figure~\ref{fig:exploiting-repetitions}. In this example the compression is
+  figure~\ref{fig:exploiting-repetitions} where $T' = 5$ and the compression
+  corresponds to five binary trees. In this example the compression is
   of the observation sequence $Y_{1:16} = o_1o_1\dots{}o_1$ and corresponds to a
   perfectly balanced tree. Assume that the indexed posterior decoding is
   requested for index $i = 6$ to $j = 14$. Since $T' = 1$, $k' = 1$ and $l'$ =
   1 algorithm~\ref{alg:decompress} will begin at the root of the tree and
   decompress it into two symbols, namely the children of the root. This
   decompression continues for all nodes that are necessary to decompress to
-  obtain $Y_{i:j}$. All nodes in the tree marked in red or blue correspond to
-  symbols that are introduced by decompression. The running time of the
+  obtain $Y_{i:j}$. To make the analysis easier to reason about some of the
+  nodes in the illustration has been colored. Nodes colored in red or blue correspond to
+  symbols that are introduced by decompression of $Y_{1:T'}'$. Nodes without
+  coloring correspond to symbols that are not introduced by the decompression. The running time of the
   algorithm is proportional to the number of colored nodes, so to find the
-  running time the number of nodes need to be counted. \fxnote{Første gang du snakker om at markere nodes røde og blå? Hvor kommer det fra, hvad betyder det? Er det mig der er dum :)}
+  running time the number of nodes need to be counted.
 
   The colored nodes are split into two. The blue nodes correspond to symbols
   that are created during the decompression and has descendants that are not

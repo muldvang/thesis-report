@@ -6,6 +6,7 @@
     xmode=log,
     % ymode=log,
     ymax=0.00005,
+    enlarge y limits=true,
     ]
     \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=N, y=many_running_time/N^3, y error=many_running_time/N^3_std]

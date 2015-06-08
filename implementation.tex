@@ -25,7 +25,7 @@ Like before the class is responsible for preprocessing sequences, reading and
 writing these from and to the disk, and for executing the forward, backward,
 Viterbi and posterior decoding algorithms.  The library supports reading in
 multiple sequences from a folder.  In the original library the sum of the
-likelihoods for each sequence is returned.  This has also been implemented for
+probabilities for each sequence is returned.  This has also been implemented for
 the Viterbi algorithm.  However, it is not currently supported to read in
 multiple sequences if either the forward or backward tables are requested and
 neither if the Viterbi path or posterior decoding is requested.
@@ -69,10 +69,10 @@ int main() {
     // Run Viterbi.
     bool memory_save = false;
     std::vector<unsigned> viterbi_path;
-    double likelihood = h.viterbi(pi, A, B, memory_save, viterbi_path);
+    double probability = h.viterbi(pi, A, B, memory_save, viterbi_path);
 
     // Print result to stdout.
-    std::cout << "Likelihood: " << likelihood << std::endl
+    std::cout << "Probability: " << probability << std::endl
               << "Path: ";
     for (std::vector<unsigned>::const_iterator it = viterbi_path.begin();
          it != viterbi_path.end(); ++it) {
@@ -105,7 +105,7 @@ file.
 as discussed in section~\ref{sec:class-viterbi-algor}. If the parameter is not
 specified, the algorithm defaults to using memory saving. If the parameter
 \texttt{viterbi\_path} is provided, the algorithm will backtrack to obtain the
-Viterbi path. If it is omitted, only the likelihood of the most likely path is
+Viterbi path. If it is omitted, only the probability of the most likely path is
 computed.
 
 \subsection{Posterior Decoding}

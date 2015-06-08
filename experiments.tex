@@ -183,7 +183,7 @@ three variations of the Viterbi algorithm corresponding to the backtracking
 discussed in section~\ref{sec:backtracking}. They are named as follows.
 \begin{description}
 \item[Viterbi\textsubscript{L}] compresses the sequence and only computes the
-  log-likelihood,
+  probability,
 \item[Viterbi\textsubscript{P}] also backtracks,
 \item[Viterbi\textsubscript{PM}] also saves memory on backtracking.
 \end{description}
@@ -263,7 +263,8 @@ shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. It is expected that
 the points in the plot will form a decreasing curve. \fxerror{Discuss that
   the plot is ugly as hell. It is probably due to the alignment of the
   matrices. In an ideal world, the matrices should have two repesentations to
-  align well in memory. This is however also expensive.}
+  align well in memory. This is however also expensive. Check for page faults
+  when the simple programs have been implemented.}
 
 \begin{figure}
   \centering
@@ -334,7 +335,7 @@ the Viterbi algorithm is shown for sequences of varying length with $e = 1$ and
 $e = 500$, respectively. A model with 16 states was used for these experiments.
 As expected, computing the Viterbi path limits the speedup factor since the
 running time is linear in $T$ instead of $T'$ as it is for only computing the
-log-likelihood. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain
+probability. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain
 a similar speedup. This is expected as the main part of the memory saving in
 Viterbi\textsubscript{PM} essentially consists in computing the Viterbi twice.
 Since this is computed for both the zipHMM implementation and the classical
@@ -438,7 +439,7 @@ Viterbi path limited the speedup factor. This limitation becomes larger for
 Fibonacci words. This is seen in
 figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length}, where the
 computation of the Viterbi path makes the computation orders of magnitudes
-slower than just computing the likelihood. However, the speedup factor for the
+slower than just computing the probability. However, the speedup factor for the
 Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} algorithms still perform
 better on Fibonacci words than on random sequences.
 
@@ -574,9 +575,7 @@ observation sequence length is larger for small sequences than for large
 sequence. Hence, as the sequence length is increasing the initial setup time
 becomes relatively smaller and the speedup factor is increasing. Speedup
 factors between 1 and 5 are gained in this experiment. This might change if the
-number of states in the model is different. \fxwarning{Why is the speedup so
-  small compared to Viterbi? If anything, it should be larger due to the BLAS
-  framework.}
+number of states in the model is different.
 
 \begin{figure}
   \centering
@@ -591,9 +590,7 @@ figure~\ref{fig:posterior_speedup_vs_N}, it is seen that for small models it is
 below 1. This means that the algorithm is slower than the classical posterior
 decoding algorithm. However, as the number of states in the model increases the
 speedup factor quickly becomes larger than 1, due to the matrix multiplications
-being very efficient due to the BLAS framework. \fxwarning{Why are is the
-  speedup factors so small compared to Viterbi?} \fxwarning{Why do they keep
-  increasing when that is not the case for the Viterbi 1 algorithms?}
+being very efficient due to the BLAS framework.
 
 \begin{figure}
   \centering
@@ -683,7 +680,8 @@ impact on the running time, thus making the running time higher.
 This is seen in
 figure~\ref{fig:assymptotic_indexed_posterior_subseq_length.tex} where the
 running time is nearly constant for small values of $j - i$, but starts to grow
-when $j - i$ gets closer to $T$.
+when $j - i$ gets closer to $T$, since the forward and backward tables then are
+computed for a large part of the uncompressed observation sequence.
 
 \begin{figure}
   \centering
@@ -691,9 +689,6 @@ when $j - i$ gets closer to $T$.
   \caption{The running time of indexed posterior decoding for varying distances
     between $i$ and $j$. Random sequences has been used.}
   \label{fig:assymptotic_indexed_posterior_subseq_length.tex}
-  \fxnote{Mention that the running time increases with almost a factor three
-    due to the computation of almost the entire observation sequence that is
-    much slower than doing it on the compressed sequence.}
 \end{figure}
 
 In figure~\ref{fig:indexed_posterior_speedup_vs_subseq} the running time is

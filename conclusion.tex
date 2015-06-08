@@ -15,7 +15,7 @@ the performance compared to the standard implementation.
 By exploiting repetitions in the observation sequence the running time of the
 Viterbi algorithm has changed from $O(N^2 T)$, with $N$ being the number of
 states and $T$ being the length of the observation sequence, to $O(N^2 T')$ for
-computing the likelihood of the most likely path and $O(N^2 T' + T)$ for also
+computing the probability of the most likely path and $O(N^2 T' + T)$ for also
 getting the path. This requires that the observation sequence has been
 preprocessed. This takes time $O(M' N^3)$ with $M'$ being the new alphabet size
 that is dependent on the data and a user provided estimate of how many times
@@ -38,8 +38,8 @@ model size are large enough.
 
 Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
-becomes \fxerror{Insert running time} with $j - i$ being the length of the
-requested substring.
+becomes $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$ with $j - i$ being the
+length of the requested substring.
 
 \section{Future Work}
 
@@ -50,6 +50,9 @@ requested substring.
 \item Implement multiple substring requests without having to recompute the
   tables of the compressed sequence.
 \item Implement substring Viterbi.
+\item Implement more efficient matrix computation for Viterbi or store two
+  copies in memory with different memory alignments.
+\item Implement parallelized algorithms.
 \end{itemize}
 
 %%% Local Variables:
