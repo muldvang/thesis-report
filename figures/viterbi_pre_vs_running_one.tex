@@ -3,6 +3,10 @@
   \begin{axis}[
     stack plots=y,
     area style,
+    ylabel near ticks,
+    every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
+      inner xsep=2pt, inner ysep=0pt},
+    enlarge y limits=false,
     enlarge x limits=false,
     xmode=log,
     ymin=0,

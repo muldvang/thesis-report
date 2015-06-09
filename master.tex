@@ -42,10 +42,15 @@
                                 % properly with externalization.
 \pgfplotsset{%
   colorbrewer cycle list=Set1,
-  legend style={at={(1, 1)},anchor=north west,draw=none,fill=none},
-  legend cell align=left
+  legend columns=-1,
+  legend style={at={(0.5, 1)},anchor=south,draw=none,fill=none,/tikz/every even
+    column/.append style={column sep=10pt}},
+  % legend cell align=left,
+  every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
+    inner xsep=2pt, inner ysep=0pt},
+  enlarge y limits=0.2,
 }
-\pgfplotsset{compat=1.3}
+% \pgfplotsset{compat=1.3}
 \usetikzlibrary{colorbrewer}
 \usetikzlibrary{arrows}
 \usepgfplotslibrary{groupplots}
@@ -100,10 +105,10 @@
       only marks, mark=triangle*, color=my-blue
     },
     indexed-one/.style={%
-      only marks, mark=*, color=my-purple
+      only marks, mark=*, color=my-red
     },
     indexed-many/.style={%
-      only marks, mark=square*, color=my-orange
+      only marks, mark=square*, color=my-green
     },
 }
 

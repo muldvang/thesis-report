@@ -3,6 +3,10 @@
   \begin{axis}[
     xlabel=Sequence length $T$,
     ylabel=$\frac{\text{Running time}}{T}$,
+    ylabel near ticks,
+    every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
+      inner xsep=2pt, inner ysep=0pt},
+    enlarge y limits=0.2,
     xmode=log,
     width=\textwidth
     ]

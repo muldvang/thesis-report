@@ -4,6 +4,10 @@
     xlabel=Sequence length $T$,
     ylabel=$\frac{\text{Running time}}{T}$,
     xmode=log,
+    ylabel near ticks,
+    every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
+      inner xsep=2pt, inner ysep=0pt},
+    enlarge y limits=0.2,
     width=\textwidth,
     plot/.style={only marks, mark=\viterbipmark, color=viterbi-p, error bars, y dir=both, y explicit},
     ]
