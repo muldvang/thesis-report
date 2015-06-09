@@ -146,8 +146,8 @@ words, the new alphabet size $\mathcal{O'}$ is also dependent on $T$: in the
 previous section it was seen that it scales linearly. Due to the recursive
 structure of Fibonacci words, the length of the observation sequence is almost
 halved each time a new symbol is introduced. Hence, the first iteration of the
-preprocessing takes time proportial to $T$, the next to $T/2$, the next to
-$T/4$, and so on. So eventhough $\mathcal{O'}$ is dependent on $T$, the
+preprocessing takes time proportional to $T$, the next to $T/2$, the next to
+$T/4$, and so on. So even though $\mathcal{O'}$ is dependent on $T$, the
 recursive structure makes the running time linear in $T$ since
 $T + T/2 + T/4 + T/8 + \cdots < 2T$.
 
@@ -262,7 +262,7 @@ time does not change with the compression. The running time divided by $N^3$ is
 shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. It is expected that
 the points in the plot will form a decreasing curve. \fxerror{Discuss that
   the plot is ugly as hell. It is probably due to the alignment of the
-  matrices. In an ideal world, the matrices should have two repesentations to
+  matrices. In an ideal world, the matrices should have two representations to
   align well in memory. This is however also expensive. Check for page faults
   when the simple programs have been implemented.}
 
@@ -301,7 +301,7 @@ Viterbi algorithm itself. It has been shown that the running time in practice
 in terms of the length of the observation sequence is very dependent on the
 structure of it, but it still fits the theoretical worst case running time. In
 terms of the model size the physical hardware becomes visible. However, when
-the models get large enough the running time stabalizes and the theoretical
+the models get large enough the running time stabilizes and the theoretical
 running time is confirmed. \fxerror{Is this correct?}
 
 \subsection{Comparing zipHMMlib Viterbi to the Classical Viterbi Algorithm}
@@ -335,20 +335,24 @@ the Viterbi algorithm is shown for sequences of varying length with $e = 1$ and
 $e = 500$, respectively. A model with 16 states was used for these experiments.
 As expected, computing the Viterbi path limits the speedup factor since the
 running time is linear in $T$ instead of $T'$ as it is for only computing the
-probability. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain
-a similar speedup. This is expected as the main part of the memory saving in
+probability. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain a
+similar speedup. This is expected as the main part of the memory saving in
 Viterbi\textsubscript{PM} essentially consists in computing the Viterbi twice.
 Since this is computed for both the zipHMM implementation and the classical
 implementation, the speedup becomes the same as for the
-Viterbi\textsubscript{P}. For small sequences the speedup factor is smaller
-than for it is for large sequences. This is primarily seen for Fibonacci words.
-This is due to the zipHMM Viterbi algorithm that computes the $C_{o_i}$ matrices
-before starting the actual Viterbi computation. As the sequences gets longer
-this computation becomes a smaller fraction of the sequence and the speedup
-factor stabalizes for the random sequences while it continues to grow for the
-Fibonacci words, due to the compression ratio being larger for larger sequences.
+Viterbi\textsubscript{P}. For $e = 500$ the speedup is better than for $e = 1$
+due to the compression ratio. For small sequences however, the speedup factor
+is equal for $e = 1$ and $e = 500$. This is due to the zipHMM Viterbi algorithm
+computing the $C_{o_i}$ matrices before starting the actual Viterbi
+computation. As the sequences become longer this computation becomes a smaller
+fraction of the running time and thereby an increasing running time is seen for
+$e = 500$. For $e = 1$ the new alphabet size $\mathcal{O'}$ is very small and
+the $C_{o_i}$ matrices are quickly computed. Hence, the running time is almost
+independent on this computation and the speedup becomes close to constant for
+increasing sequence lengths.
 
 \begin{figure}
+  \fxwarning{Why is the running time decreasing a bit?}
   \centering
   \input{figures/compressed_1_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi algorithms with $e = 1$ of the
@@ -358,7 +362,6 @@ Fibonacci words, due to the compression ratio being larger for larger sequences.
 \end{figure}
 
 \begin{figure}
-  \fxnote{Why does this not look exactly like figure~\ref{fig:compressed_1_speedup_vs_sequence_length}?}
   \centering
   \input{figures/compressed_500_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi algorithms with $e = 500$ of the
@@ -432,7 +435,7 @@ is shown for sequences of varying length using $e = 1$ and $e = 500$, respective
 As seen, the speedup factors are greater than for random data. It is however
 very dependent on the value of $e$. For $e = 1$, even though the sequence is
 being compressed a lot as seen in section~\ref{sec:compression-ratio}, the
-speedup factor is limitied since a lot of time is still spent on the
+speedup factor is limited since a lot of time is still spent on the
 compression. For $e = 500$ however, the speedup factor stays increasing for the
 Viterbi\textsubscript{L} algorithm. For random data the computation of the
 Viterbi path limited the speedup factor. This limitation becomes larger for
@@ -491,7 +494,7 @@ will make the running time smaller for many executions.
 
 \subsubsection{Conclusion}
 
-This ends the section of experimentations for the Viterbi algorithm. In
+This ends the section of experiments for the Viterbi algorithm. In
 conclusion the compression of sequences does speed up the execution time of the
 Viterbi algorithm in many cases. The best results are of course found for
 repetitive data with the Viterbi algorithm run multiple times and the Viterbi
