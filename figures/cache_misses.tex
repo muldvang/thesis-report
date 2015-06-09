@@ -1,0 +1,30 @@
+\tikzsetnextfilename{cache_misses}
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    xlabel=Model size $N$,
+    ylabel=$\frac{\text{Value}}{N^3}$ scaled,
+    xmode=log,
+    ]
+    \addplot[only marks, color=black]
+    table[x=N, y=Time-plot]
+    {plot_data/cache-misses.csv};
+
+    \addplot[only marks, mark=x, thick, color=my-red]
+    table[x=N, y=L1_TCM-plot]
+    {plot_data/cache-misses.csv};
+
+    \addplot[only marks, mark=x, thick, color=my-green]
+    table[x=N, y=L2_TCM-plot]
+    {plot_data/cache-misses.csv};
+
+    \addplot[only marks, mark=x, thick, color=my-blue]
+    table[x=N, y=L3_TCM-plot]
+    {plot_data/cache-misses.csv};
+    \legend{Time, L1 cache misses, L2 cache misses, L3 cache misses};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

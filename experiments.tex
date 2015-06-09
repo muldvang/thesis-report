@@ -51,6 +51,8 @@ calculated, since especially for short sequences the compression ratio might var
 a lot. Furthermore, the standard deviation has been calculated and is shown as
 error bars in the plots to visually indicate the fluctuations in running time.
 
+\fxwarning{How has the running time been measured?}
+
 \section{Compression Ratio}
 \label{sec:compression-ratio}
 
@@ -273,6 +275,15 @@ the points in the plot will form a decreasing curve. \fxerror{Discuss that
     states in the model $N$. The running time of all three variations of the Viterbi
     algorithm are cubic in $N$.}
   \label{fig:assymptotic_viterbi_backtrack_N}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \input{figures/cache_misses}
+  \caption{Cache misses and running time of Viterbi\textsubscript{PM} for
+    varying number of hidden states $N$. Each measured value has been divided
+    by $N^3$ and scaled to span the interval $[0, 1]$.}
+  \label{fig:cache-misses}
 \end{figure}
 
 Recall that the running time is cubic in $N$ is due to the computation of the
