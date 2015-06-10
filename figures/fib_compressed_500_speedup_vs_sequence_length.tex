@@ -10,6 +10,10 @@
     table[x=T, y=many_total_ratio, y error=many_total_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
 
+    \addplot[forget plot, viterbi-l, error bars, y dir=both, y explicit]
+    table[x=T, y=many_total_ratio, y error=many_total_ratio_std]
+    {plot_data/viterbi_fib_sequence_extended_transformed.data};
+
     \addplot[viterbi-p, error bars, y dir=both, y explicit]
     table[x=T, y=many_path_total_ratio, y error=many_path_total_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
