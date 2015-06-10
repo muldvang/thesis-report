@@ -1,27 +1,45 @@
 \tikzsetnextfilename{cache_misses}
 \begin{tikzpicture}[trim axis left,trim axis right]
-  \begin{axis}[
+  \begin{groupplot}[
+    group style={
+      group size=1 by 2,
+      xlabels at=edge bottom,
+      xticklabels at=edge bottom,
+      vertical sep=10pt,
+    },
     xlabel=Model size $N$,
-    ylabel=$\frac{\text{Value}}{N^3}$ scaled,
     xmode=log,
+    height=60mm,
+    legend to name=cache_misses_legend,
+    legend entries={Running time, L1, L2, L3},
+    legend columns=-1,
+    legend style={/tikz/every even column/.append style={column sep=10pt}},
     ]
+
+    \nextgroupplot[ylabel=$\frac{\text{Running time}}{N^3}$]
+
     \addplot[only marks, color=black]
-    table[x=N, y=Time-plot]
-    {plot_data/cache-misses.csv};
+    table[x=N, y=time/N^3]
+    {plot_data/cache_misses_transformed.data};
 
-    \addplot[only marks, mark=x, thick, color=my-red]
-    table[x=N, y=L1_TCM-plot]
-    {plot_data/cache-misses.csv};
+    \nextgroupplot[ylabel=Pct.\ cache misses, ymin=0, enlargelimits=true]
 
-    \addplot[only marks, mark=x, thick, color=my-green]
-    table[x=N, y=L2_TCM-plot]
-    {plot_data/cache-misses.csv};
+    % Begin legend hack.
+    \addplot[only marks,color=black] coordinates {(100,-50)};
+    % End legend hack.
 
-    \addplot[only marks, mark=x, thick, color=my-blue]
-    table[x=N, y=L3_TCM-plot]
-    {plot_data/cache-misses.csv};
-    \legend{Time, L1 cache misses, L2 cache misses, L3 cache misses};
-  \end{axis}
+    \addplot[only marks, color=my-red]
+    table[x=N, y=L1_pct]
+    {plot_data/cache_misses_transformed.data};
+
+    \addplot[only marks, mark=square*, color=my-green]
+    table[x=N, y=L2_pct]
+    {plot_data/cache_misses_transformed.data};
+
+    \addplot[only marks, mark=triangle*, color=my-blue]
+    table[x=N, y=L3_pct]
+    {plot_data/cache_misses_transformed.data};
+  \end{groupplot}
 \end{tikzpicture}
 
 %%% Local Variables:
