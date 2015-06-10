@@ -125,4 +125,4 @@ for _, group in df.groupby(['T']):
 
 file_name, file_extension = os.path.splitext(path)
 
-res.to_csv(file_name + "_transformed" + file_extension, sep=' ', index=False)
+res.to_csv(file_name + "_transformed" + file_extension, sep=' ', index=False, na_rep="NaN")
