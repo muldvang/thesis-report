@@ -4,35 +4,35 @@
 \label{cha:implementation}
 
 This chapter describes the important aspects of the implementation.  As this
-thesis is intended as being an extension of the work made by zipHMMlib made by
+thesis is intended to be an extension of zipHMMlib by
 \citet{sand2013ziphmmlib}, from now on called the original library, the code
-itself is also an extension of the library.  By the work made in this thesis
+itself is also an extension of the library code.  By the work made in this thesis
 the library has been extended to include an efficient Viterbi implementation
 and an indexed posterior decoding implementation exploiting repetitions, as well
 as a posterior decoding implementation that does not exploit repetitions.
 
-As zipHMMlib is written in C++, the additions made in this thesis have also been
-written in C++.  This code can be downloaded from
-\url{users-cs.au.dk/muldvang}.  \fxerror{URL here.} The build procedure has not
-changed, so for instructions on how to build the project see
-\url{github.com/mailund/ziphmm}.
+As zipHMMlib is written in C++, the additions made in this thesis have also
+been written in C++. The code is readily available\footnote{link til kode}.
+\fxerror{URL here.} The build procedure has not changed, so for instructions on
+how to build the project see \url{github.com/mailund/ziphmm}.
 
 \section{Description of the Implementation}
 
 In the original library the main class of the library was the
-\texttt{Forwarder} class.  This class has been renamed to \texttt{HMM\_Suite}.
+\texttt{Forwarder} class.  This class has been renamed to \texttt{HMMSuite}.
 Like before the class is responsible for preprocessing sequences, reading and
 writing these from and to the disk, and for executing the forward, backward,
-Viterbi and posterior decoding algorithms.  The library supports reading in
-multiple sequences from a folder.  In the original library the sum of the
-probabilities for each sequence is returned.  This has also been implemented for
-the Viterbi algorithm.  However, it is not currently supported to read in
-multiple sequences if either the forward or backward tables are requested and
-neither if the Viterbi path or posterior decoding is requested.
+Viterbi and posterior decoding algorithms.
 
 For matrix multiplications a BLAS framework is used to make these as efficient
-as possible.  For the max times matrix multiplication and addition simple nested
+as possible.  For the max-times matrix multiplication and addition simple nested
 for loops are used as BLAS does not support these operations.
+
+The library supports reading in multiple sequences from a folder. In the
+original library the sum of the probabilities for each sequence is returned by
+the forward algorithm. It is not currently supported to read in multiple
+sequences if either the forward or backward tables are requested and neither if
+the Viterbi path or posterior decoding is requested.
 
 \section{Usage}
 
@@ -44,7 +44,7 @@ discussed.
 \subsection{Viterbi}
 
 In listing~\ref{lst:c++-example} an example of C++ program that uses zipHMMlib
-to compute the Viterbi decoding.
+to compute the Viterbi decoding can be found.
 
 \begin{listing}
 \begin{minted}[fontsize=\footnotesize]{C++}
@@ -82,30 +82,30 @@ int main() {
     exit(0);
 }
 \end{minted}
-\caption{C++ example}
+\caption{Compute the Viterbi path using zipHMM.}
 \label{lst:c++-example}
 \end{listing}
 
-The \texttt{HMM\_Suite.read\_seq(\dots)} reads a sequence from a file. The user
-has to specify the alphabet size since the sequence might not contain all
-symbols from the alphabet. Furthermore, the user specifies that number of states
+The \texttt{HMMSuite.read\_seq(\dots)} reads a sequence from a file. The user
+has to specify the alphabet size since the sequence may not contain all
+symbols from the alphabet. Furthermore, the user specifies the number of states
 in the model $N_{\min}$ that will be used later and the number of executions
 $e$ of the Viterbi algorithm as discussed in
 section~\ref{sec:compr-stopp-crit}.
 
-If the compressed sequence will be reused later by another program, it is saved
-to the disk by \texttt{HMM\_Suite.write\_to\_directory(\dots)}. It can then be
-loaded using \texttt{HMM\_Suite.read\_from\_directory(\dots)}.
+If the compressed sequence will be reused later by another program it is saved
+to the disk by \texttt{HMMSuite.write\_to\_directory(\dots)}. It can then be
+loaded using \texttt{HMMSuite.read\_from\_directory(\dots)}.
 
-\texttt{HMM\_Suite.read\_HMM(\dots)} simply reads an HMM specification from a
+\texttt{HMMSuite.read\_HMM(\dots)} simply reads an HMM specification from a
 file.
 
-\texttt{HMM\_Suite.viterbi(\dots)} runs the Viterbi algorithm. A boolean
+\texttt{HMMSuite.viterbi(\dots)} runs the Viterbi algorithm. A boolean
 \texttt{memory\_save} can be specified to choose whether to save memory or not
 as discussed in section~\ref{sec:class-viterbi-algor}. If the parameter is not
 specified, the algorithm defaults to using memory saving. If the parameter
 \texttt{viterbi\_path} is provided, the algorithm will backtrack to obtain the
-Viterbi path. If it is omitted, only the probability of the most likely path is
+Viterbi path. If it is omitted only the probability of the most likely path is
 computed.
 
 \subsection{Posterior Decoding}
@@ -115,19 +115,19 @@ cannot speed up the execution of the posterior decoding algorithm. It might stil
 be faster, due matrix multiplications being faster than the classical
 approach. The implementation finds a posterior decoding of the same length as
 the compressed sequence. Hence, to find the posterior decoding of the original
-observation sequence $Y_{1:T}$, compressed should be disabled. This can be achieved by
+observation sequence $Y_{1:T}$, compression should be disabled. This can be achieved by
 specifying $e = 0$ when reading the sequence using
-\texttt{HMM\_Suite.read\_seq(\dots)}.
+\texttt{HMMSuite.read\_seq(\dots)}.
 
-The \texttt{HMM\_Suite.posterior\_decoding(\dots)} is a bit simpler than the
+The \texttt{HMMSuite.posterior\_decoding(\dots)} is a bit simpler than the
 Viterbi method and takes as parameters the matrices $\pi, A$, and $B$ and a
 vector in which the posterior decoding is saved.
 
 \subsection{Indexed Posterior Decoding}
 
-For the indexed posterior decoding compression can be enabled. The
-\texttt{HMM\_Suite::indexed\_posterior\_decoding(\dots)} takes as parameters the
-matrices $\pi, A$, and $B$, the indices $i$ and $j$ and a reference to a vector
+Compression can be enabled for the indexed posterior decoding. The
+\texttt{HMMSuite::indexed\_posterior\_decoding(\dots)} takes as parameters the
+matrices $\pi, A$, and $B$, the indices $i$ and $j$, and a reference to a vector
 where the indexed posterior decoding is saved.
 
 %%% Local Variables:

@@ -1,12 +1,13 @@
 % chktex-file 9
+% chktex-file 11
 % chktex-file 24
 % chktex-file 44
 \chapter{Experiments}
 \label{cha:experiments}
 
 This chapter covers description and discussion of all experiments performed in
-this thesis. First, the used data is described followed by the experimental
-setup and then the Viterbi and posterior algorithms are discussed in turn.
+this thesis. First, the data used is described followed by the experimental
+setup. Finally, the Viterbi and posterior algorithms are discussed in turn.
 
 \section{Data}
 
@@ -33,7 +34,7 @@ The models used are random, fully connected models, that is there is a
 transition from a state to any other state. The emission probabilities are
 random too. The alphabet size has been kept constant at four. In general, the
 larger the alphabet, the worse compression ratio is expected. The size of the
-models, i.e.\ the number of states, have been varied from 2 to 512.
+models, i.e.\ the number of states, varies from 2 to 512.
 
 \section{Experimental Setup}
 
@@ -44,14 +45,17 @@ version 3.10.2 was used.
 
 Each point in the plots in this chapter corresponds to the mean of multiple
 runs. For all experiments, the executions of a program with a set of parameters
-have been repeated five times and the mean computed to even out fluctuations in
+has been repeated five times and the mean computed to even out fluctuations in
 the running time. Furthermore, in the case of random sequences, 20 random
 sequences of the same length has been generated and the mean of the measure
-calculated, since especially for short sequences the compression ratio might vary
+calculated since, especially for short sequences, the compression ratio might vary
 a lot. Furthermore, the standard deviation has been calculated and is shown as
 error bars in the plots to visually indicate the fluctuations in running time.
 
 \fxwarning{How has the running time been measured?}
+
+\fxwarning{How has expected running times been measured. I.e.\ divided by
+  theoretical and constant is assued. However, there is some initialization.}
 
 \section{Compression Ratio}
 \label{sec:compression-ratio}
@@ -63,11 +67,10 @@ possible to compress the sequence to a single character, even though this might
 not be a good idea in terms of performance. To see how well the different kinds
 of data compresses when used by zipHMMlib the compression ratio for all the
 sequences described above have been measured. The compression ratio is defined
-as $\frac{\text{original size}}{\text{compressed size}}$. Hence, the greater
-compression ratio the better. Recall, that the amount of compression depends on
-the estimate of how many times the algorithm is run after compressing the
-sequence. For this experiment an estimates of $e = 1$ and $e = 500$ have been
-provided to the program.
+as $\frac{\text{original size}}{\text{compressed size}}$. Recall that the
+amount of compression depends on the estimate of how many times the algorithm
+is run after compressing the sequence. For this experiment estimates of
+$e = 1$ and $e = 500$ have been provided to the program.
 
 \begin{figure}
   \centering\ref{compression_legend}
@@ -86,35 +89,37 @@ provided to the program.
 \end{figure}
 
 As seen in figure~\ref{fig:compression_ratio} the compression ratio grows
-linearly for the Fibonacci words as the sequence length increases, whereas is
-it only slightly growing for random sequences. The compression of Fibonacci
-words are much better than the compression of random sequences, just as
+linearly for Fibonacci words as the sequence length increases, whereas it
+is only slightly growing for random sequences. The compression of Fibonacci
+words is much better than the compression of random sequences as
 expected. This suggests that the performance of the Viterbi algorithm will be
-very dependent on the input sequences. Just to verify that the Fibonacci words
-is very repetitive, unary sequences have also been compressed, and as seen the
+very dependent on the input sequences. To verify that Fibonacci words
+are very repetitive, unary sequences have also been compressed, and as seen the
 compression of these two types is very comparable.
 
-Also it is seen that the compression is very dependent of the $e$ parameter.
+It is also seen that the compression is very dependent of the $e$ parameter.
 For Fibonacci words the compression ratio is approximately factor 10 lower when
 $e = 1$ compared to $e = 500$. For random sequences only a single iteration of
-the compression is run when $e = 1$ and the sequence is only slightly
-compressed. For $e = 500$ more iterations of the compression is made and
+the compression is run when $e = 1$ and the sequence is only compressed by a
+small percentage. For $e = 500$ more iterations of the compression is made and
 thereby a better compression ratio is obtained.
 
 For this experiment only, random sequences of an alphabet of size 2 was also
 tested. It is expected that the random sequences with an alphabet of size 2
 will compress two times better than the sequence with an alphabet size 4, since
 the most common pair of symbols will occur twice as many times in the sequences
-with alphabet size 2 than the sequences with alphabet size 4. This is also seen
+with alphabet size 2 than the sequences with alphabet size 4 by random.
+\fxnote{Gælder det også med den model, du bruger til at generere sekvenserne?
+  Synes stadig at det er unødvendigt kompliceret.} This is also seen
 in the plot for $e = 500$. For random sequences of alphabet size four the compression ratio
 is approximately four, while it is almost eight for sequences with alphabet
 size 2. This suggests that using the library with e.g.\ protein sequences that
 has an alphabet size of 20 might not result in a good performance as good as seen
 in the following experiment.
 
-To keep the experiments simple and not introduce overly many plots, an alphabet
-size of four have been used for the rest of the experiments. This corresponds
-to DNA sequences that HMM's are often used with in the field of bioinformatics.
+To keep the experiments simple and limit the number of plots, an alphabet
+size of four has been used for the rest of the experiments. This corresponds
+to DNA sequences, which HMMs are often used with in the field of bioinformatics.
 
 \section{Preprocessing}
 
@@ -133,25 +138,41 @@ Recall that the preprocessing iterates over the observation sequence and finds
 the most common pair of symbols, introduces a new symbol, and replaces the pair
 with the new symbol.
 
-As seen the running time is not linear in $T$ for random sequences. Since the
-compression ratio is dependent on $T$ as seen in the previous section and the
-size of the new alphabet $\lvert\mathcal{O'}\rvert$ grows with the compression
-ratio, $\lvert\mathcal{O'}\rvert$ is also dependent on $T$. Hence, when $T$
-grows, $\lvert\mathcal{O'}\rvert$ also grows. Since the length of the
-observation sequence only becomes a bit smaller for each iteration of the
-preprocessing, while $\mathcal{O'}$ grows, what is seen in the figure is then
-not surprising; the running time of the preprocessing for random sequences is
-superlinear in $T$ and not linear as the theoretical running time suggests.
+As seen the running time is not linear in $T$ for random sequences. To explain
+this assume that the sequence is compressed using
+$\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert$ iterations with a new
+symbol introduced in each iteration. As seen in the previous section the
+observation sequence only becomes a bit say $\epsilon_i$ smaller in iteration
+$i$. Thus, an approximate running time of the compression of random data can be
+written as
+\begin{equation*}
+  \begin{aligned}
+    O(T & + T - \epsilon_1                \\
+        & + T - (\epsilon_1 + \epsilon_2) \\
+        & + \cdots                        \\
+        & + T -(\epsilon_1 + \epsilon_2 + \cdots + \epsilon_{\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert - 1})) = O\left((\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert) T \right) .
+  \end{aligned}
+\end{equation*}
+Since the compression ratio is dependent on $T$ as seen in the previous section
+and the size of the new alphabet $\lvert\mathcal{O'}\rvert$ grows with the
+compression ratio, $\lvert\mathcal{O'}\rvert$ is also dependent on $T$. Hence,
+when $T$ grows, $\lvert\mathcal{O'}\rvert$ also grows, i.e.\ they are not
+independent. Hence, what is seen in the figure is not surprising; the running
+time of the preprocessing for random sequences is superlinear in $T$ and not
+linear as the theoretical running time suggests.
 
-However, for Fibonacci words the running time is linear in $T$. For Fibonacci
-words, the new alphabet size $\mathcal{O'}$ is also dependent on $T$: in the
-previous section it was seen that it scales linearly. Due to the recursive
-structure of Fibonacci words, the length of the observation sequence is almost
-halved each time a new symbol is introduced. Hence, the first iteration of the
-preprocessing takes time proportional to $T$, the next to $T/2$, the next to
-$T/4$, and so on. So even though $\mathcal{O'}$ is dependent on $T$, the
-recursive structure makes the running time linear in $T$ since
-$T + T/2 + T/4 + T/8 + \cdots < 2T$.
+However, for Fibonacci words the running time is linear in $T$. The new
+alphabet size $\mathcal{O'}$ is linearly dependent on $T$ as seen in the
+previous section. Due to the recursive structure of Fibonacci words the length
+of the observation sequence is almost halved each time a new symbol is
+introduced. The running time can be written as
+\begin{equation*}
+  O(T + \frac{T}{2} + \frac{T}{4} + \frac{T}{8} + \dots + \frac{T}{2^{\lvert\mathcal{O'}\rvert - \lvert{\mathcal{O}}\rvert}}) = O(T).
+\end{equation*}
+Hence, the first iteration of the preprocessing takes time proportional to $T$,
+the next to $T/2$, the next to $T/4$, etc. Thus, even though $\mathcal{O'}$
+is dependent on $T$ the recursive structure makes the running time linear in
+$T$ and independent of $\mathcal{O'}$ and $\mathcal{O}$.
 
 \begin{figure}
   \centering
@@ -179,10 +200,10 @@ zipHMMlib implementation.
 \subsection{Verification of Theoretical Running Times}
 \label{sec:theor-runn-times}
 
-In this section the theoretical running times are verified to make sure that
-the implementation runs as expected. The running time has been measured for
-three variations of the Viterbi algorithm corresponding to the backtracking
-discussed in section~\ref{sec:backtracking}. They are named as follows.
+In this section the theoretical running times are verified. The running time
+has been measured for three variations of the Viterbi algorithm corresponding
+to the backtracking discussed in section~\ref{sec:backtracking}. They are named
+as follows.
 \begin{description}
 \item[Viterbi\textsubscript{L}] compresses the sequence and only computes the
   probability,
@@ -194,17 +215,17 @@ running times.
 
 \subsubsection{Sequence Length}
 
-The implementation of the Viterbi algorithm supports both computing the Viterbi
-path and not doing it. For the two of those there is a difference in the
-theoretical time, since computing the path is linear in $T$. For a list of
-running times for the algorithms, see table~\ref{tab:running-time}.
+The implementation of the Viterbi algorithm supports both computing and not
+computing the Viterbi path. There is a difference in the theoretical running
+time since computing the path is linear in $T$. For a list of running times
+for the algorithms see table~\ref{tab:running-time}.
 
-In figure~\ref{fig:assymptotic_viterbi_T} the running divided by the length of
-the compressed sequence $T'$ is shown for input sequences of varying lengths.
-The experiment has been made for both random sequences (to the left) and
-Fibonacci words (to the right). As expected the fraction is close to constant
-with a slightly decreasing curve for Viterbi\textsubscript{L} in both cases.
-For random sequences the running time for Viterbi\textsubscript{P} and
+In figure~\ref{fig:assymptotic_viterbi_T} the running time divided by the
+length of the compressed sequence $T'$ is shown for input sequences of varying
+lengths. The experiment has been made for both random sequences (to the left)
+and Fibonacci words (to the right). As expected the fraction is close to
+constant with a slightly decreasing curve for Viterbi\textsubscript{L} in both
+cases. For random sequences the running time for Viterbi\textsubscript{P} and
 Viterbi\textsubscript{PM} is in practice linear in $T'$ also. This is due to
 the compression ratio being only approximately four, and that the backtracking
 is computed quickly using the $R$ matrices. For Fibonacci words the compression
@@ -250,23 +271,23 @@ in $T$.
   \end{subfigure}
   \caption{The running time of Viterbi as a function of the original sequence
     length $T$. The running time of all three variations of the Viterbi
-    algorithm are linear in $T$.}
+    algorithm is linear in $T$.}
   \label{fig:assymptotic_viterbi_backtrack_T}
 \end{figure}
 
 \subsubsection{Model Size}
 
 The theoretical running times of all three variations of the Viterbi algorithm
-are cubic in the number of states $N$. To verify this an experiment with random
-sequences of length 10\,000 have been run for models with between 2 and 1024
-states. Fibonacci words has not been used in this experiment since the running
-time does not change with the compression. The running time divided by $N^3$ is
+is cubic in the number of states $N$. To verify this an experiment with random
+sequences of length 10\,000 has been run for models with between 2 and 1024
+states. Fibonacci words have not been used in this experiment since the running
+time does not change with the compression ratio. The running time divided by $N^3$ is
 shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. It is expected that
-the points in the plot will form a decreasing curve. \fxerror{Discuss that
-  the plot is ugly as hell. It is probably due to the alignment of the
-  matrices. In an ideal world, the matrices should have two representations to
-  align well in memory. This is however also expensive. Check for page faults
-  when the simple programs have been implemented.}
+the points in the plot will form a decreasing curve. \fxerror{Discuss that the
+  plot is ugly as hell. It is probably due to the alignment of the matrices. In
+  an ideal world, the matrices should have two representations to align well in
+  memory. This is however also expensive. Check for page faults when the simple
+  programs have been implemented.}
 
 \begin{figure}
   \centering
@@ -287,7 +308,7 @@ the points in the plot will form a decreasing curve. \fxerror{Discuss that
 \end{figure}
 
 Recall that the running time is cubic in $N$ is due to the computation of the
-$C$ matrices. The multiplication of the these matrices, i.e.\ the computation
+$C$ matrices. The multiplication of these matrices, i.e.\ the computation
 of the Viterbi or forward-backward algorithm, takes time
 proportional to $N^2$ as stated in section~\ref{sec:running-time}. When the
 size of the new alphabet $M'$ is small compared to the length of the compressed
@@ -295,14 +316,14 @@ sequence, the $N^3$ term vanishes in practice when compared to the $N^2$
 term. Hence, it is seen that the running time of the matrix multiplication
 (and the backtracking) is proportional to $N^2$ by not compressing the
 sequence. This is shown in figure~\ref{fig:assymptotic_viterbi_N} where
-$\lvert M' \rvert = 4$ and $T = 10.000$.
+$\lvert M' \rvert = 4$ and $T = 10\,000$.
 
 \begin{figure}
   \centering
   \input{figures/assymptotic_viterbi_N}
   \caption{The running time of Viterbi as a function of the number of hidden
-    states in the model $N$. If the input sequences are not compressed, the
-    running time of all three variations of the Viterbi algorithm are quadratic
+    states, $N$, in the model. If the input sequences are not compressed the
+    running time of all three variations of the Viterbi algorithm is quadratic
     in $N$.}
   \label{fig:assymptotic_viterbi_N}
 \end{figure}
@@ -310,17 +331,17 @@ $\lvert M' \rvert = 4$ and $T = 10.000$.
 This ends the experiments concerning the theoretical running times of the
 Viterbi algorithm itself. It has been shown that the running time in practice
 in terms of the length of the observation sequence is very dependent on the
-structure of it, but it still fits the theoretical worst case running time. In
+structure of the sequence, but it still fits the theoretical worst case running time. In
 terms of the model size the physical hardware becomes visible. However, when
-the models get large enough the running time stabilizes and the theoretical
-running time is confirmed. \fxerror{Is this correct?}
+the models become large enough the running time stabilizes and fits the theoretical
+running time. \fxerror{Is this correct?}
 
 \subsection{Comparing zipHMMlib Viterbi to the Classical Viterbi Algorithm}
 \label{sec:comp-ziphmml-viterbi}
 
 The zipHMMlib Viterbi algorithm is compared to an implementation of the
 classical Viterbi algorithm. Recall that the compressed sequence from the
-preprocessing can be saved to disk for later use. For some problems though one
+preprocessing can be saved to disk for later use. However, for some problems one
 might only need to run Viterbi once for a sequence. As described in
 section~\ref{sec:compr-stopp-crit} the preprocessing uses an estimate $e$ of
 how many times the Viterbi algorithm is run to compress the sequence
@@ -330,7 +351,7 @@ $e = 1$ and $e = 500$ executions of Viterbi.
 The algorithms are compared to their respective counterpart of the classical
 algorithm, e.g.\ for Viterbi\textsubscript{L} algorithms the classical
 algorithm without backtracking has been used. In the following plots a
-``speedup factor'' is shown on the y-axis. The speedup factor is calculated as
+speedup factor is shown on the y-axis. The speedup factor is calculated as
 the running time of the classical algorithm (with or without without backtracking
 enabled) divided by the running time of algorithm being measured, including the
 time it takes to do the preprocessing. Hence, any speedup factor larger than one
@@ -346,21 +367,21 @@ the Viterbi algorithm is shown for sequences of varying length with $e = 1$ and
 $e = 500$, respectively. A model with 16 states was used for these experiments.
 As expected, computing the Viterbi path limits the speedup factor since the
 running time is linear in $T$ instead of $T'$ as it is for only computing the
-probability. The Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain a
+probability. Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain a
 similar speedup. This is expected as the main part of the memory saving in
-Viterbi\textsubscript{PM} essentially consists in computing the Viterbi twice.
+Viterbi\textsubscript{PM} essentially consists in computing Viterbi twice.
 Since this is computed for both the zipHMM implementation and the classical
-implementation, the speedup becomes the same as for the
-Viterbi\textsubscript{P}. For $e = 500$ the speedup is better than for $e = 1$
-due to the compression ratio. For small sequences however, the speedup factor
-is equal for $e = 1$ and $e = 500$. This is due to the zipHMM Viterbi algorithm
-computing the $C_{o_i}$ matrices before starting the actual Viterbi
-computation. As the sequences become longer this computation becomes a smaller
-fraction of the running time and thereby an increasing running time is seen for
-$e = 500$. For $e = 1$ the new alphabet size $\mathcal{O'}$ is very small and
-the $C_{o_i}$ matrices are quickly computed. Hence, the running time is almost
-independent on this computation and the speedup becomes close to constant for
-increasing sequence lengths.
+implementation, the speedup becomes the same as for Viterbi\textsubscript{P}.
+For $e = 500$ the speedup is better than for $e = 1$ due to the compression
+ratio. For small sequences however, the speedup factor is equal for $e = 1$ and
+$e = 500$. This is due to the zipHMM Viterbi algorithm computing the $C_{o_i}$
+matrices before starting the actual Viterbi computation. As the sequences
+become longer this computation becomes a smaller fraction of the running time
+and thereby an increasing running time is seen for $e = 500$. For $e = 1$ the
+new alphabet size $\mathcal{O'}$ is very small and the $C_{o_i}$ matrices are
+quickly computed. Hence, the running time is almost independent of this
+computation and the speedup becomes close to constant for increasing sequence
+lengths.
 
 \begin{figure}
   \fxwarning{Why is the running time decreasing a bit?}
@@ -382,7 +403,7 @@ increasing sequence lengths.
 \end{figure}
 
 Instead of presenting the speedup factor as a function of the sequence length,
-the model size is used in the next experiment. So while the size of the model
+the model size is used in the next experiment. While the size of the model
 is varied the length of the observation sequence is kept constant at length
 10\,000. Recall that the running time of Viterbi is $O(M' N^3 + N^2 T')$. The
 cubic term might become a problem as $N$ grows. The speedup factor as function
@@ -411,16 +432,16 @@ states increases. This is due to the matrix representation of the algorithm
 making it more efficient. However, for larger matrices, the cubed $N$ term
 becomes a limiting factor and the speedup factor drops below 1. This is also
 seen for $e = 500$. For $e = 500$ however, the best result is obtained for very
-small models. This is due to the new alphabet size $\mathcal{O'}$ in being
+small models. This is due to the new alphabet size $\mathcal{O'}$ being
 bigger when $e = 500$. Hence, the $M' N^3$ term of the running time becomes
-more dominating and the speedup becomes smaller even for small increases of the
+more dominat and the speedup becomes smaller even for small increases of the
 model size.
 
 \subsubsection{Fibonacci Words}
 
 Speedups were gained for many cases using random data, but it is
-expected that much greater speedups will be obtained by using repetitive
-sequences. Thus, experiments similar to the ones for random data has been
+expected that much greater speedups will be obtained using repetitive
+sequences. Thus, experiments similar to the ones for random data have been
 conducted. In figures~\ref{fig:fib_compressed_1_speedup_vs_sequence_length}
 and~\ref{fig:fib_compressed_500_speedup_vs_sequence_length} the speedup factor
 is shown for sequences of varying length using $e = 1$ and $e = 500$, respectively.
@@ -446,8 +467,8 @@ is shown for sequences of varying length using $e = 1$ and $e = 500$, respective
 As seen, the speedup factors are greater than for random data. It is however
 very dependent on the value of $e$. For $e = 1$, even though the sequence is
 being compressed a lot as seen in section~\ref{sec:compression-ratio}, the
-speedup factor is limited since a lot of time is still spent on the
-compression. For $e = 500$ however, the speedup factor stays increasing for the
+speedup factor is limited since a lot of time is still spent on compression.
+For $e = 500$ however, the speedup factor stays increasing for the
 Viterbi\textsubscript{L} algorithm. For random data the computation of the
 Viterbi path limited the speedup factor. This limitation becomes larger for
 Fibonacci words. This is seen in
@@ -509,10 +530,10 @@ This ends the section of experiments for the Viterbi algorithm. In
 conclusion the compression of sequences does speed up the execution time of the
 Viterbi algorithm in many cases. The best results are of course found for
 repetitive data with the Viterbi algorithm run multiple times and the Viterbi
-path is not computed. Speedup factors in the order of hundreds were found, so
-for these kinds of problems this method has a great potential. If the Viterbi
+path not computed. Speedup factors in the order of hundreds were found, so
+for these kinds of problems this method has great potential. If the Viterbi
 path is requested the speedup factors becomes much lower. The maximum speedup
-seen in the experiments were below 20. In other scenarios with random data a
+seen in the experiments was below 20. In other scenarios with random data a
 more modest speedup was obtained. For random data and request of the Viterbi
 path speedup factors below 1 is obtained. Hence, the zipHMM Viterbi is slower
 than the classical Viterbi algorithm in some cases.
@@ -520,7 +541,7 @@ than the classical Viterbi algorithm in some cases.
 \section{Posterior Decoding}
 
 This section contains all experiments performed on the posterior decoding
-algorithm. As described in section~\ref{sec:probl-expl-repet}, no efficient way
+algorithm. As described in section~\ref{sec:probl-expl-repet} no efficient way
 of exploiting sequence repetitions has been found. Nevertheless, experiments
 have been made to see whether a minor speedup can be obtained by computing the
 posterior decoding in the matrix multiplications framework in zipHMM.\@ In
@@ -528,18 +549,18 @@ contrast to the previous section with multiple variations of the Viterbi
 algorithm, only a single variation makes sense here: the input sequence is not
 compressed and the path is computed.
 
-The section is split into two parts. The first part compares the actual
-running time to the theoretical running time to verify that the implementation
-of the algorithm satisfies the theory. The second part compares it to the
+The section is split into two parts. The first part compares the actual running
+time to the theoretical running time to verify that the implementation of the
+algorithm fits the theoretical running time. The second part compares it to the
 classical implementation of posterior decoding.
 
 \subsection{Asymptotic Running Time}
 \label{sec:asympt-runn-time}
 
-Like in section~\ref{sec:theor-runn-times}, the theoretical compared the actual
-running times experiments have been made using random data. The theoretical
-running time is $O(M N^3 + TN^2)$. Since $M$ is very small compared to $T$, is
-expected that the first term vanishes. This was already seen for the Viterbi
+As in section~\ref{sec:theor-runn-times} the theoretical compared to the actual
+running time experiments have been made using random data. The theoretical
+running time is $O(M N^3 + TN^2)$. Since $M$ is very small compared to $T$, it
+is expected that the first term vanishes. This was already seen for the Viterbi
 algorithm in section~\ref{sec:theor-runn-times},
 figure~\ref{fig:assymptotic_viterbi_N}. Hence, for this experiment the
 theoretical running time $O(TN^2)$ is assumed. This of course only makes sense
@@ -559,8 +580,8 @@ the running time is decreasing going towards constant.
 \end{figure}
 
 Secondly, in figure~\ref{fig:posterior_N} the running time for an increasing
-number of states is shown. A random sequence of length $10.000$ has been used. It
-is seen that the running time is indeed quadratic in the numbers of states
+number of states is shown. A random sequence of length 10\,000 has been used. It
+is seen that the running time is indeed quadratic in the number of states
 in practice.
 
 \begin{figure}
@@ -586,8 +607,8 @@ factor becomes larger as the input sequence grows. This is due to the initial
 setup of the algorithm that slows down the algorithm a bit, which was also seen
 in figure~\ref{fig:posterior_T}, where the factor between running time and
 observation sequence length is larger for small sequences than for large
-sequence. Hence, as the sequence length is increasing the initial setup time
-becomes relatively smaller and the speedup factor is increasing. Speedup
+sequence. Hence, as the sequence length is increases the initial setup time
+becomes relatively smaller and the speedup factor increases. Speedup
 factors between 1 and 5 are gained in this experiment. This might change if the
 number of states in the model is different.
 
@@ -599,12 +620,12 @@ number of states in the model is different.
   \label{fig:posterior_speedup_vs_sequence_length}
 \end{figure}
 
-Looking at the speedup factor as function of the number of states in
+Looking at the speedup factor as a function of the number of states in
 figure~\ref{fig:posterior_speedup_vs_N}, it is seen that for small models it is
 below 1. This means that the algorithm is slower than the classical posterior
 decoding algorithm. However, as the number of states in the model increases the
-speedup factor quickly becomes larger than 1, due to the matrix multiplications
-being very efficient due to the BLAS framework.
+speedup factor quickly becomes larger than 1, due to the BLAS framework
+computing matrix multiplication efficiently.
 
 \begin{figure}
   \centering
@@ -617,15 +638,14 @@ being very efficient due to the BLAS framework.
 These experiments end the section of the posterior decoding. Overall the
 algorithm has a running time that is very comparable to the classical
 implementation of posterior decoding. For scenarios with large models and
-sequences the zipHMM is faster whereas the classical algorithm is a better
+sequences the zipHMM is faster whereas the classical algorithm is better
 for small models.
 
 \section{Indexed Posterior Decoding}
 
-In this section experiments on the indexed posterior decoding is
-made. Recall that indexed posterior decoding also takes two indices $i$ and
-$j$ as input and only returns the posterior decoding for the subsequence
-$Y_{i:j}$.
+In this section experiments on the indexed posterior decoding are carried out.
+Recall that indexed posterior decoding also takes two indices $i$ and $j$ as
+input and only returns the posterior decoding for the subsequence $Y_{i:j}$.
 
 Recall from section~\ref{sec:running-time-2} that the algorithm has a
 theoretical running time of $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$,
@@ -637,7 +657,7 @@ algorithms. However, the three terms of the running time are still discussed in
 turn below.
 
 The first term $M' N^3$ comes from the computation of the $C$ matrices. This
-has already been experimented with for the Viterbi algorithm in
+has already been experimentally verified for the Viterbi algorithm in
 section~\ref{sec:theor-runn-times}. Since the only difference between the
 computations of the matrices for the Viterbi algorithm and the forward-backward
 algorithm is matrix multiplication vs.\ max times multiplication and numerical
@@ -646,30 +666,29 @@ decoding.
 
 The second term $N^2 T'$ comes from computing the forward and backward tables
 for the compressed sequence of length $T'$. In
-section~\ref{sec:asympt-runn-time} this was already verified the for posterior
+section~\ref{sec:asympt-runn-time} this was already verified for the posterior
 decoding algorithm.
 
 Finally, the $N^2 (j - i + \log T)$ term comes from the decompression of the
 compressed subsequence that is linear in $j - i + \log T$ and from computing
 the posterior decoding for the subsequence. The running time of the posterior
 decoding has already been shown to match the theoretical running time. The
-decompression has a quite simple implementation and experiments have not been
-made for this. \fxwarning{Make experiment for decompression? It would also be
-  interesting in terms of comparing random data to Fibonacci words.}
+decompression is trivial and experiments have not been
+made for this. \fxwarning{Is the decompression algorithm trivial!?}
 
 \subsection{Comparison to the Classical Algorithm}
 
 The indexed posterior decoding algorithm has been compared to the classical
 posterior decoding algorithm. For the classical algorithm the entire posterior
-decoding has been found and then the state sequence from index $i$ to $j$ has
+decoding has been found and the state sequence from index $i$ to $j$ has
 been extracted.
 
-As for the experimentation of the Viterbi algorithm, the comparison to the
+As for the Viterbi algorithm experiments, the comparison to the
 classical implementation is first made for random data and then for Fibonacci
-words. Like for the Viterbi algorithm the algorithm is analyzed by varying the
-input sequence length and the model size, but the length of the partially
-decompressed subsequence $Z$ also has an impact on the running time, so this
-has also been experimented with.
+words. As for the Viterbi algorithm the algorithm is analyzed by varying the
+input sequence length and the model size, but as the length of the partially
+decompressed the subsequence $Z$ also has an impact on the running time the
+value of $j - i$ is also varied.
 
 \subsection{Random Data}
 
@@ -683,13 +702,13 @@ is a small number compared to $j - i$.
 Depending on how well the data compresses, the value of the length of the
 compressed sequence $T'$ will be larger or smaller than the length of
 subsequence $Z$. For random data that only has a compression ratio of
-approximately 4 as seen section~\ref{sec:compression-ratio} the number of
+approximately 4 as seen in section~\ref{sec:compression-ratio} the number of
 ``extra'' symbols will be small. Hence, when $j - i$ is small the length of $Z$
 will also be small compared to $T'$. Therefore, it is expected that $T'$ will
 dominate the running time and small increases of $j - i$ will not make major
 changes to the overall running time. However, for large values of $j - i$, the
 value will be close to or larger than $T'$ and the value will have a larger
-impact on the running time, thus making the running time higher.
+impact on the running time, thus increasing the running time.
 
 This is seen in
 figure~\ref{fig:assymptotic_indexed_posterior_subseq_length.tex} where the
@@ -708,7 +727,7 @@ computed for a large part of the uncompressed observation sequence.
 In figure~\ref{fig:indexed_posterior_speedup_vs_subseq} the running time is
 compared the classical algorithm. A speedup is gained when running the
 algorithm multiple times, but for a single run the algorithm is slower than the
-classical one in this case. The speedup get smaller when $j - i$ gets closer to
+classical algorithm. The speedup becomes smaller when $j - i$ approaches
 $T$. That is expected from the running time seen in
 figure~\ref{fig:assymptotic_indexed_posterior_subseq_length.tex} that was
 discussed in the previous paragraph.
@@ -731,7 +750,7 @@ result of this experiment is shown in
 figure~\ref{fig:indexed_posterior_speedup_vs_T}. The result is as
 expected. Again, the indexed posterior decoding 1 algorithm is slower than
 the classical algorithm for small sequences. For the indexed posterior
-decoding 500 algorithm however, speedups of up to factor 15 is seen in this
+decoding 500 algorithm however, speedups of up to factor 15 are seen in this
 example.
 
 \begin{figure}
@@ -743,7 +762,7 @@ example.
 \end{figure}
 
 Finally, the number of states in the model has been varied. Sequences of length
-10\,000 were used and the posterior decoding has been computed for an indexed of
+10\,000 were used and the posterior decoding has been computed for a posterior decoding of
 length 200. As for the Viterbi algorithm experiments in
 section~\ref{sec:comp-ziphmml-viterbi} it is expected that the algorithm is
 most efficient for ``medium sized'' models. As seen in
@@ -762,23 +781,23 @@ and~\ref{fig:speedup_vs_N2}.
 \subsection{Fibonacci Words}
 
 The results of the experiments using random data showed speedups in some cases
-whereas in other cases slowdowns were obtained. As seen for the Viterbi
-algorithm much better results were obtained by using Fibonacci words so this
+whereas in other cases slowdowns were observed. As seen for the Viterbi
+algorithm much better results were obtained using Fibonacci words which
 is also expected for the indexed posterior decoding.
 
 The experiments from the previous section is repeated with Fibonacci words
-instead of random sequences. It is expected that this will provide better
+instead of random sequences. It is expected that this will provide larger
 speedups. The result of these experiments is shown in
 figures~\ref{fig:assymptotic_indexed_posterior_fib_subseq_length.tex},~\ref{fig:fib_indexed_posterior_speedup_vs_subseq},
 and~\ref{fig:indexed_posterior_fib_speedup_vs_T}. As seen the curves in the
 plots are similar to those of random data except that the speedup factor is
-much better as expected.
+much larger as expected.
 
 \begin{figure}
   \centering
   \input{figures/assymptotic_indexed_posterior_fib_subseq_length.tex}
   \caption{The running time for indexed posterior decoding for
-    varying indexed lengths. Fibonacci word has been used}
+    varying indexed lengths. Fibonacci word have been used}
   \label{fig:assymptotic_indexed_posterior_fib_subseq_length.tex}
 \end{figure}
 

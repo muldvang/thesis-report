@@ -1,7 +1,7 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-\citet{sand2013ziphmmlib} implements a library zipHMM---a library for working
+\citet{sand2013ziphmmlib} implements a zipHMM for working
 with hidden Markov models. It includes an efficient implementation of the forward
 algorithm that obtains a speedup compared to the classical implementation by
 exploiting repetitions in the input sequence.
@@ -14,19 +14,20 @@ the performance compared to the standard implementation.
 
 By exploiting repetitions in the observation sequence the running time of the
 Viterbi algorithm has changed from $O(N^2 T)$, with $N$ being the number of
-states and $T$ being the length of the observation sequence, to $O(N^2 T')$ for
-computing the probability of the most likely path and $O(N^2 T' + T)$ for also
-getting the path. This requires that the observation sequence has been
-preprocessed. This takes time $O(M' N^3)$ with $M'$ being the new alphabet size
-that is dependent on the data and a user provided estimate of how many times
-the Viterbi algorithm is executed afterwards.
+states and $T$ being the length of the observation sequence, to $O(N^2 T')$
+where $T'$ is the length of the compression observation sequence for computing
+the probability of the most likely path and $O(N^2 T' + T)$ for also getting
+the path. This requires that the observation sequence has been preprocessed.
+This takes time $O(M' N^3)$ with $M'$ being the new alphabet size that is
+dependent on the data and a user provided estimate of how many times the
+Viterbi algorithm is executed afterwards.
 
 The experiments show that a possibly very large speedup can be gained. However,
-it is very dependent on how well the data compress, i.e.\ how many repetitions
+it is very dependent on how well the data compresses, i.e.\ how many repetitions
 the observation sequence contains, and how many times the user estimates that the
 algorithm is executed after the compression. Furthermore, since the
-preprocessing is cubic in the number of states, a speedup is not obtained in
-the models used become too large.
+preprocessing is cubic in the number of states, a speedup is not obtained for
+large models.
 
 The backward algorithm has been implemented as part of the implementation for
 computing the posterior decoding. It has not been possible to find a method for
@@ -34,7 +35,7 @@ exploiting repetitions in the observation sequence, so in practice it becomes a
 battle between constants whether the classical version or the zipHMMlib version
 is the fastest. In the experimental setup used in this thesis the constants are
 in favor of the zipHMMlib implementation, when the observation sequence length and
-model size are large enough.
+model size is large enough.
 
 Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
@@ -54,6 +55,8 @@ length of the requested substring.
   copies in memory with different memory alignments.
 \item Implement parallelized algorithms.
 \end{itemize}
+
+\fxwarning{Perspective. E.g.\ this changes the way we work with HMMs (or something).}
 
 %%% Local Variables:
 %%% mode: latex
