@@ -279,15 +279,34 @@ in $T$.
 
 The theoretical running times of all three variations of the Viterbi algorithm
 is cubic in the number of states $N$. To verify this an experiment with random
-sequences of length 10\,000 has been run for models with between 2 and 1024
+sequences of length 10\,000 has been run for models with between 2 and 512
 states. Fibonacci words have not been used in this experiment since the running
 time does not change with the compression ratio. The running time divided by $N^3$ is
-shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}. It is expected that
-the points in the plot will form a decreasing curve. \fxerror{Discuss that the
-  plot is ugly as hell. It is probably due to the alignment of the matrices. In
-  an ideal world, the matrices should have two representations to align well in
-  memory. This is however also expensive. Check for page faults when the simple
-  programs have been implemented.}
+shown in figure~\ref{fig:assymptotic_viterbi_backtrack_N}.
+
+It is expected that the points in the plot will form a decreasing curve. This
+is however not the case. The running time seems to be constant until a model
+size $N = 16$. After that the running time divided by $N^3$ increases until
+$N=256$ where it again stabilizes. It is expected that this is due to memory
+alignment of matrices in the implementation. Recall that for Viterbi the
+max-times matrix multiplication is implemented naively using for-loops.
+\fxwarning{Has this been mentioned?} As each cell in the resulting matrix is
+computed using a row from one matrix and a column from the other cache misses
+are likely to occur since the memory alignment of the two matrices is the same.
+
+To check this an experiment measuring the running time and the percentage of
+L1, L2, and L3 cache misses have been conducted. The cache misses have been
+measured using PAPI.\@ The result of this is shown in
+figure~\ref{fig:cache-misses}. Note that the running time is not identical to
+figure~\ref{fig:assymptotic_viterbi_backtrack_N} as this experiment has been
+made with a shorter observation sequence. As seen the percentage of L1 cache
+misses increase from zero to approximately 50\% when the running time starts to
+increase. When cache misses also occur for the L2 cache the running time
+becomes even worse. By this experiment it is concluded that the alignment of
+the data in the matrices is the cause of the running time not to behave as
+expected. It is concluded that the running time is indeed proportional to $N^3$
+as it becomes constant in figure~\ref{fig:assymptotic_viterbi_backtrack_N} for
+large models.
 
 \begin{figure}
   \centering
@@ -302,8 +321,9 @@ the points in the plot will form a decreasing curve. \fxerror{Discuss that the
   \centering\ref{cache_misses_legend}\\
   \input{figures/cache_misses}
   \caption{Cache misses and running time of Viterbi\textsubscript{PM} for
-    varying number of hidden states $N$. Each measured value has been divided
-    by $N^3$ and scaled to span the interval $[0, 1]$.}
+    varying number of hidden states $N$. The pertage of cache misses has been
+    calculated as the number of cache misses divided by the number of cache
+    accesses.}
   \label{fig:cache-misses}
 \end{figure}
 
@@ -313,7 +333,7 @@ of the Viterbi or forward-backward algorithm, takes time
 proportional to $N^2$ as stated in section~\ref{sec:running-time}. When the
 size of the new alphabet $M'$ is small compared to the length of the compressed
 sequence, the $N^3$ term vanishes in practice when compared to the $N^2$
-term. Hence, it is seen that the running time of the matrix multiplication
+term. Hence, it is expected that the running time of the matrix multiplication
 (and the backtracking) is proportional to $N^2$ by not compressing the
 sequence. This is shown in figure~\ref{fig:assymptotic_viterbi_N} where
 $\lvert M' \rvert = 4$ and $T = 10\,000$.
@@ -334,7 +354,7 @@ in terms of the length of the observation sequence is very dependent on the
 structure of the sequence, but it still fits the theoretical worst case running time. In
 terms of the model size the physical hardware becomes visible. However, when
 the models become large enough the running time stabilizes and fits the theoretical
-running time. \fxerror{Is this correct?}
+running time.
 
 \subsection{Comparing zipHMMlib Viterbi to the Classical Viterbi Algorithm}
 \label{sec:comp-ziphmml-viterbi}
@@ -394,6 +414,7 @@ lengths.
 \end{figure}
 
 \begin{figure}
+  \fxwarning{Discuss that the running time stabilizes even for Viterbi\textsubscript{L}.}
   \centering
   \input{figures/compressed_500_speedup_vs_sequence_length.tex}
   \caption{The speed up factor for the Viterbi algorithms with $e = 500$ of the
