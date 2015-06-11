@@ -53,10 +53,16 @@ calculated since, especially for short sequences, the compression ratio may vary
 a lot. Furthermore, the standard deviation has been calculated and is shown as
 error bars in the plots to visually indicate the fluctuations in running time.
 
-\fxwarning{How has the running time been measured?}
+The running time in all experiments has been measured using \texttt{time.h}
+that provides a time resolution of nanoseconds for measured real time.
 
-\fxwarning{How has expected running times been measured. I.e.\ divided by
-  theoretical and constant is assued. However, there is some initialization.}
+In many of the figures in this chapter, the theoretical running is verified.
+For verifying running time the of the paramters of the running time has been
+varied while the remaining has been kept constant. The actual running time of
+the algorithm is divided by varied paramter. If the points in the plot then are
+constant, the running time satisfies the theoretical bound. However, since some
+of the algorithms read in data etc.\ the points in the plot tend to be larger
+than the other points. This is expected. \fxwarning{This should perhaps be reformulated.}
 
 \section{Compression Ratio}
 \label{sec:compression-ratio}
