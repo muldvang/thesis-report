@@ -3,35 +3,47 @@
 \chapter{Implementation}
 \label{cha:implementation}
 
-This chapter describes the important aspects of the implementation.  As this
-thesis is intended to be an extension of zipHMMlib by
-\citet{sand2013ziphmmlib}, from now on called the original library, the code
-itself is also an extension of the library code.  By the work made in this thesis
-the library has been extended to include an efficient Viterbi implementation
-and an indexed posterior decoding implementation exploiting repetitions, as well
-as a posterior decoding implementation that does not exploit repetitions.
+This chapter describes the important aspects of the implementation. As this
+thesis is intended to be an extension of zipHMMlib by \citet{sand2013ziphmmlib}
+the code itself is also an extension of the library code. By the work made in
+this thesis the library has been extended to include an efficient Viterbi
+algorithm and an indexed posterior decoding algorithm exploiting
+repetitions, as well as a posterior decoding algorithm that does not
+exploit repetitions.
 
-As zipHMMlib is written in C++, the additions made in this thesis have also
-been written in C++. The code is readily available\footnote{link til kode}.
+As zipHMMlib is written in C++98, the additions made in this thesis have also
+been written in C++. The code is available at \url{link til kode}.
 \fxerror{URL here.} The build procedure has not changed, so for instructions on
 how to build the project see \url{github.com/mailund/ziphmm}.
 
 \section{Description of the Implementation}
+\label{sec:descr-impl}
 
 In the original library the main class of the library was the
 \texttt{Forwarder} class.  This class has been renamed to \texttt{HMMSuite}.
-Like before the class is responsible for preprocessing sequences, reading and
-writing these from and to the disk, and for executing the forward, backward,
-Viterbi and posterior decoding algorithms.
+This class is responsible for preprocessing sequences, reading and writing
+these from and to the disk, and for executing the forward, backward, Viterbi
+and posterior decoding algorithms.
 
-For matrix multiplications a BLAS framework is used to make these as efficient
-as possible.  For the max-times matrix multiplication and addition simple nested
-for loops are used as BLAS does not support these operations.
+Each sequence is represented as a \texttt{std::vector<unsigned>} in memory.
+Using \texttt{unsigned} to represent symbols makes the compression easy as, a
+sequence of alphabet size four is consisting of the symbols 0, 1, 2, and 3 and
+during the compression the symbols 4, 5, 6, etc.\ are added. The matrices of
+the model, $\Pi$, $A$, and $B$, and the matrices computed in the algorithms are
+handled by the \texttt{Matrix} class. In this class a matrix is represented as
+a single \texttt{double}, where the first elements of the array is the first
+row of the matrix, the next elements is the second row of the matrix, etc. The
+\texttt{Matrix} class is also responsible for various operations on a matrix
+such as converting it into log-space or multiplying matrices. For matrix
+multiplications a BLAS framework is used to make these as efficient as
+possible. For the max-times matrix multiplication and addition simple nested
+for loops are used as BLAS does not support these operations. For the
+algorithms where a table is stored it is stored as a \texttt{Matrix} array.
 
-The library supports reading in multiple sequences from a folder. In the
+As mentioned the library supports reading in multiple sequences from a folder. In the
 original library the sum of the probabilities for each sequence is returned by
 the forward algorithm. It is not currently supported to read in multiple
-sequences if either the forward or backward tables are requested and neither if
+sequences if either the forward or backward tables are requested or if
 the Viterbi path or posterior decoding is requested.
 
 \section{Usage}
@@ -110,9 +122,9 @@ computed.
 
 \subsection{Posterior Decoding}
 
-As described in section~\ref{sec:probl-expl-repet}, exploiting repetitions will
+As described in section~\ref{sec:probl-expl-repet}, exploiting repetitions
 cannot speed up the execution of the posterior decoding algorithm. It might still
-be faster, due matrix multiplications being faster than the classical
+be faster, due to matrix multiplications being faster than the classical
 approach. The implementation finds a posterior decoding of the same length as
 the compressed sequence. Hence, to find the posterior decoding of the original
 observation sequence $Y_{1:T}$, compression should be disabled. This can be achieved by
