@@ -12,10 +12,12 @@
     width=\textwidth,
     ]
 
-    \addplot table[x=T, y=many_path_memory_pre_fraction]
+    \addplot[fill=my-blue, draw=my-blue, fill opacity=0.3]
+    table[x=T, y=many_path_memory_pre_fraction]
     {plot_data/viterbi_fib_sequence_transformed.data} \closedcycle;
 
-    \addplot table[x=T, y=many_path_memory_running_fraction]
+    \addplot[fill=my-red, draw=my-red, fill opacity=0.3]
+    table[x=T, y=many_path_memory_running_fraction]
     {plot_data/viterbi_fib_sequence_transformed.data} \closedcycle;
 
     % \legend{Preprocessing, Viterbi};
