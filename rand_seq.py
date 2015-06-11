@@ -2,7 +2,8 @@ import random
 import sys
 
 def random_sequence(n, alphabet_size):
-    return [random.randrange(0, alphabet_size) for _ in range(n)]
+    for _ in range(n):
+        sys.stdout.write(str(random.randrange(0, alphabet_size)) + " ")
 
 if not len(sys.argv) == 3:
     print('Usage: rand_seq length alphabet-size')
@@ -10,4 +11,4 @@ if not len(sys.argv) == 3:
 
 N = int(sys.argv[1])
 alphabet_size = int(sys.argv[2])
-print(' '.join([str(x) for x in random_sequence(N, alphabet_size)]))
+random_sequence(N, alphabet_size)
