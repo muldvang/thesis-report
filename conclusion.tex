@@ -1,3 +1,5 @@
+% chktex-file 44
+
 \chapter{Conclusion}
 \label{cha:conclusion}
 
@@ -44,16 +46,41 @@ length of the requested substring.
 
 \section{Future Work}
 
+zipHMM can be extended beyond what has been implemented in this thesis.
+
 \begin{itemize}
-\item Make bindings for R and Python.
-\item Implement compression stopping criterion based on whether backtracking is
-  enabled or not.
-\item Implement multiple substring requests without having to recompute the
-  tables of the compressed sequence.
-\item Implement substring Viterbi.
+\item In zipHMM a parallelized version of the forward algorithm is implemented.
+  This idea is to parallelize equation~\eqref{eq:3} as the max-times
+  multiplication can be computed in any order. One processesor computes
+  equation~\eqref{eq:3} from right to left while the remaining processors
+  computes blocks of the equation from left to right. The first processor will
+  compute matrix-vector multiplication while the remaining processors will
+  compute matrix-matrix multiplications. Hence, this parallelization scheme
+  will work best for small models. Note that $\delta_t$ is not computed for all
+  $t \in [1, T]$, since only the first processor makes matrix-vector
+  multiplications. Hence, backtracking becomes harder. One solution to this is
+  given in \citet{sand2014engineering}, where the missing $\delta_t$ vectors
+  are computed and then the path is backtracked. Another idea is to compute
+  extra $R$ matrices for each of the matrix-matrix computations. When the
+  subset of the $\delta_t$ matrices and the path corresponding to these have
+  been computed, the ones missing can be found using the extra $R$ matrices
+  using the same technique as in section~\ref{sec:backtracking}.
+\item At the current state zipHMM compresses the sequences using a single
+  compression stopping criterion as discussed in
+  section~\ref{sec:compr-stopp-crit}. Since a BLAS framework is used for the
+  implementation of the forward and backward algorithms and a naive max-times
+  matrix multiplication is used for Viterbi multiple compression criterions
+  could be used. Also, the criterion could depend on whether the Viterbi path
+  is request or not. One solution is to compute multiple compressed sequences
+  from a single sequence such that the best compression is used for any algorithm.
+\item Also save the decompressed sequence along the compressed sequence to
+  avoid having to decompress. (This should only give a minor speedup.) \fxwarning{Elaborate.}
 \item Implement more efficient matrix computation for Viterbi or store two
-  copies in memory with different memory alignments.
-\item Implement parallelized algorithms.
+  copies in memory with different memory alignments. \fxwarning{Elaborate.}
+\item Implement multiple substring requests without having to recompute the
+  tables of the compressed sequence. \fxwarning{Elaborate.}
+\item Implement substring Viterbi. \fxwarning{Elaborate.}
+\item Make bindings for R and Python. \fxwarning{Elaborate.}
 \end{itemize}
 
 \fxwarning{Perspective. E.g.\ this changes the way we work with HMMs (or something).}
@@ -61,4 +88,5 @@ length of the requested substring.
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master.tex"
+%%% TeX-command-extra-options: "-shell-escape"
 %%% End:
