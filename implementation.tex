@@ -4,7 +4,7 @@
 \label{cha:implementation}
 
 This chapter describes the important aspects of the implementation. As this
-thesis is intended to be an extension of zipHMMlib by \citet{sand2013ziphmmlib}
+thesis is intended to be an extension of zipHMMlib by \citet{sand2013ziphmmlib},
 the code itself is also an extension of the library code. By the work made in
 this thesis the library has been extended to include an efficient Viterbi
 algorithm and an indexed posterior decoding algorithm exploiting
@@ -28,7 +28,7 @@ and posterior decoding algorithms.
 
 Each sequence is represented as a \texttt{std::vector<unsigned>} in memory.
 Using \texttt{unsigned} to represent symbols makes the compression easy as, a
-sequence of alphabet size four is consisting of the symbols 0, 1, 2, and 3 and
+sequence of alphabet size four consists of the symbols 0, 1, 2, and 3 and
 during the compression the symbols 4, 5, 6, etc.\ are added. The matrices of
 the model, $\Pi$, $A$, and $B$, and the matrices computed in the algorithms are
 handled by the \texttt{Matrix} class. In this class a matrix is represented as
@@ -41,7 +41,7 @@ possible. For the max-times matrix multiplication and addition simple nested
 for loops are used as BLAS does not support these operations. For the
 algorithms where a table is stored it is stored as a \texttt{Matrix} array.
 
-As mentioned the library supports reading in multiple sequences from a folder. In the
+As mentioned, the library supports reading in multiple sequences from a folder. In the
 original library the sum of the probabilities for each sequence is returned by
 the forward algorithm. It is not currently supported to read in multiple
 sequences if either the forward or backward tables are requested or if
@@ -106,7 +106,7 @@ in the model $N_{\min}$ that will be used later and the number of executions
 $e$ of the Viterbi algorithm as discussed in
 section~\ref{sec:compr-stopp-crit}.
 
-If the compressed sequence will be reused later by another program it is saved
+If the compressed sequence will be reused later by another program, it is saved
 to the disk by \texttt{HMMSuite.write\_to\_directory(\dots)}. It can then be
 loaded using \texttt{HMMSuite.read\_from\_directory(\dots)}.
 
