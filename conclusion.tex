@@ -3,9 +3,9 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-\citet{sand2013ziphmmlib} implements a zipHMM for working
-with hidden Markov models. It includes an efficient implementation of the forward
-algorithm that obtains a speedup compared to the classical implementation by
+\citet{sand2013ziphmmlib} implements a zipHMM for working with hidden Markov
+models. It includes an efficient implementation of the forward algorithm that
+obtains a speedup compared to the implementation of the original algorithm by
 exploiting repetitions in the input sequence.
 
 In this master's thesis the zipHMM library has been extended to include
@@ -34,7 +34,7 @@ large models.
 The backward algorithm has been implemented as part of the implementation for
 computing the posterior decoding. It has not been possible to find a method for
 exploiting repetitions in the observation sequence, so in practice it becomes a
-battle between constants whether the classical version or the zipHMMlib version
+battle between constants whether the original version or the zipHMMlib version
 is the fastest. In the experimental setup used in this thesis the constants are
 in favor of the zipHMMlib implementation, when the observation sequence length and
 model size is large enough.
@@ -96,14 +96,11 @@ is listed a number of improvements that can make the library better.
 \item Finally, \citet{sand2013ziphmmlib} have provided bindings to the Python
   and R programming languages. This has not yet been done for the
   implementations made in this thesis.
-\item \fxnote{Make a new kind of compression stopping criterion. The
-    compression should be stopped when it does not become faster, only due to
-    the computation of C matrices and not since compression takes time.}
 \end{itemize}
 
-In most cases the added algorithms to zipHMM perform better than the classical
+In most cases the added algorithms to zipHMM perform better than the original
 algorithms. The algorithms should not be used with large models, but this is
-also normally preferred as the classical algorithms have a running time
+also normally preferred as the original algorithms have a running time
 proportional to the square of the number of states. In a few cases major
 speedups in the order of hundreds are obtained, but in most cases the speedups
 are more modest between factors 1 and 10. In some cases the speedup factor is
@@ -111,7 +108,7 @@ below 1 which correspond to a slowdown.
 
 As the running time of the algorithns on large data set in some applications
 can be measured in hours or days small speedups of a few factors can be very
-useful. The classical algorithms are very simple and thus it can also hard to
+useful. The original algorithms are very simple and thus it can also hard to
 improve on those. In this thesis it is shown that compression of the input can
 speed up the algorithms, but that it is only by a small factor in many cases.
 

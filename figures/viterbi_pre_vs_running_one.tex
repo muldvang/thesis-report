@@ -1,6 +1,7 @@
 \tikzsetnextfilename{viterbi_pre_vs_running_one}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
+    scale only axis,
     stack plots=y,
     area style,
     ylabel near ticks,
@@ -14,13 +15,13 @@
     width=\textwidth,
     ]
 
-    \addplot[fill=my-blue, draw=my-blue, fill opacity=0.3]
-    table[x=T, y=one_path_memory_pre_fraction]
+    \addplot[fill=gray, draw=gray, fill opacity=0.3]
+    table[x=T, y=one_pre_fraction]
     {plot_data/viterbi_sequence_transformed.data}
     \closedcycle;
 
     \addplot[fill=my-red, draw=my-red, fill opacity=0.3]
-    table[x=T, y=one_path_memory_running_fraction]
+    table[x=T, y=one_running_fraction]
     {plot_data/viterbi_sequence_transformed.data}
     \closedcycle;
   \end{axis}

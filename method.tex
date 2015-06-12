@@ -4,27 +4,24 @@
 \chapter{Method}
 \label{cha:method}
 
-This chapter describes the theory used and developed in this thesis. First, the
+This chapter describes the theory used and developed in this thesis. The
 notation for HMMs introduced in section~\ref{sec:hidden-markov-models} is
-written out as this is used extensively in the following sections. The next
-sections contain theory of decoding algorithms.
+written out as this is used extensively in the following sections.
 
-As mentioned in section~\ref{sec:hidden-markov-models} an observation sequence
-$Y_{1:T}$ can be generated in different ways since multiple hidden states can
-have a nonzero probability of omitting the same symbol. Given a model
-$\lambda$ and an observation sequence an interesting question might be: of all
-possible paths of hidden sequences which one is the most likely and how likely
-is it? This question can be solved the Viterbi algorithm. This algorithm is first
-described in its classical formulation and then changed into using matrix
-multiplications. Then it is described how the compression using byte pair
-encoding is used to exploit repetitions in the observation sequence and
-thereby gain a theoretical speedup.
+The first contribution of this thesis is the reformulation of the original
+Viterbi algorithm to fit into the zipHMM framework, to analyze the running
+time, and to make the computations numerically stable.
 
-Next, another decoding algorithm is described, namely the posterior decoding.
-As no method for obtaining a speedup from the byte pair encoding has been found
-for posterior decoding, theory for an \emph{indexed} posterior decoding
-algorithm is given. This algorithm gains a theoretical speedup compared to the
-classical formulation.
+Next, theory for the posterior decoding is described. As only the forward
+algorithm has been implemented in zipHMM the backward algorithm is described
+here since it is required to compute the posterior decoding. However, it is has
+not been possible to develop an algorithm for exploiting repetitions.
+
+The final theoretical contribution is the theory for an \emph{indexed}
+posterior decoding. A theoretical speedup can be gained by exploiting
+repetitions in the entire input sequence for the forward and backward
+algorithms and only return the posterior decoding for a part of the input
+sequence.
 
 \section{Notation}
 
@@ -51,9 +48,15 @@ a HMM is defined as
 A HMM is parametrized by $\pi$, $A$, and $B$ and is denoted by $\lambda =
 (\pi, A, B)$.
 
-\section{The Classical Viterbi Algorithm}
+\section{The Original Viterbi Algorithm}
 \label{sec:class-viterbi-algor}
-\fxnote{Renamed classical to original?}
+
+As mentioned in section~\ref{sec:hidden-markov-models} an observation sequence
+$Y_{1:T}$ can be generated in different ways since multiple hidden states can
+have a nonzero probability of omitting the same symbol. Given a model $\lambda$
+and an observation sequence an interesting question might be: of all possible
+paths of hidden sequences which one is the most likely and how likely is it?
+This question can be solved the Viterbi algorithm.
 
 The Viterbi algorithm finds the probability of the most likely sequence of
 hidden states emitting an observation sequence $Y_{1:T}$ given a model
@@ -141,7 +144,7 @@ asymptotic running time of $O(N^2 T)$.
 \label{sec:algorithm-as-linear}
 
 Before exploiting repetitions in the observation sequence $Y_{1:T}$ the
-classical Viterbi algorithm is reformulated into linear algebra. The goal is to
+original Viterbi algorithm is reformulated into linear algebra. The goal is to
 express equation~\eqref{eq:1} as a series of matrix multiplications as
 \citet{sand2013ziphmmlib} and \citet{lifshits2009speeding} do.
 
@@ -181,7 +184,7 @@ where $\odot$ is the max-times matrix multiplication defined as
 {(X \odot Y)}_{ij} = \max_k X_{ik} Y_{kj}.
 \end{equation*}
 
-The implementation of the classical Viterbi algorithm corresponds to
+The implementation of the original Viterbi algorithm corresponds to
 computing this from right to left, i.e.\ the $\delta$ table is computed for $t
 = 1, t=2, \dots, t=T$. This will also be most efficient since
 $C_1$ is a vector that when multiplied by the matrix $C_2$ will result in a new
@@ -189,11 +192,11 @@ vector. Hence, computing $\delta_t$ from right to left will result in $t$
 matrix-vector multiplications, while computing it from left to right will
 result in $t$ matrix-matrix multiplications that are less efficient to compute.
 
-Backtracking is achieved in the same way as for the classical Viterbi algorithm
+Backtracking is achieved in the same way as for the original Viterbi algorithm
 as described in section~\ref{sec:class-viterbi-algor}.
 
 The space consumption and running time of this algorithm has changed, compared
-to the classical Viterbi algorithm. For each symbol $o_i$ in the alphabet of
+to the original Viterbi algorithm. For each symbol $o_i$ in the alphabet of
 observables the corresponding matrix $B_{o_i}$ is created, thus requiring
 $O(M N^2)$ space. The $C_{o_i}$ matrices require the same amount of space,
 $O(M N^2)$. $C_1$ is a vector, thus only requiring $O(N)$ space. If
@@ -300,7 +303,7 @@ computation.
 \label{sec:backtracking}
 
 Obtaining the Viterbi path $S = p_1, p_2, \dots, p_T$ of $Y_{1:T}$ is no longer
-as simple as for the classical Viterbi algorithm. Using the standard
+as simple as for the original Viterbi algorithm. Using the standard
 backtracking methods only the Viterbi path $S' = p_1', p_2', \dots, p_{T'}'$
 of the compressed sequence $Y'_{1:T'}$ can be found. The path corresponds to
 the columns in figure~\ref{fig:exploiting-repetitions} that have been
@@ -330,7 +333,7 @@ figure~\ref{fig:infering-viterbi-path}. The example is continued from
 figure~\ref{fig:exploiting-repetitions}. When the $\delta$ table has been
 computed for the compressed observation sequence $Y_{1:T'}'$, the sequence of
 states $P_{1:T'}'$ can be found using the same backtracking methods as for the
-classical Viterbi algorithm. The remaining part of the Viterbi path can be
+original Viterbi algorithm. The remaining part of the Viterbi path can be
 computed from right to left using the $R$ matrices. As an example consider the
 computation of $p_5$ and $p_6$. When scanning through $Y_{1:5}'$ from right to
 left the symbol $Y_4' = 3$ is encountered at some point in time. As
@@ -358,7 +361,7 @@ algorithm are defined.
 \item[Viterbi\textsubscript{P}] also backtracks using a table of pointers,
 \item[Viterbi\textsubscript{PM}] saves memory on backtracking by using checkpoints.
 \end{description}
-The same variations are defined for the classical Viterbi algorithm.
+The same variations are defined for the original Viterbi algorithm.
 
 \subsection{Running Time}
 \label{sec:running-time}
@@ -373,7 +376,7 @@ for Viterbi\textsubscript{P}. For Viterbi\textsubscript{PM} the space
 consumption is $O(M' N^2 + N \sqrt{T'} + T)$.
 
 With similar arguments the running time of computing the probability has changed
-to $O(M' N^3 +N^2 T')$. Using standard backtracking methods from the classical
+to $O(M' N^3 +N^2 T')$. Using standard backtracking methods from the original
 algorithm part of the Viterbi path is found in $O(N^2 T')$ time and using the
 $R$ matrices the rest can be obtained in $O(T)$ time. Hence, the
 running time with backtracking enabled is $O(M' N^3 +N^2 T' + T)$.
@@ -399,9 +402,9 @@ table~\ref{tab:running-time}.
     \toprule
     Algorithm                   & Running time             & Space consumption             \\
     \midrule
-    Classical\textsubscript{L}  & $O(N^2 T)$               & $O(N + T)$                    \\
-    Classical\textsubscript{P}  & $O(N^2 T)$               & $O(NT)$                       \\
-    Classical\textsubscript{PM} & $O(N^2 T)$               & $O(N\sqrt{T})$                \\
+    Original\textsubscript{L}  & $O(N^2 T)$               & $O(N + T)$                    \\
+    Original\textsubscript{P}  & $O(N^2 T)$               & $O(NT)$                       \\
+    Original\textsubscript{PM} & $O(N^2 T)$               & $O(N\sqrt{T})$                \\
     Viterbi\textsubscript{L}    & $O(M' N^3 + N^2 T')$     & $O(M' N^2 + T')$              \\
     Viterbi\textsubscript{P}    & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N T' + T)$        \\
     Viterbi\textsubscript{PM}   & $O(M' N^3 + N^2 T' + T)$ & $O(M' N^2 + N \sqrt{T'} + T)$ \\
@@ -425,7 +428,7 @@ genome data from multiple individuals of the same species that are to be
 analysed using a single model. In this case the observation sequences are very
 similar and the compression can work very well by finding most common pairs
 only in a subset of the observation sequences. This has however not been
-implemented.
+implemented in this thesis.
 
 \subsection{Numerical Stability}
 
@@ -437,11 +440,14 @@ lengths in the order of hundreds or a few thousands. \citet{sand2013ziphmmlib}
 describes how to avoid underflow in terms of the forward algorithm. It turns
 out that it is easier to avoid for the Viterbi algorithm.
 
-To circumvent underflow in the classical Viterbi algorithm all probabilities
+To circumvent underflow in the original Viterbi algorithm all probabilities
 are converted to log-space. So, instead of computing $\delta_T$,
 $\log \delta_T$ is computed. By using the property that
 $\log(AB) = \log A + \log B$ the multiplications are turned into additions,
-which makes the algorithm more resilient to underflow. \fxnote{More resilient?Giv en ballpark figure på præcisionen du vinder.}
+which makes the algorithm more resilient to underflow. If using nontransformed
+probabilities problems with underflow will typically occur for observations
+sequences of lengths in the order for hundreds, while for the log-transformed
+probabilities numerical problems will most likely never occur in practice.
 
 The same idea can be used for the matrix based approach, where
 equation~\eqref{eq:3} is rewritten as
@@ -521,7 +527,7 @@ estimating the time it takes to allocate an array of size $T$ and
 infer the Viterbi path $S$ from the compressed path $S'$. This has
 not been implemented.
 
-\section{Classical Posterior Decoding}
+\section{Original Posterior Decoding}
 \label{sec:posterior-decoding-1}
 
 The Viterbi algorithm described above finds the most likely path of hidden
@@ -552,7 +558,7 @@ compute the joint probability of all paths, that is
 This is computed using two tables $\alpha$ and $\beta$ computed by the
 forward-backward algorithms.
 
-For the classical forward algorithm a table, $\alpha$, with entries
+For the original forward algorithm a table, $\alpha$, with entries
 \begin{equation*}
 \alpha_t(v_t) = \Pr \left( Y_{1:t}, V_t = v_t \mid \lambda \right) =
 \sum_{v_{1:t-1}} \Pr \left( Y_{1:t}, V_{1:t} = v_{1:t} \mid \lambda \right)
@@ -639,7 +645,7 @@ matrix multiplications.
 To compute the posterior decoding equation~\eqref{eq:6} is used. Hence, the
 matrix formulation is only used to compute the forward and backward tables,
 while the computation of the posterior decoding itself has not changed from the
-classical formulation.
+original formulation.
 
 The asymptotic running time and space consumption is equal to the running time
 and space consumption of the Viterbi algorithm since the algorithms only
@@ -679,13 +685,13 @@ results.
 
 \citet{sand2013ziphmmlib} exploits repetitions for the forward algorithm using
 byte-pair encoding similarly to the description in
-section~\ref{sec:expl-repet} but do implement any kind of backtracking. Using
+section~\ref{sec:expl-repet} but do not implement any kind of backtracking. Using
 the same method it is easy to also exploit repetitions in the backward
 algorithm.
 
 To compute the posterior decoding of the uncompressed sequence from the
 forward and backward tables of the compressed sequence, either (1) the
-posterior decoding sequence can be computed using the partial path obtained
+posterior decoding sequence can be computed using the partial decoding obtained
 from the compressed sequence, or (2) the entire forward and backward tables of
 the uncompressed sequence are required. For both approaches the running time of
 computing one state in the posterior decoding must take strictly less than
@@ -741,7 +747,7 @@ approaches are now discussed in turn.
 Unfortunately no solution to this problem has been found. Hence, the posterior
 decoding cannot be sped up by exploiting repetitions in the observation
 sequence. The running time of computing the posterior decoding is then
-$O(M N^3 + TN^2)$ which is asymptotically worse than the classical posterior
+$O(M N^3 + TN^2)$ which is asymptotically worse than the original posterior
 decoding algorithm that runs in $O(TN^2)$. However, note that the alphabet size
 $M$ typically is small, so it is expected that the asymptotic running times of
 the two algorithms in practice are comparable.
@@ -851,7 +857,7 @@ length of $Y_{k:l}$ might be much larger than $Y_{i:j}$. In the worst case of
 $T' = 1$, the decompression would result in the uncompressed sequence
 $Y_{1:T}$. Hence, the indexed posterior decoding algorithm will spend a lot of
 time computing columns that are thrown away afterwards, and the running time is
-$O(M' N^3 + N^2 T)$ which is not an improvement over the classical
+$O(M' N^3 + N^2 T)$ which is not an improvement over the original
 posterior decoding. The decompression needs to be more clever to improve the
 running time.
 
@@ -999,12 +1005,18 @@ These four steps are now analyzed in turn.
   $2h + 2(j - i + 2) - 1 = O(h + (j - i))$.
 
   The height of tree, $h$, can be bounded. The worst case height is obtained
-  for sequences that compresses well, that is Fibonacci words. \fxwarning{Define
-    Fibonacci words here?} For unary
-  sequences that are almost as bad the tree has height $h = \log_2 T$ as seen
-  in figure~\ref{fig:decompression}. For Fibonacci words observe that the
-  number of leaves $T$ for a tree of height $h$ is the $h$'th Fibonacci number.
-  In general, the $n$'th Fibonacci number can be computed as
+  for sequences that compresses well, that is sequences with many repetitions.
+  For unary sequences that the tree has height $h = \log_2 T$ as seen in
+  figure~\ref{fig:decompression}. Another class of words that contain many
+  repetitions is Fibonacci words. They are generated in a way very similar to
+  how Fibonacci numbers are generated by concatenating the two previous words,
+  corresponding to generating the next Fibonacci number from the two previous
+  ones. Let $S_0$ be ``0'' and $S_1$ be ``01''. Now define
+  $S_n=S_{n-1}S_{n-2}$. According to \citet{fraenkel1998many} it is not known
+  whether a class of words with more repetitions exist, so for this analysis
+  it is assumed that Fibonacci words are worst case. Observe that the number of
+  leaves $T$ for a tree of height $h$ is the $h$'th Fibonacci number. In
+  general, the $n$'th Fibonacci number can be computed as
   \begin{equation*}
     F_n = \frac{1}{\sqrt{5}}
     {\left(

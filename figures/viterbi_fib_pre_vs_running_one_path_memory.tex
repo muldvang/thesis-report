@@ -1,14 +1,13 @@
-\tikzsetnextfilename{viterbi_pre_vs_running_one_path_memory}
+\tikzsetnextfilename{viterbi_fib_pre_vs_running_one_path_memory}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
+    yticklabels={,,},
     scale only axis,
+    legend style={at={(0, 1)},anchor=north west},
     stack plots=y,
     area style,
-    ylabel near ticks,
-    every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
-      inner xsep=2pt, inner ysep=0pt},
-    enlarge y limits=false,
     enlarge x limits=false,
+    enlarge y limits=false,
     xmode=log,
     ymin=0,
     ymax=1,
@@ -17,13 +16,15 @@
 
     \addplot[fill=gray, draw=gray, fill opacity=0.3]
     table[x=T, y=one_path_memory_pre_fraction]
-    {plot_data/viterbi_sequence_transformed.data}
+    {plot_data/viterbi_fib_sequence_transformed.data}
     \closedcycle;
 
     \addplot[fill=my-blue, draw=my-blue, fill opacity=0.3]
     table[x=T, y=one_path_memory_running_fraction]
-    {plot_data/viterbi_sequence_transformed.data}
+    {plot_data/viterbi_fib_sequence_transformed.data}
     \closedcycle;
+
+    % \legend{Preprocessing, Viterbi};
   \end{axis}
 \end{tikzpicture}
 

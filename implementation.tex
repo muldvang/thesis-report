@@ -12,9 +12,10 @@ repetitions, as well as a posterior decoding algorithm that does not
 exploit repetitions.
 
 As zipHMMlib is written in C++98, the additions made in this thesis have also
-been written in C++. The code is available at \url{link til kode}.
-\fxerror{URL here.} The build procedure has not changed, so for instructions on
-how to build the project see \url{github.com/mailund/ziphmm}.
+been written in C++. The code is available at
+\url{http://users-cs.au.dk/muldvang/thesis}. The build procedure has not
+changed, so for instructions on how to build the project see
+\url{github.com/mailund/ziphmm}.
 
 \section{Description of the Implementation}
 \label{sec:descr-impl}
@@ -124,7 +125,7 @@ computed.
 
 As described in section~\ref{sec:probl-expl-repet}, exploiting repetitions
 cannot speed up the execution of the posterior decoding algorithm. It might still
-be faster, due to matrix multiplications being faster than the classical
+be faster, due to matrix multiplications being faster than the original
 approach. The implementation finds a posterior decoding of the same length as
 the compressed sequence. Hence, to find the posterior decoding of the original
 observation sequence $Y_{1:T}$, compression should be disabled. This can be achieved by
