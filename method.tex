@@ -80,7 +80,7 @@ the current state, this formula is solved inductively by
   \end{aligned}
 \end{equation}
 This is computed efficiently by making $\delta$ a table of size
-$N \times T$ and by computing this table columnwise from left to right
+$N \times T$ and by computing this table column-wise from left to right
 using dynamic programming. After populating $\delta$,
 the probability of the most likely sequence of states can be computed as
 $P^* = \max_{v_T} \delta_T(v_T)$.
@@ -425,7 +425,7 @@ for the compression based on a set of representative sequences. Then the
 $C_{o_i}$ matrices could be computed beforehand and also saved to the disk.
 This could be useful in e.g.\ bioinformatics where one might have a lot of
 genome data from multiple individuals of the same species that are to be
-analysed using a single model. In this case the observation sequences are very
+analyzed using a single model. In this case the observation sequences are very
 similar and the compression can work very well by finding most common pairs
 only in a subset of the observation sequences. This has however not been
 implemented in this thesis.
@@ -444,7 +444,7 @@ To circumvent underflow in the original Viterbi algorithm all probabilities
 are converted to log-space. So, instead of computing $\delta_T$,
 $\log \delta_T$ is computed. By using the property that
 $\log(AB) = \log A + \log B$ the multiplications are turned into additions,
-which makes the algorithm more resilient to underflow. If using nontransformed
+which makes the algorithm more resilient to underflow. If using non-transformed
 probabilities problems with underflow will typically occur for observations
 sequences of lengths in the order for hundreds, while for the log-transformed
 probabilities numerical problems will most likely never occur in practice.
@@ -499,7 +499,7 @@ will take to execute the actual algorithm. When the time it takes to make
 another iteration of the compression is larger than the estimate of the time
 saved in the execution of the algorithm, the compression is stopped.
 
-Assume that in iteration $i$ of the compression the number of occurences
+Assume that in iteration $i$ of the compression the number of occurrences
 of the most common pair of symbols is $p_i$. Then the time saved on the actual
 algorithm for iteration $i$ is $e (t_{\text{mv}} p_i - t_{\text{mm}})$ since
 $p_i$ matrix-vector multiplications is avoided, but a new symbol is introduced
@@ -998,8 +998,8 @@ These four steps are now analyzed in turn.
   the original alphabet $\mathcal{O}$. To count the number of these observe
   that the $j - i$ leaves have at most $\frac{j - i + 2}{2}$ parents, at most
   $\frac{j - i + 2}{4}$ grand parents and so on. In this example the leaves and
-  their red ancestors correspond to three subtrees in the tree, but in the
-  worst case they correspond to one balanced subtree. The size of a balanced
+  their red ancestors correspond to three sub-trees in the tree, but in the
+  worst case they correspond to one balanced sub-tree. The size of a balanced
   binary tree with $j - i + 2$ leaves is $2(j - i + 2) - 1$, which is the worst
   case number of red nodes. Summing the number of blue and red nodes we obtain
   $2h + 2(j - i + 2) - 1 = O(h + (j - i))$.

@@ -51,7 +51,7 @@ is listed a number of improvements that can make the library better.
   This is described in detail in \citet{sand2014engineering}. This can be
   implemented similarly for the Viterbi and posterior decoding algorithms. For
   Viterbi the idea is to parallelize equation~\eqref{eq:3} as the max-times
-  multiplication can be computed in any order. One processesor computes
+  multiplication can be computed in any order. One processor computes
   equation~\eqref{eq:3} from right to left while the remaining processors
   multiply matrices from the entire equation. Hence, compared to the sequential
   version the first processor does not need to multiply by matrices already
@@ -106,7 +106,7 @@ speedups in the order of hundreds are obtained, but in most cases the speedups
 are more modest between factors 1 and 10. In some cases the speedup factor is
 below 1 which correspond to a slowdown.
 
-As the running time of the algorithns on large data set in some applications
+As the running time of the algorithms on large data set in some applications
 can be measured in hours or days small speedups of a few factors can be very
 useful. The original algorithms are very simple and thus it can also hard to
 improve on those. In this thesis it is shown that compression of the input can

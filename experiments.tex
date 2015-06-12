@@ -62,7 +62,7 @@ time of the algorithm is divided by varied factor. If the points in the plot
 then are constant, the running time satisfies the theoretical bound. However,
 since some of the algorithms read in data etc.\ before starting the
 computation starts, the points will typically form a decreasing curve instead
-of being constat.
+of being constant.
 
 \section{Compression Ratio}
 \label{sec:compression-ratio}
@@ -315,7 +315,7 @@ as it becomes constant in figure~\ref{fig:assymptotic_viterbi_backtrack_N} for
 large models. The number of cache misses can be reduced by changing the
 implementation of the max-times matrix multiplication or by keeping two copies
 of each matrix in memory, each with a different memory layout, and use the
-appropiate one for multiplications.
+appropriate one for multiplications.
 
 \begin{figure}
   \centering
@@ -329,7 +329,7 @@ appropiate one for multiplications.
   \centering\ref{cache_misses_legend}\\
   \input{figures/cache_misses}
   \caption{Cache misses and running time of Viterbi\textsubscript{PM} for
-    varying number of hidden states $N$. The pertage of cache misses has been
+    varying number of hidden states $N$. The percentage of cache misses has been
     calculated as the number of cache misses divided by the number of cache
     accesses.}
   \label{fig:cache-misses}
