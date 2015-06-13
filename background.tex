@@ -4,7 +4,7 @@
 \chapter{Background}
 \label{cha:background}
 
-In this chapter the preliminary theory of hidden Markov models, and
+In this chapter the preliminary theory of hidden Markov models and
 the work by \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} is
 described.
 
@@ -29,7 +29,7 @@ In figure~\ref{fig:markov-chain} an example with three states is shown. In
 discrete time steps denoted $t = 1, 2, \dots$ the system changes from one state
 to another. For each state there is a certain probability
 of making a transition to any other state. This can be represented as a matrix
-$A = {\{a_{ij}\}}_{1 \le i \le N}$ with $a_{ij} \in [0, 1]$ and
+$A = {\{a_{ij}\}}_{1 \le i,j \le N}$ with $a_{ij} \in [0, 1]$ and
 $\sum_{j = 1}^N a_{ij} = 1$. A system like this where the next state is only
 dependent on the current is called a Markov process, or more precisely
 for discrete-time and finite state spaces: a Markov chain. The non-zero
@@ -41,14 +41,14 @@ state $\pi_i$.
 
 Having established the above system with $A$ and $\Pi$ given, one might ask
 questions like what the probability of observing a certain sequence of states
-$V_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example lets assume the
+$X_{1:T}$ during time steps $t = 1, \dots\ T$ is. As an example assume that the
 model in figure~\ref{fig:markov-chain} is a model of the weather with $h_1$
 being rainy, $h_2$ being cloudy, and $h_3$ being sunny weather. The probability
-of a sequence of observations $V_{1:4} = v_1v_2v_3v_4$ with
-$v_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, can easily be computed
+of a sequence of observations $X_{1:4} = x_1x_2x_3x_4$ with
+$x_i \in \mathcal{H}$ over four days, $t = 1, 2, 3, 4$, can easily be computed
 by multiplying the initial probability to the transition probabilities.
 
-The above formality is too limited for many applications since the states do
+The above formality is too limited for many applications since the states often do
 not correspond to the actual observable events. To overcome this problem a
 distinction between observables and states is made. The observables are a
 probabilistic function of the state. Given
@@ -75,24 +75,24 @@ $h_1$ being low pressure, $h_2$ being high pressure, $o_1$ being rainy, $o_2$
 being cloudy, and $o_3$ being sunny weather. As before the probability of a
 sequence of observations $Y_{1:4} = y_1y_2y_3y_4$ with $y_i \in \mathcal{O}$
 can be found, but it is a harder than before since an observation sequence can be
-generated in many ways.
+generated in many ways by the models.
 
 \citet{rabiner1989tutorial} states three key problems for using hidden Markov
-models in real world applications, with the first one being the one just
+models in real world applications, with the first being the one just
 mentioned.
 \begin{enumerate}
 \item Given the observation sequence $Y_{1:T} = y_1y_2\dots{}y_T$, and the
   model $\lambda = (A, B, \Pi)$, how we compute $\Pr(O \mid \lambda)$, the
   probability of the observation sequence.
 \item Given the observation sequence $Y_{1:T} = y_1y_2\dots{}y_T$, how do we
-  choose a state sequence $V_{1:T} = v_1v_2\dots{}v_T$ which is optimal in some
+  choose a state sequence $X_{1:T} = x_1x_2\dots{}x_T$ which is optimal in some
   meaningful sense.
 \item How we adjust the model parameters $\lambda = (A, B, \Pi)$ to maximize
   $\Pr(O \mid \lambda)$.
 \end{enumerate}
 
 The first problem of finding the joint probability of an observation sequence
-$Y_{1:T}$ is solved by the Forward algorithm. This was implemented in zipHMMlib
+$Y_{1:T}$ is solved by the forward algorithm. This was implemented in zipHMMlib
 by \citet{sand2013ziphmmlib}.
 
 For solving the second problem (also called HMM decoding), many
@@ -100,26 +100,28 @@ methods may exist as it depends on which optimality criterion is chosen.
 However, two widely used methods exist. One solution is to look at all possible
 sequences of states emitting the observation sequence and pick the most likely
 one. This problem is solved efficiently by the Viterbi algorithm. Another
-method is to choose the states $v_t$ that are individually most likely. In this
+method is to choose the states $x_t$ that are individually most likely. In this
 way the expected number of correct states is maximized, but the state sequence
-might not be valid, since the transition probability from $v_t$ to $v_{t + 1}$
-might be zero. This is also called the posterior decoding and is solved by
-Forward-Backward algorithm.
+might not be valid, since the transition probability from $x_t$ to $x_{t + 1}$
+can be zero. This is also called the posterior decoding and is solved by
+forward-backward algorithm.
 
 Different solutions also exist to the third problem. One solution is Baum-Welch
 training that is an iterative procedure that maximizes the probability of the
 observation sequence by iteratively re-estimating the parameters such that the
 new model is more likely to generate the observation sequence than the previous
-model.
+model. Another solution known as Viterbi training set the parameters of the
+model such that the most likely sequences of states is becoming larger in each
+iteration.
 
 \section{Related Work}
 
 \citet{lifshits2009speeding} present a method for speeding up the dynamic
 programming algorithms used with HMMs, namely the forward-backward algorithms
 and the Viterbi algorithm. The approach is based on finding repeated substrings
-in the observation input sequence. Five different algorithms for finding
+in the observation sequence. Five different algorithms for finding
 substrings are proposed: Four Russians method, run length encoding, Lempel-Ziv
-parsing, grammar-based compression and byte pair encoding. In the article the
+parsing, grammar-based compression and byte-pair encoding. In the article the
 forward-backward and the Viterbi algorithms are reformulated into a series of
 matrix multiplications. The overall idea is that the repeated substrings
 correspond to repeated matrix multiplications and by finding the repeated
@@ -130,15 +132,15 @@ experiments have been made for the other algorithms and no code has been made
 available.
 
 \citet{sand2013ziphmmlib} presents zipHMMlib, a highly optimized HMM library for
-speeding up the forward algorithm. The speed up is achieved by finding repeated
-substrings using byte pair encoding. Much of the theory in this paper relies on
+speeding up the forward algorithm. The speedup is achieved by finding repeated
+substrings using byte-pair encoding. Much of the theory in this paper relies on
 \cite{lifshits2009speeding}, but is extended to make the computations
 numerically stable. Furthermore, the code is available as an open source
 library with bindings for both Python and R.
 
 This thesis extends the work made by \citet{sand2013ziphmmlib} to also include
-a highly efficient Viterbi algorithm and a posterior decoding algorithm based
-on byte pair encoding as developed theoretically by
+a efficient Viterbi algorithm and a posterior decoding algorithm based
+on byte-pair encoding as developed theoretically by
 \citet{lifshits2009speeding}. The theory will also be extended a bit to make
 the computation numerically stable and the experiments will be more extensive.
 

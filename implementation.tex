@@ -11,11 +11,11 @@ algorithm and an indexed posterior decoding algorithm exploiting
 repetitions, as well as a posterior decoding algorithm that does not
 exploit repetitions.
 
-As zipHMMlib is written in C++98, the additions made in this thesis have also
+As zipHMMlib is written in C++, the additions made in this thesis have also
 been written in C++. The code is available at
 \url{http://users-cs.au.dk/muldvang/thesis}. The build procedure has not
 changed, so for instructions on how to build the project see
-\url{github.com/mailund/ziphmm}.
+\url{http://github.com/mailund/ziphmm}.
 
 \section{Description of the Implementation}
 \label{sec:descr-impl}
@@ -32,9 +32,9 @@ sequence of alphabet size four consists of the symbols 0, 1, 2, and 3 and
 during the compression the symbols 4, 5, 6, etc.\ are added. The matrices of
 the model, $\Pi$, $A$, and $B$, and the matrices computed in the algorithms are
 handled by the \texttt{Matrix} class. In this class a matrix is represented as
-a single \texttt{double}, where the first elements of the array is the first
+a single \texttt{double} array, where the first elements of the array is the first
 row of the matrix, the next elements is the second row of the matrix, etc. The
-\texttt{Matrix} class is also responsible for various operations on a matrix
+\texttt{Matrix} class is also responsible for various operations on matrices
 such as converting it into log-space or multiplying matrices. For matrix
 multiplications a BLAS framework is used to make these as efficient as
 possible. For the max-times matrix multiplication and addition simple nested
@@ -95,7 +95,7 @@ int main() {
     exit(0);
 }
 \end{minted}
-\caption{Compute the Viterbi path using zipHMM.}
+\caption{Compute the Viterbi path using zipHMMlib.}
 \label{lst:c++-example}
 \end{listing}
 
@@ -114,9 +114,9 @@ loaded using \texttt{HMMSuite.read\_from\_directory(\dots)}.
 file.
 
 \texttt{HMMSuite.viterbi(\dots)} runs the Viterbi algorithm. A boolean
-\texttt{memory\_save} can be specified to choose whether to save memory or not
+\texttt{me\-mo\-ry\_\-save} can be specified to choose whether to save memory or not
 as discussed in section~\ref{sec:class-viterbi-algor}. If the parameter is not
-specified, the algorithm defaults to using memory saving. If the parameter
+specified, the algorithm defaults to use memory saving. If the parameter
 \texttt{viterbi\_path} is provided, the algorithm will backtrack to obtain the
 Viterbi path. If it is omitted only the probability of the most likely path is
 computed.

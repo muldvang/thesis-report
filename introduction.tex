@@ -1,7 +1,7 @@
 % chktex-file 44
 \chapter{Introduction}
 
-A hidden Markov models is a statistical model that during many years has proven
+A hidden Markov model is a statistical model that during many years has proven
 to be useful in many areas such as speech recognition, character recognition,
 face recognition, and various areas of bioinformatics, where it has been
 used for e.g.\ gene finding, modeling protein structures and sequence
@@ -26,28 +26,31 @@ The goal of this thesis is to complement the work made by \citet{sand2013ziphmml
 by extending the theory and implementation to include the Viterbi and posterior decoding
 algorithms and by making experiments validating the performance of the implementations.
 
+\newpage{}
+
 \section{Outline}
 
 The thesis is structured as follows.
-
 \begin{description}
-\item[Chapter~\ref{cha:background}] provides an overview of the work made by
-  \citet{lifshits2009speeding} and \citet{sand2013ziphmmlib} and the differences
-  between these.
-\item[Chapter~\ref{cha:method}] contains theory of the original formulations
-  of the Viterbi and posterior decoding algorithms along with theoretical
-  descriptions and analyses of these algorithms using compression.
-\item[Chapter~\ref{cha:implementation}] gives an overview of the implementation
-  and instructions on how to use the library.
-\item[Chapter~\ref{cha:experiments}] checks that the implementation of the
-  algorithms fit the theoretical running time and shows the performance gain
-  obtained from the compression.
-\item[Chapter~\ref{cha:conclusion}] provides an overview of the developed
-  theory, the experiments and the results of these. Ideas on how to
-  make the framework better are also given.
+\item[Chapter~\ref{cha:background}: \nameref{cha:background}] provides an
+  overview of the work made by \citet{lifshits2009speeding} and
+  \citet{sand2013ziphmmlib} and the differences between these.
+\item[Chapter~\ref{cha:method}: \nameref{cha:method}] contains theory of the
+  original formulations of the Viterbi and posterior decoding algorithms along
+  with theoretical descriptions and analyses of these algorithms using
+  compression.
+\item[Chapter~\ref{cha:implementation}: \nameref{cha:implementation}] gives an
+  overview of the implementation and instructions on how to use the library.
+\item[Chapter~\ref{cha:experiments}: \nameref{cha:experiments}] checks that the
+  implementation of the algorithms fit the theoretical running time and shows
+  the performance gain obtained from the compression.
+\item[Chapter~\ref{cha:conclusion}: \nameref{cha:conclusion}] provides an
+  overview of the developed theory, the experiments and the results of these.
+  Ideas on how to make the framework better are also given.
 \end{description}
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "master"
+%%% TeX-command-extra-options: "-shell-escape"
 %%% End:

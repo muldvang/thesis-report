@@ -5,7 +5,7 @@ algorithms for hidden Markov model decoding. The classical algorithms used
 for decoding is the Viterbi algorithm and the posterior decoding algorithm.
 These are reformulated into series of matrix multiplications. By finding
 repeated substrings in the observation sequence multiplications can be
-avoided and thereby a potential speedup is obtained.
+avoided and thereby potential for speedup is obtained.
 
 \citet{sand2013ziphmmlib} present zipHMMlib which uses byte-pair encoding to
 exploit repetitions. Using and efficient implementation of matrix
@@ -17,7 +17,7 @@ has been extended to include implementations of these algorithms.
 
 The experiments show that a speedup can be gained in some situations. Speedups
 in the order of hundreds or thousands is observed for large repetitive
-observation sequences and small models, but in most cases the zipHMM version of
+observation sequences and small models, but in most cases the zipHMMlib version of
 the algorithm is between $0.5$ and 10 times faster. The speedup becomes
 greater if the sequences are compressed once and used multiple times afterwards
 with e.g.\ different models.

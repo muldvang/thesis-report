@@ -3,51 +3,52 @@
 \chapter{Conclusion}
 \label{cha:conclusion}
 
-\citet{sand2013ziphmmlib} implements a zipHMM for working with hidden Markov
+\citet{sand2013ziphmmlib} implements a zipHMMlib for working with hidden Markov
 models. It includes an efficient implementation of the forward algorithm that
-obtains a speedup compared to the implementation of the original algorithm by
+obtains a speedup compared to an implementation of the original algorithm by
 exploiting repetitions in the input sequence.
 
-In this master's thesis the zipHMM library has been extended to include
+In this master's thesis the zipHMMlib library has been extended to include
 implementations of the Viterbi, the backward and two variants of the posterior
 decoding algorithms. This includes description of the theory behind the
 algorithm, efficient implementations of these, and experiments that evaluates
 the performance compared to the standard implementation.
 
 By exploiting repetitions in the observation sequence the running time of the
-Viterbi algorithm has changed from $O(N^2 T)$, with $N$ being the number of
-states and $T$ being the length of the observation sequence, to $O(N^2 T')$
-where $T'$ is the length of the compression observation sequence for computing
-the probability of the most likely path and $O(N^2 T' + T)$ for also getting
-the path. This requires that the observation sequence has been preprocessed.
-This takes time $O(M' N^3)$ with $M'$ being the new alphabet size that is
-dependent on the data and a user provided estimate of how many times the
-Viterbi algorithm is executed afterwards.
+Viterbi algorithm for computing the probability of the most likely path has
+changed from $O(N^2 T)$, with $N$ being the number of states and $T$ being the
+length of the observation sequence, to $O(M' N^3 + N^2 T')$ where $T'$ is the
+length of the compressed observation sequence and $M'$ is the new alphabet
+size. If the Viterbi path is required the running time has changed to
+$O(M' N^3 + N^2 T' + T)$. This requires that the observation sequence has been
+preprocessed. This takes $O((M' - M) T)$ time with $M'$ being the new alphabet size
+that is dependent on the data and a user provided estimate of how many times
+the Viterbi algorithm is executed afterwards.
 
 The experiments show that a possibly very large speedup can be gained. However,
 it is very dependent on how well the data compresses, i.e.\ how many repetitions
 the observation sequence contains, and how many times the user estimates that the
 algorithm is executed after the compression. Furthermore, since the
-preprocessing is cubic in the number of states, a speedup is not obtained for
-large models.
+algorithms are cubic in the number of states, a speedup is not obtained for
+large models and large alphabet sizes.
 
 The backward algorithm has been implemented as part of the implementation for
 computing the posterior decoding. It has not been possible to find a method for
 exploiting repetitions in the observation sequence, so in practice it becomes a
 battle between constants whether the original version or the zipHMMlib version
-is the fastest. In the experimental setup used in this thesis the constants are
-in favor of the zipHMMlib implementation, when the observation sequence length and
-model size is large enough.
+of the posterior decoding algorithm is the fastest. In the experimental setup
+used in this thesis the constants are in favor of the zipHMMlib implementation,
+when the observation sequence length and model size is large enough.
 
 Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
 becomes $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$ with $j - i$ being the
 length of the requested substring.
 
-zipHMM can be extended beyond what has been implemented in this thesis. Below
+zipHMMlib can be extended beyond what has been implemented in this thesis. Below
 is listed a number of improvements that can make the library better.
 \begin{itemize}
-\item In zipHMM a parallelized version of the forward algorithm is implemented.
+\item In zipHMMlib a parallelized version of the forward algorithm is implemented.
   This is described in detail in \citet{sand2014engineering}. This can be
   implemented similarly for the Viterbi and posterior decoding algorithms. For
   Viterbi the idea is to parallelize equation~\eqref{eq:3} as the max-times
@@ -67,20 +68,20 @@ is listed a number of improvements that can make the library better.
   subset of the $\delta_t$ matrices and the path corresponding to these have
   been computed, the ones missing can be found using the extra $R$ matrices
   using the same technique as in section~\ref{sec:backtracking}.
-\item At the current state zipHMM compresses the sequences using a single
+\item At the current state zipHMMlib compresses the sequences using a single
   compression stopping criterion as discussed in
   section~\ref{sec:compr-stopp-crit}. Since a BLAS framework is used for the
   implementation of the forward and backward algorithms and a naive max-times
   matrix multiplication is used for Viterbi multiple compression criterions
   could be used. Also, the criterion could depend on whether the Viterbi path
-  is request or not. One solution is to compute multiple compressed sequences
+  is requested or not. One solution is to compute multiple compressed sequences
   from a single sequence such that the best compression is used for any algorithm.
 \item A minor improvement of the indexed posterior decoding algorithm would be
   to save the uncompressed sequence along the compressed sequence. In that case
   no decompression would be needed. However, preliminary experiments suggest
   that this will not improve the running time significantly.
 \item As seen in section~\ref{sec:theor-runn-times} the max-times matrix
-  multiplication results in cache-misses for large models. This problem can be
+  multiplication results in cache misses for large models. This problem can be
   solved by either implementing a better max-times multiplication algorithm
   that takes the underlying hardware into account or by storing two copies of
   each matrix with different memory alignment of the data.
@@ -88,9 +89,9 @@ is listed a number of improvements that can make the library better.
   and backward tables, $\alpha'$ and $\beta'$, and then the indexed posterior
   decoding itself for a pair of indexes $i$ to $j$. If the indexed posterior
   decoding is wanted for multiple pairs of indexes $i_1$ to $j_1$, $i_2$ to
-  $j_2$, etc.\ $\alpha'$ and $\beta'$ are computed each time. These could be
+  $j_2$, etc.\ $\alpha'$ and $\beta'$ are recomputed each time. These could be
   saved in memory once computed and reused for each of the pair of indexes.
-\item When having an index posterior decoding algorithm it would also make
+\item When having an indexed posterior decoding algorithm it would also make
   sense to implement an indexed Viterbi algorithm. This should be faster than
   computing the entire Viterbi path.
 \item Finally, \citet{sand2013ziphmmlib} have provided bindings to the Python
@@ -98,7 +99,7 @@ is listed a number of improvements that can make the library better.
   implementations made in this thesis.
 \end{itemize}
 
-In most cases the added algorithms to zipHMM perform better than the original
+In most cases the added algorithms to zipHMMlib perform better than the original
 algorithms. The algorithms should not be used with large models, but this is
 also normally preferred as the original algorithms have a running time
 proportional to the square of the number of states. In a few cases major

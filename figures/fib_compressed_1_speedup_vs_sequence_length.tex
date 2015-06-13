@@ -1,9 +1,13 @@
 \tikzsetnextfilename{fib_compressed_1_speedup_vs_sequence_length}
 \begin{tikzpicture}[trim axis left,trim axis right]
   \begin{axis}[
+    ylabel near ticks,
+    width=\textwidth,
     xlabel=Sequence length $T$,
     ylabel=Speedup factor,
     xmode=log,
+    legend entries={Viterbi\textsubscript{L}, Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}},
+    legend to name=legend:fib_compressed_speedup_vs_sequence_length,
     ]
     \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=T, y=one_total_ratio, y error=one_total_ratio_std]
@@ -20,8 +24,6 @@
     \addplot[viterbi-pm, error bars, y dir=both, y explicit]
     table[x=T, y=one_path_memory_total_ratio, y error=one_path_memory_total_ratio_std]
     {plot_data/viterbi_fib_sequence_transformed.data};
-
-    \legend{Viterbi\textsubscript{L}, Viterbi\textsubscript{P}, Viterbi\textsubscript{PM}}
   \end{axis}
 \end{tikzpicture}
 
