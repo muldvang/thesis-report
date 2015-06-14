@@ -25,20 +25,24 @@ preprocessed. This takes $O((M' - M) T)$ time with $M'$ being the new alphabet s
 that is dependent on the data and a user provided estimate of how many times
 the Viterbi algorithm is executed afterwards.
 
-The experiments show that a possibly very large speedup can be gained. However,
+The experiments for the Viterbi algorithm show that a possibly very large speedup can be gained. However,
 it is very dependent on how well the data compresses, i.e.\ how many repetitions
 the observation sequence contains, and how many times the user estimates that the
 algorithm is executed after the compression. Furthermore, since the
-algorithms are cubic in the number of states, a speedup is not obtained for
-large models and large alphabet sizes.
+algorithms are cubic in the number of states a speedup is not obtained for
+large models and large alphabet sizes. The experiments show that a speedup
+between 0.5 and 20 can be a typical result depending on how the algorithm is used.
 
 The backward algorithm has been implemented as part of the implementation for
 computing the posterior decoding. It has not been possible to find a method for
 exploiting repetitions in the observation sequence, so in practice it becomes a
 battle between constants whether the original version or the zipHMMlib version
-of the posterior decoding algorithm is the fastest. In the experimental setup
-used in this thesis the constants are in favor of the zipHMMlib implementation,
-when the observation sequence length and model size is large enough.
+of the posterior decoding algorithm is the fastest. The running time of the
+original algorithm is $O(N^2 T)$ while the zipHMMlib version has a running time
+of $O(MN^3 + N^2 T)$. In the experimental setup used in this thesis the
+constants are in favor of the zipHMMlib implementation, when the observation
+sequence length and model size are large enough. In general, a speedup between
+0.5 and 6 can be expected using the zipHMMlib posterior decoding.
 
 Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
@@ -100,7 +104,7 @@ is listed a number of improvements that can make the library better.
 \end{itemize}
 
 In most cases the added algorithms to zipHMMlib perform better than the original
-algorithms. The algorithms should not be used with large models, but this is
+algorithms. The algorithms exploiting repetitions should not be used with large models, but this is
 also normally preferred as the original algorithms have a running time
 proportional to the square of the number of states. In a few cases major
 speedups in the order of hundreds are obtained, but in most cases the speedups

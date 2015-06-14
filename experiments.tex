@@ -113,8 +113,7 @@ compression is made and thereby a better compression ratio is obtained.
 For this experiment only, random sequences of an alphabet of size 2 were also
 tested. It is expected that the random sequences with an alphabet of size 2
 will compress better than the sequence with an alphabet size 4, since the most
-common pair of symbols will occur more often in the sequences with alphabet
-size 2 than the sequences with alphabet size 4 by random. This is also seen in
+common pair of symbols will occur more often. This is also seen in
 the plot for $e = 500$. For random sequences of alphabet size four the
 compression ratio is approximately four, while it is almost eight for sequences
 with alphabet size 2. For $e = 1$ more than one iteration of the compression is
@@ -168,7 +167,7 @@ time of the preprocessing for random sequences is superlinear in $T$ and not
 linear as the theoretical running time suggests.
 
 However, for Fibonacci words the running time is linear in $T$. The new
-alphabet size $\mathcal{O'}$ is linearly dependent on $T$ as seen in the
+alphabet size $M'$ is linearly dependent on $T$ as seen in the
 previous section. Due to the recursive structure of Fibonacci words the length
 of the observation sequence is almost halved each time a new symbol is
 introduced. The running time can be written as
@@ -398,6 +397,7 @@ In figures~\ref{fig:compressed_1_speedup_vs_sequence_length}
 and~\ref{fig:compressed_500_speedup_vs_sequence_length} the speedup factor for
 the Viterbi algorithm is shown for sequences of varying length with $e = 1$ and
 $e = 500$, respectively. A model with 16 states was used for these experiments.
+
 As expected, computing the Viterbi path limits the speedup factor since the
 running time is linear in $T$ instead of $T'$ as it is for only computing the
 probability. Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} gain a
@@ -412,7 +412,9 @@ Viterbi\textsubscript{PM}. This is due to the zipHMMlib Viterbi algorithm
 computing the $C_{o_i}$ matrices before starting the actual Viterbi
 computation. As the sequences become longer this computation becomes a smaller
 fraction of the running time and thereby the running time increases at the
-beginning for $e = 500$. For $e = 1$ the new alphabet size $\mathcal{O'}$ is
+beginning for $e = 500$.
+
+For $e = 1$ the new alphabet size $\mathcal{O'}$ is
 very small and the $C_{o_i}$ matrices are quickly computed. Hence, the running
 time is almost independent of this computation and the speedup becomes close to
 constant for increasing sequence lengths. For $e = 1$ the speedup factor is
@@ -476,7 +478,7 @@ model size.
 
 \subsubsection{Fibonacci Words}
 
-Speedups were gained for many cases using random data, but it is
+Speedups is gained for many cases using random data, but it is
 expected that much greater speedups will be obtained using repetitive
 sequences. Thus, experiments similar to the ones for random data have been
 conducted. In figures~\ref{fig:fib_compressed_1_speedup_vs_sequence_length}
@@ -507,15 +509,15 @@ being compressed a lot as seen in section~\ref{sec:compression-ratio}, the
 speedup factor is limited since a lot of time is still spent on compression.
 For $e = 500$ however, the speedup factor keeps increasing for rather long
 sequences for the Viterbi\textsubscript{L} algorithm, but as for random data
-the speedup converges to a constant for long sequences. Later in this section
-it is shown that this is due to the algorithm using more time on
-compression. For random data the computation of the Viterbi path limited the
-speedup factor. This limitation becomes even larger for Fibonacci words. This
-is seen in figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length},
-where the computation of the Viterbi path makes the computation orders of
-magnitudes slower than just computing the probability. However, the speedup
-factor for the Viterbi\textsubscript{P} and Viterbi\textsubscript{PM}
-algorithms perform better on Fibonacci words than on random sequences.
+the speedup converges to a constant for long sequences. Below it is shown that
+this is due to the algorithm using more time on compression. For random data
+the computation of the Viterbi path limited the speedup factor. This limitation
+becomes even larger for Fibonacci words. This is seen in
+figure~\ref{fig:fib_compressed_500_speedup_vs_sequence_length}, where the
+computation of the Viterbi path makes the computation orders of magnitudes
+slower than just computing the probability. However, the speedup factor for the
+Viterbi\textsubscript{P} and Viterbi\textsubscript{PM} algorithms perform
+better on Fibonacci words than on random sequences.
 
 \subsubsection{Future Work}
 
@@ -600,17 +602,17 @@ repetitive and the Viterbi path is not requested. Higher efficiency in the
 Viterbi algorithm or in the effectiveness of the compression will make the
 running time smaller especially for large values of $e$.
 
-\subsection{Discussion}
+\subsection{Summary}
 
 This ends the section of experiments for the Viterbi algorithm. In
 conclusion the compression of sequences does speed up the execution time of the
 Viterbi algorithm in many cases. The best results are of course found for
 repetitive data with the Viterbi algorithm run multiple times and the Viterbi
-path not computed. Speedup factors in the order of hundreds were found, so
+path not computed. Speedup factors in the order of hundreds is found, so
 for these kinds of problems this method has a great potential. If the Viterbi
 path is requested the speedup factors becomes much lower. The maximum speedup
-seen in the experiments was below 20. In other scenarios with random data a
-more modest speedup was obtained. For random data and request of the Viterbi
+seen in the experiments is below 20. In other scenarios with random data a
+more modest speedup is obtained. For random data and request of the Viterbi
 path speedup factors below 1 is obtained. Hence, the zipHMMlib Viterbi is slower
 than the original Viterbi algorithm in some cases. The algorithm performs very
 badly on large models. This is partly due to the alphabet size becoming large
@@ -641,7 +643,7 @@ original implementation of posterior decoding.
 As in section~\ref{sec:theor-runn-times} the theoretical compared to the actual
 running time experiments have been made using random data. The theoretical
 running time is $O(M N^3 + TN^2)$. Since $M$ is very small compared to $T$, it
-is expected that the first term vanishes. This was already seen for the Viterbi
+is expected that the first term vanishes. This has already been seen for the Viterbi
 algorithm in section~\ref{sec:theor-runn-times},
 figure~\ref{fig:assymptotic_viterbi_N}. Hence, for this experiment the
 theoretical running time $O(TN^2)$ is assumed. This of course only makes sense
@@ -715,13 +717,15 @@ computing matrix multiplication efficiently.
   \label{fig:posterior_speedup_vs_N}
 \end{figure}
 
-\subsection{Discussion}
+\subsection{Summary}
 
 These experiments end the section of the posterior decoding. Overall the
 algorithm has a running time that is comparable to the original implementation
 of posterior decoding with observed speedups between approximately $0.5$ and 6.
 For scenarios with large models and sequences zipHMMlib is faster whereas the
-original algorithm is better for small models. This is different from the
+original algorithm is better for small models. This is partly due to the BLAS
+framework being very efficient at multiplying large matrices and partly due to
+sequence not being compressed resulting in the $MN^3$ term of the running time vanishing. This is different from the
 Viterbi algorithm that performs badly on large models due to an inefficient
 matrix multiplication algorithm and a larger alphabet.
 
@@ -901,15 +905,15 @@ much larger.
   \label{fig:indexed_posterior_fib_speedup_vs_T}
 \end{figure}
 
-\subsection{Discussion}
+\subsection{Summary}
 
 The indexed posterior decoding algorithm also gives speedups. As for the
 Viterbi algorithm the speedup depends heavily on the value of $e$. For $e = 1$
 slowdowns often occur and the maximum speedup is a factor four. For $e = 500$
-no slowdowns were observed and speedups of up to a factor 15 was observed.
+no slowdowns is observed and speedups of up to a factor 15 is observed.
 Compared to the Viterbi algorithm the indexed posterior decoding works better
 with larger models since the BLAS framework multiplies matrices in a more
-efficient way. However, the $N^3$ factor of the running time limits the speedup
+efficient way. However, the $M N^3$ factor of the running time limits the speedup
 when models become too large. For Fibonacci words a better speedup is seen
 again. If the length of the requested decoding $j - i$ is much smaller than the
 observation sequence length $T$ a speedup in the order of hundreds is observed.

@@ -1,3 +1,13 @@
+%% Argumenter for Viterbi
+% - Hvis man har flere modeller, men kun vil backtracke på den, som giver den
+% største likelihood.
+% - Viterbi-training.
+
+%% Argumenter for indexed posterior decoding
+% - If only part of e.g. a genome is of interest
+% - If the posterior decoding is visualized interactively somehow
+
+
 \documentclass[final,11pt,twoside,danish,english]{memoir}
 
 % Math
@@ -50,6 +60,7 @@
   every y tick scale label/.style={at={(0,1)},anchor=east, font=\scriptsize,
     inner xsep=2pt, inner ysep=0pt},
   ytick placement tolerance=-2mm,
+  max space between ticks=30pt,
 }
 \usetikzlibrary{arrows}
 \usepgfplotslibrary{groupplots}

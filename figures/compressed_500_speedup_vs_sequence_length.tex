@@ -6,7 +6,8 @@
     width=\textwidth,
     height=0.9\textwidth,
     xmode=log,
-    ]
+    max space between ticks=30pt,
+   ]
     \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=T, y=many_total_ratio, y error=many_total_ratio_std]
     {plot_data/viterbi_sequence_transformed.data};
