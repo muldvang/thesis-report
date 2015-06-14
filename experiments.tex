@@ -370,7 +370,9 @@ running time.
 The zipHMMlib Viterbi algorithm is compared to an implementation of the
 original Viterbi algorithm. Recall that the compressed sequence from the
 preprocessing can be saved to disk for later use. However, for many problems
-one only need to run Viterbi once for a sequence. As described in
+one only need to run Viterbi once for a sequence, where the most likely path of
+hidden states is requested for an observation sequence and a model. Whereas for
+e.g.\ Viterbi training, the sequences is used multiple times. As described in
 section~\ref{sec:compr-stopp-crit} the preprocessing uses an estimate $e$ of
 how many times the Viterbi algorithm is run to compress the sequence
 appropriately. To make a fair comparison between the two algorithms the
@@ -486,7 +488,7 @@ and~\ref{fig:fib_compressed_500_speedup_vs_sequence_length} the speedup factor
 is shown for sequences of varying length using $e = 1$ and $e = 500$,
 respectively.
 
-\begin{figure}
+\begin{figure}[htbp]
   \centering\ref{legend:fib_compressed_speedup_vs_sequence_length}\\
   \begin{subfigure}[b]{0.5\textwidth}
     \centering \input{figures/fib_compressed_1_speedup_vs_sequence_length.tex}
