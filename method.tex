@@ -516,12 +516,12 @@ time of iteration $i$ of the compression. When at an iteration $j$
 $\text{pre}_j > e (t_{\text{mv}} p_i - t_{\text{mm}})$ is true, the compression is
 stopped.
 
-If a single value of
-$N_{\text{min}}$ cannot be found, a list of parameters
-$(N_{\text{min}}^1, N_{\text{min}}^2, \dots)$ can be specified and the input
-sequence will be compressed for each of these model sizes. If no
-$N_{\text{min}}$ parameter is provided, the compression continues until the
-frequency of the most common pair is the same in two consecutive iterations.
+If the compressed sequence is to be used with models of different sizes a list
+of parameters $(N_{\text{min}}^1,N_{\text{min}}^2,\dots)$ can be specified and
+the input sequence will be compressed for each of these model sizes instead of
+provided a single size $N_{\text{min}}$. If no $N_{\text{min}}$ parameter is
+provided, the compression continues until the frequency of the most common pair
+is the same in two consecutive iterations.
 
 This method is reused for the Viterbi algorithm. Instead of measuring the
 time it takes to do matrix-matrix multiplications and matrix-vector
@@ -550,7 +550,7 @@ The posterior decoding $P_{1:T}$ is a sequence of hidden states that might not
 be a valid path according to the transitions of the model, like the Viterbi
 decoding, but it is useful for some applications.
 
-The posterior decoding is efficiently computed using the forward-backward
+The posterior decoding is efficiently computed using the for\-ward\--back\-ward
 algorithms. The forward-backward algorithms are comparable to the Viterbi
 algorithm. Instead of computing the probability of the most likely path they
 compute the joint probability of all paths, that is

@@ -83,7 +83,7 @@ $e = 1$ and $e = 500$ have been provided to the program.
   \begin{subfigure}[b]{0.5\textwidth}
     \centering \input{figures/compression_ratio_one.tex}
     \caption{Estimate $e = 1$.}
-  \end{subfigure}%
+  \end{subfigure}\hspace{-5mm}%
   \begin{subfigure}[b]{0.5\textwidth}
     \centering \input{figures/compression_ratio.tex}
     \caption{Estimate $e = 500$.}
@@ -370,15 +370,19 @@ running time.
 
 The zipHMMlib Viterbi algorithm is compared to an implementation of the
 original Viterbi algorithm. Recall that the compressed sequence from the
-preprocessing can be saved to disk for later use. However, for many problems one
- only need to run Viterbi once for a sequence. As described in
+preprocessing can be saved to disk for later use. However, for many problems
+one only need to run Viterbi once for a sequence. As described in
 section~\ref{sec:compr-stopp-crit} the preprocessing uses an estimate $e$ of
 how many times the Viterbi algorithm is run to compress the sequence
-appropriately.  To experiment with this, experiments have been made with
-$e = 1$ and $e = 500$ executions of Viterbi.
+appropriately. To make a fair comparison between the two algorithms the
+preprocessing has been included in the running time for these experiments. To
+experiment with this, experiments have been made with $e = 1$ and $e = 500$
+executions of Viterbi. In the end of this section is it seen that $e = 500$
+roughly corresponds to measure the running time without preprocessing as the
+preprocessing time is a minor fraction of the total running time.
 
 The algorithms are compared to their respective counterpart of the original
-algorithm, e.g.\ for Viterbi\textsubscript{L} algorithms the original
+algorithm, e.g.\ for Viterbi\textsubscript{L} the original
 algorithm without backtracking has been used. In the following plots a
 speedup factor is shown on the y-axis. The speedup factor is calculated as
 the running time of the original algorithm (with or without backtracking

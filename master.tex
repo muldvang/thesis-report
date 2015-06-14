@@ -1,4 +1,4 @@
-\documentclass[11pt,twoside,danish,english]{memoir}
+\documentclass[final,11pt,twoside,danish,english]{memoir}
 
 % Math
 \usepackage{amssymb}
@@ -33,25 +33,24 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{pgfplots.colorbrewer}
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz/,mode=list and make]
-\pgfplotsset{invoke before crossref tikzpicture={\tikzexternaldisable},
-  invoke after crossref tikzpicture={\tikzexternalenable}} % Cross reference
-                                % tikzpicture, e.g. named legends does not work
-                                % properly with externalization.
+\pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}} % Makes
+                                                                  % externalize
+                                                                  % and draft
+                                                                  % work
+                                                                  % together.
 \pgfplotsset{%
-  colorbrewer cycle list=Set1,
+  invoke before crossref tikzpicture={\tikzexternaldisable},
+  invoke after crossref tikzpicture={\tikzexternalenable},
+  ylabel near ticks,
   legend columns=-1,
   legend style={at={(0.5, 1)},anchor=south,draw=none,fill=none,/tikz/every even
     column/.append style={column sep=10pt}},
-  % legend cell align=left,
-  every y tick scale label/.style={at={(0,1)},anchor=north east, font=\scriptsize,
+  every y tick scale label/.style={at={(0,1)},anchor=east, font=\scriptsize,
     inner xsep=2pt, inner ysep=0pt},
-  enlarge y limits=0.2,
+  ytick placement tolerance=-2mm,
 }
-% \pgfplotsset{compat=1.3}
-\usetikzlibrary{colorbrewer}
 \usetikzlibrary{arrows}
 \usepgfplotslibrary{groupplots}
 
