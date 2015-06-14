@@ -47,7 +47,8 @@ sequence length and model size are large enough. In general, a speedup between
 Exploiting repetitions is however possible for posterior decoding if only a
 part of the posterior decoding is requested. In that case the running time
 becomes $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$ with $j - i$ being the
-length of the requested substring.
+length of the requested substring. A speedup between 0 and 60 can be expected
+for most cases.
 
 zipHMMlib can be extended beyond what has been implemented in this thesis. Below
 is listed a number of improvements that can make the library better.
