@@ -123,18 +123,26 @@
 \begin{frame}
   \frametitle{\insertsection}
   \begin{columns}
-    \begin{column}{0.3\textwidth}
+    \begin{column}{0.5\textwidth}
+      \onslide<2->
       \begin{itemize}
-      \item Hidden states: \{H, L\}.
-      \item Observables: \{ \Sun, \Cloud, \Rain\}.
+      \item Hidden states: L, H.
+      \item Observables: \Sun, \Cloud, \Rain.
       \end{itemize}
     \end{column}%
-    \begin{column}{0.7\textwidth}
+    \begin{column}{0.5\textwidth}
+      \onslide<1->
       \begin{figure}
-        \centering \framebox{\input{figures/HMM.tex}}
+        \centering \input{figures/HMM.tex}
       \end{figure}
     \end{column}
   \end{columns}
+  \begin{center}
+    \begin{tabular}{cccccccccc}
+      \onslide<3-> \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
+      \onslide<4-> H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
+    \end{tabular}
+  \end{center}
   \begin{itemize}
     \tiny
   \item Very short introduction using figure from thesis.
