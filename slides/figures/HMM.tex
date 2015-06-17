@@ -1,0 +1,43 @@
+% \tikzsetnextfilename{HMM}
+
+\begin{tikzpicture} [
+  remember picture,
+  overlay,
+  ->,
+  >=stealth',
+  auto,
+  node distance=3cm,
+  main node/.style={rectangle,draw,rounded corners,align=center},
+  ]
+
+  \node[main node] (L) {L\\{\scriptsize%
+      Hej
+    $\begin{aligned}
+      \text{\Sun} \ & 20\% \\
+      \text{\Cloud} \ & 40\% \\
+      \text{\Rain} \ & 40\% \\
+    \end{aligned}$}};
+  \node[main node, right of=L] (H) {H \\{\scriptsize%
+    $\begin{aligned}
+      \text{\Sun} \ & 80\% \\
+      \text{\Cloud} \ & 10\% \\
+      \text{\Rain} \ & 10\% \\
+    \end{aligned}$}};
+  \node[left of=L] (p1) {};
+  \node[right of=H] (p2) {};
+
+  \path
+    (L) edge[bend right]               node[below] {50\%} (H)
+         edge[loop below, looseness=5] node        {50\%} (L)
+    (H) edge[bend right]               node[above] {20\%} (L)
+         edge[loop below, looseness=5] node        {80\%} (H);
+
+  % \path
+  %   (p1) edge node[above] {$\pi_1$} (L)
+  %   (p2) edge node[above] {$\pi_2$} (H);
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
