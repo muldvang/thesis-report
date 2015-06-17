@@ -8,18 +8,21 @@
   main node/.style={rectangle,draw,rounded corners,align=center},
   ]
 
-  \node[main node] (L) {L\\{\scriptsize%
+  \onslide<1->
+  \node[main node] (L) {L\\{\small%
     $\begin{aligned}
       \text{\Sun} \ & 20\% \\
       \text{\Cloud} \ & 40\% \\
       \text{\Rain} \ & 40\% \\
     \end{aligned}$}};
-  \node[main node, right of=L] (H) {H \\{\scriptsize%
+  \node[main node, right of=L] (H) {H \\{\small%
     $\begin{aligned}
       \text{\Sun} \ & 80\% \\
       \text{\Cloud} \ & 10\% \\
       \text{\Rain} \ & 10\% \\
     \end{aligned}$}};
+
+  \onslide<2->
   \path
     (L) edge[bend right]               node[below] {50\%} (H)
          edge[loop below, looseness=5] node        {50\%} (L)

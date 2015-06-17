@@ -1,4 +1,4 @@
-\documentclass[english]{beamer}
+\documentclass[english,notes]{beamer}
 
 % Math
 \usepackage{amssymb}
@@ -52,6 +52,7 @@
 
 % Fixme
 \usepackage[draft]{fixme}
+\fxsetup{inlineface=\bfseries\tiny,inline=true,nomargin}
 
 % Colors
 \usepackage{color}
@@ -74,7 +75,7 @@
 \AtBeginSection[]
 {
  \begin{frame}<beamer>
- \frametitle{Plan}
+ \frametitle{Agenda}
  \tableofcontents[currentsection]
  \end{frame}
 }
@@ -123,42 +124,39 @@
 \begin{frame}
   \frametitle{\insertsection}
   \begin{columns}
-    \begin{column}{0.5\textwidth}
-      \onslide<2->
-      \begin{itemize}
-      \item Hidden states: L, H.
-      \item Observables: \Sun, \Cloud, \Rain.
-      \end{itemize}
-    \end{column}%
-    \begin{column}{0.5\textwidth}
-      \onslide<1->
-      \begin{figure}
-        \centering \input{figures/HMM.tex}
-      \end{figure}
-    \end{column}
+    \onslide<1->{
+      \begin{column}{0.5\textwidth}
+        \centering
+        \input{figures/HMM.tex}
+      \end{column}}%
+    \onslide<3->{
+      \begin{column}{0.5\textwidth}
+        \begin{tabular}{rl}
+          Hidden states & L H                     \\
+          Observables   & \Sun{} \Cloud{} \Rain{} \\
+        \end{tabular}
+      \end{column}}
   \end{columns}
-  \begin{center}
-    \begin{tabular}{cccccccccc}
-      \onslide<3-> \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
-      \onslide<4-> H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
-    \end{tabular}
-  \end{center}
-  \begin{itemize}
-    \tiny
-  \item Very short introduction using figure from thesis.
-  \item Example with observation sequence. How come? Informal definition of
-    Viterbi decoding.
-  \item Simple explanation of Viterbi decoding using weather example and figure.
-    Perspectivation to bioinformatics.
-  \end{itemize}
+  \onslide<4->{
+    \begin{center}
+      \begin{tabular}{rcccccccccc}
+        \onslide<4-> Observation & \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
+        \onslide<5-> Decoding    & H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
+      \end{tabular}
+    \end{center}}
 \end{frame}
 
 \section{Viterbi Decoding}
 
 \subsection{The Original Viterbi Algorithm}
-
 \begin{frame}
   \frametitle{\insertsubsection}
+  Given a model $\lambda$ and an observation sequence $Y_{1:T}$, define
+  \begin{equation*}
+    \omega_t(x_t) = \argmax_{x_{1:t}} \Pr (Y_{1:t}, X_{1:t} = x_{1:t} \mid
+    \lambda).
+  \end{equation*} \fxwarning{Forklar den notation.} \fxwarning{Insert correct formula.}
+
   \begin{itemize}
     \tiny
   \item Definition.
