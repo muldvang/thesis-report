@@ -8,7 +8,6 @@
   main node/.style={rectangle,draw,rounded corners,align=center},
   ]
 
-  \onslide<1->
   \node[main node] (L) {L\\{\small%
     $\begin{aligned}
       \text{\Sun} \ & 20\% \\
@@ -22,12 +21,19 @@
       \text{\Rain} \ & 10\% \\
     \end{aligned}$}};
 
-  \onslide<2->
+  \onslide<+->
   \path
     (L) edge[bend right]               node[below] {50\%} (H)
          edge[loop below, looseness=5] node        {50\%} (L)
     (H) edge[bend right]               node[above] {20\%} (L)
          edge[loop below, looseness=5] node        {80\%} (H);
+
+  \onslide<+->
+  \node[above of=L, node distance=20mm] (pi1) {};
+  \node[above of=H, node distance=20mm] (pi2) {};
+  \path
+    (pi1) edge node[right] {50\%} (L)
+    (pi2) edge node[right] {50\%} (H);
 \end{tikzpicture}
 
 %%% Local Variables:

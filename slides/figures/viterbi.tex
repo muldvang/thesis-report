@@ -1,0 +1,37 @@
+%\tikzsetnextfilename{viterbi}
+\begin{tikzpicture} [
+  ->,
+  >=stealth',
+  ]
+  \tikzstyle{box} = [draw=black, minimum width=10mm, minimum height=10mm];
+
+  \node at (0, 1) {H};
+  \node at (0, 2) {L};
+
+  \node[box] at (1, 1) {};
+  \node[box] at (1, 2) {};
+  \node[box] at (2, 1) {};
+  \node[box] at (2, 2) {};
+  \node[box] at (3, 1) {};
+  \node[box] at (3, 2) {};
+  \node[box] at (4, 1) {};
+  \node[box] at (4, 2) {};
+  \node[box] at (5, 1) {};
+  \node[box] at (5, 2) {};
+
+  \node at (1, 3) {\Sun};
+  \node at (2, 3) {\Sun};
+  \node at (3, 3) {\Cloud};
+  \node at (4, 3) {\Sun};
+  \node at (5, 3) {\Sun};
+
+  \onslide<+->
+  \node[box,fill=gray] at (4, 2) {};
+  \draw (4, 2) -- (3, 2);
+  \draw (4, 2) -- (3, 1);
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:

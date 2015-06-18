@@ -79,6 +79,7 @@
  \tableofcontents[currentsection]
  \end{frame}
 }
+\usefonttheme{serif}
 
 % Symbols
 \usepackage[weather]{ifsym}
@@ -124,24 +125,24 @@
 \begin{frame}
   \frametitle{\insertsection}
   \begin{columns}
-    \onslide<1->{
+    \onslide<+->
       \begin{column}{0.5\textwidth}
         \centering
         \input{figures/HMM.tex}
-      \end{column}}%
-    \onslide<3->{
+      \end{column}%
+    \onslide<+->{
       \begin{column}{0.5\textwidth}
         \begin{tabular}{rl}
-          Hidden states & L H                     \\
-          Observables   & \Sun{} \Cloud{} \Rain{} \\
+          Hidden states       & L H                                                                       \\
+          Observables         & \Sun{} \Cloud{} \Rain{}                                                   \\
         \end{tabular}
       \end{column}}
   \end{columns}
-  \onslide<4->{
+  \onslide<+->{
     \begin{center}
       \begin{tabular}{rcccccccccc}
-        \onslide<4-> Observation & \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
-        \onslide<5-> Decoding    & H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
+        Observation $Y_{1:T}$           & \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
+        \onslide<+-> Decoding $X_{1:T}$ & H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
       \end{tabular}
     \end{center}}
 \end{frame}
@@ -151,12 +152,25 @@
 \subsection{The Original Viterbi Algorithm}
 \begin{frame}
   \frametitle{\insertsubsection}
+  \onslide<+->
   Given a model $\lambda$ and an observation sequence $Y_{1:T}$, define
   \begin{equation*}
-    \omega_t(x_t) = \argmax_{x_{1:t}} \Pr (Y_{1:t}, X_{1:t} = x_{1:t} \mid
-    \lambda).
-  \end{equation*} \fxwarning{Forklar den notation.} \fxwarning{Insert correct formula.}
+    \delta_t(x_t) = \max_{x_{1:t}} \Pr(Y_{1:t}, X_{1:t} = x_{1:t} \mid \lambda).
+  \end{equation*}
 
+  \onslide<+->
+  This can be solved using dynamic programming using
+  \begin{equation*}
+    \begin{aligned}
+      \delta_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
+      \delta_t(x_t) &= \max_{x_{t - 1}} \delta_{t - 1}(x_{t - 1}) a_{x_{t - 1}, x_t} b_{x_t, y_t} .
+    \end{aligned}
+  \end{equation*}
+
+  \onslide<+->
+  \begin{center}
+    \input{figures/viterbi.tex}
+  \end{center}
   \begin{itemize}
     \tiny
   \item Definition.
@@ -164,6 +178,8 @@
   \item Backtracking.
   \item Assymptotic running time and some perspectivation to bioinformatics.
   \end{itemize}
+ \fxwarning{Forklar øverste notation.}
+ \fxwarning{Forbered udledning af Viterbi.}
 \end{frame}
 
 \subsection{Linear Algebra}
