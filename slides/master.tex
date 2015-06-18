@@ -16,8 +16,6 @@
 \usepackage{newpxtext}
 \usepackage{newpxmath}
 \usepackage{microtype}
-\usepackage[autostyle=true,danish=quotes]{csquotes}
-\MakeOuterQuote{"}
 
 % Captions
 \usepackage[small,hang,bf,margin=30pt]{caption}
@@ -28,8 +26,8 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
-% \usetikzlibrary{external}
-% \tikzexternalize[prefix=tikz/,mode=list and make]
+\usetikzlibrary{external}
+\tikzexternalize[prefix=tikz/,mode=list and make]
 \pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}} % Makes
                                                                   % externalize
                                                                   % and draft
@@ -83,6 +81,10 @@
 
 % Symbols
 \usepackage[weather]{ifsym}
+\newcommand{\sun}{\text{\Sun}}
+\newcommand{\cloud}{\text{\Cloud}}
+\newcommand{\rain}{\text{\Rain}}
+\newcommand{\suncloud}{\text{\SunCloud}}
 
 \title{Speeding Up HMM Decoding Using Compression}
 \author{Torben Muldvang Andersen, 20093713}
@@ -133,16 +135,16 @@
     \onslide<+->{
       \begin{column}{0.5\textwidth}
         \begin{tabular}{rl}
-          Hidden states       & L H                                                                       \\
-          Observables         & \Sun{} \Cloud{} \Rain{}                                                   \\
+          Hidden states                 & L H                                                                                    \\
+          Observables                   & \Sun{} \Cloud{} \Rain{}                                                                \\
         \end{tabular}
       \end{column}}
   \end{columns}
   \onslide<+->{
     \begin{center}
       \begin{tabular}{rcccccccccc}
-        Observation $Y_{1:T}$           & \Sun & \Sun & \Sun & \Cloud & \Cloud & \Rain & \Rain & \Sun & \Sun & \Sun \\
-        \onslide<+-> Decoding $X_{1:T}$ & H    & H    & H    & H      & L      & L     & L     & L    & H    & H    \\
+        Observation $Y_{1:T}$           & \Sun{} & \Sun{} & \Cloud{} & \Rain{} & \Sun{} & \Cloud{} & \Sun{} & \Cloud{} & \Rain{} \\
+        \onslide<+-> Decoding $X_{1:T}$ & H      & H      & H        & L       & L      & H        & H      & H        & H       \\
       \end{tabular}
     \end{center}}
 \end{frame}
@@ -159,7 +161,7 @@
   \end{equation*}
 
   \onslide<+->
-  This can be solved using dynamic programming using
+  This can be solved by dynamic programming using
   \begin{equation*}
     \begin{aligned}
       \delta_1(x_1) &= \pi_{x_1} b_{x_1, y_1} \\
@@ -171,13 +173,15 @@
   \begin{center}
     \input{figures/viterbi.tex}
   \end{center}
-  \begin{itemize}
-    \tiny
-  \item Definition.
-  \item Dynamic programming table.
-  \item Backtracking.
-  \item Assymptotic running time and some perspectivation to bioinformatics.
-  \end{itemize}
+
+  \onslide<+->{
+    Backtracking using argmax table.
+  }
+
+  \onslide<+->{
+    Running time: $O(N^2 T)$
+  }
+
  \fxwarning{Forklar øverste notation.}
  \fxwarning{Forbered udledning af Viterbi.}
 \end{frame}
@@ -186,26 +190,84 @@
 
 \begin{frame}
   \frametitle{\insertsubsection}
-  \begin{itemize}
-    \tiny
-  \item Reformulation. (Would be really cool if this could be made using an
+  \onslide<+->{
+    \begin{equation*}
+      \Pi =
+      \begin{bmatrix}
+        \pi_1                            \\
+        \vdots                           \\
+        \pi_N                            \\
+      \end{bmatrix}\quad
+      A =
+      \begin{bmatrix}
+        a_{1, 1}   & \cdots & a_{1,N}    \\
+        \vdots     & \ddots & \vdots     \\
+        a_{N, 1}   & \cdots & a_{N,N}    \\
+      \end{bmatrix}\quad
+      B_{o_i} =
+      \begin{bmatrix}
+        b_{1, o_i} &        &            \\
+        & \ddots &            \\
+        &        & b_{N, o_i} \\
+      \end{bmatrix}
+    \end{equation*}
+  }
+
+  \onslide<+->{
+    \begin{equation*}
+      \delta_t(x_t) = \max_{x_{t - 1}} \delta_{t - 1}(x_{t - 1}) \underbrace{a_{x_{t - 1},x_t} b_{x_t, y_t}}_{\textstyle C_{o_i} = B_{o_i} A^T}
+    \end{equation*}
+  }
+
+  \onslide<+->{
+    \begin{equation*}
+      \begin{aligned}
+        \delta_1 &= C_1 = B_{y_1} \Pi\\
+        \onslide<+-> \delta_t &= C_{y_t} \odot \delta_{t - 1} = C_{y_t} \odot C_{y_{t-1}} \odot \dots \odot C_1
+      \end{aligned}
+    \end{equation*}
+  }
+
+  \onslide<+->
+  Running time: $O(M N^3 + N^2 T)$
+
+  \vfill
+  \fxwarning{Reformulation. (Would be really cool if this could be made using an
     illustration of the stuff multiplied in the original algorithm and the
-    table using the weather example.)
-  \item Running time.
-  \end{itemize}
+    table using the weather example.)}
+  \fxwarning{In the implementation the matrixmultiplications involving
+    $B_{o_i}$ takes time $O(N^2)$ since $B$ is stored as an array.}
 \end{frame}
 
-\subsection{Exploting Repetitions}
+\subsection{Exploiting Repetitions}
 
 \begin{frame}
   \frametitle{\insertsubsection}
-  \begin{itemize}
-    \tiny
-  \item Example of byte-pair encoding on weather example.
-  \item Continue example on the illustration of table.
-  \item Backtracking.
-  \item Running time.
-  \end{itemize}
+  Example
+  \begin{center}
+    \def\tabcolsep{1pt}
+    \begin{tabular}{rccccccccccccccccc}
+      \only<1> {$\delta_{T} =$ & $C_{\rain}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_{\rain}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_1$ \\}%
+      \only<2->{$\delta_{T} =$ & $C_{\rain}$ & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & $C_{\rain}$ & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & $C_1$ \\}%
+      \onslide<3->{$ =$  & $C_{\rain}$ & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & $C_{\rain}$ & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & $C_1$ \\}%
+    \end{tabular}
+  \end{center}
+  \onslide<4->{
+    Byte-pair encoding
+  }
+  \begin{center}
+    \def\tabcolsep{1pt}
+    \begin{tabular}{ccccccccccccccccc}
+    \only<5>{$Y_{1:T} = $ & \Rain{} & \Sun{} & \Cloud{} & \Rain{} & \Sun{} & \Cloud{} & \Sun{} & \Cloud{} & \Rain{} \\}%
+    \only<6->{$Y_{1:T} = $ & \Rain{} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \Rain{} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \Rain{} \\}%
+    \only<7>{& \Rain{} & \multicolumn{2}{c}{\SunCloud{}} & \Rain{} & \multicolumn{2}{c}{\SunCloud{}} & \multicolumn{2}{c}{\SunCloud{}} & \Rain{} \\}%
+    \only<8->{& \Rain{} & \multicolumn{2}{c}{\textcolor[rgb]{1,0,0}{\SunCloud{}}} & \textcolor[rgb]{1,0,0}{\Rain{}} & \multicolumn{2}{c}{\SunCloud{}} & \multicolumn{2}{c}{\textcolor[rgb]{1,0,0}{\SunCloud{}}} & \textcolor[rgb]{1,0,0}{\Rain{}} \\}%
+    \onslide<9-> $Y_{1:T'}' = $ & \Rain{} & & \Lightning{} & & \multicolumn{2}{c}{\SunCloud{}} & & \Lightning{} & \\
+    \end{tabular}
+  \end{center}
+  \vfill{}
+  \fxwarning{Backtracking.}
+  \fxwarning{Running time.}
 \end{frame}
 
 \section{Posterior Decoding}
