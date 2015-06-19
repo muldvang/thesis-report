@@ -26,9 +26,9 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{external}
-\tikzexternalize[prefix=tikz/,mode=list and make]
-\pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}} % Makes
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=tikz/,mode=list and make]
+% \pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}} % Makes
                                                                   % externalize
                                                                   % and draft
                                                                   % work
@@ -122,6 +122,17 @@
   \tableofcontents{}
 \end{frame}
 
+\section{Goal}
+
+\begin{frame}
+  \frametitle{\insertsection}
+  Complement the work made by Sand et al. (2013).
+  \begin{itemize}
+  \item Decoding algorithms: Viterbi and posterior decoding.
+  \item Theory, implementation, experiments.
+  \end{itemize}
+\end{frame}
+
 \section{Hidden Markov Models}
 
 \begin{frame}
@@ -175,10 +186,10 @@
   \end{center}
 
   \onslide<+->{
-    Backtracking using argmax table.
+    Backtracking using argmax table to obtain $V_{1:T}$.
   }
 
-  \onslide<+->{
+  \onslide<8->{
     Running time: $O(N^2 T)$
   }
 
@@ -247,8 +258,7 @@
   \begin{center}
     \def\tabcolsep{1pt}
     \begin{tabular}{rccccccccccccccccc}
-      \only<1> {$\delta_{T} =$ & $C_{\rain}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_{\rain}$ & $\odot$ & $C_{\cloud}$ & $\odot$ & $C_{\sun}$ & $\odot$ & $C_1$ \\}%
-      \only<2->{$\delta_{T} =$ & $C_{\rain}$ & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & $C_{\rain}$ & $\odot$ & \textcolor[rgb]{1,0,0}{$C_{\cloud}$} & \textcolor[rgb]{1,0,0}{$\odot$} & \textcolor[rgb]{1,0,0}{$C_{\sun}$} & $\odot$ & $C_1$ \\}%
+      \onslide<1->{$\delta_{T} =$ & $C_{\rain}$ & $\odot$ & \alert<2->{$C_{\cloud}$} & \alert<2->{$\odot$} & \alert<2->{$C_{\sun}$} & $\odot$ & \alert<2->{$C_{\cloud}$} & \alert<2->{$\odot$} & \alert<2->{$C_{\sun}$} & $\odot$ & $C_{\rain}$ & $\odot$ & \alert<2->{$C_{\cloud}$} & \alert<2->{$\odot$} & \alert<2->{$C_{\sun}$} & $\odot$ & $C_1$ \\}%
       \onslide<3->{$ =$  & $C_{\rain}$ & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & $C_{\rain}$ & $\odot$ & \multicolumn{3}{c}{$C_{\suncloud}$} & $\odot$ & $C_1$ \\}%
     \end{tabular}
   \end{center}
@@ -258,28 +268,55 @@
   \begin{center}
     \def\tabcolsep{1pt}
     \begin{tabular}{ccccccccccccccccc}
-    \only<5>{$Y_{1:T} = $ & \Rain{} & \Sun{} & \Cloud{} & \Rain{} & \Sun{} & \Cloud{} & \Sun{} & \Cloud{} & \Rain{} \\}%
-    \only<6->{$Y_{1:T} = $ & \Rain{} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \Rain{} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \textcolor[rgb]{1,0,0}{\Sun{}} & \textcolor[rgb]{1,0,0}{\Cloud{}} & \Rain{} \\}%
-    \only<7>{& \Rain{} & \multicolumn{2}{c}{\SunCloud{}} & \Rain{} & \multicolumn{2}{c}{\SunCloud{}} & \multicolumn{2}{c}{\SunCloud{}} & \Rain{} \\}%
-    \only<8->{& \Rain{} & \multicolumn{2}{c}{\textcolor[rgb]{1,0,0}{\SunCloud{}}} & \textcolor[rgb]{1,0,0}{\Rain{}} & \multicolumn{2}{c}{\SunCloud{}} & \multicolumn{2}{c}{\textcolor[rgb]{1,0,0}{\SunCloud{}}} & \textcolor[rgb]{1,0,0}{\Rain{}} \\}%
-    \onslide<9-> $Y_{1:T'}' = $ & \Rain{} & & \Lightning{} & & \multicolumn{2}{c}{\SunCloud{}} & & \Lightning{} & \\
+    \onslide<5->{$Y_{1:T} = $ & \Sun{} & \alert<6->{\Sun{}} & \alert<6->{\Cloud{}} & \Rain{} & \alert<6->{\Sun{}} & \alert<6->{\Cloud{}} & \alert<6->{\Sun{}} & \alert<6->{\Cloud{}} & \Rain{} \\}%
+    \onslide<7->{& \Sun{} & \multicolumn{2}{c}{\alert<8->{\SunCloud{}}} & \alert<8->{\Rain{}} & \multicolumn{2}{c}{\SunCloud{}} & \multicolumn{2}{c}{\alert<8->{\SunCloud{}}} & \alert<8->{\Rain{}} \\}%
+    \onslide<9-> $Y_{1:T'}' = $ & \Sun{} & & \Lightning{} & & \multicolumn{2}{c}{\SunCloud{}} & & \Lightning{} & \\
     \end{tabular}
   \end{center}
-  \vfill{}
-  \fxwarning{Backtracking.}
-  \fxwarning{Running time.}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Backtracking}
+  \onslide<1->{
+    From argmax table $V_{1:T'}'$ can be obtained.
+    \begin{center}
+      \input{figures/viterbi_comp_backtrack.tex}
+    \end{center}
+  }
+
+  \onslide<2->{
+    Compute another set of matrices.
+    \begin{equation*}
+      C_{\suncloud} = C_{\cloud} \odot C_{\sun}, \quad
+      R_{\suncloud}(i, j) = \argmax_k
+      \left(
+        C_{\cloud}(i, k) \cdot C_{\sun}(k, j)
+      \right).
+    \end{equation*}
+  }
+
+  \onslide<4->{
+    Running time: $O(M' N^3 + N^2 T')$ or $O(M' N^3 + N^2 T' + T)$.
+  }
+\end{frame}
 \section{Posterior Decoding}
 
 \begin{frame}
   \frametitle{\insertsection}
+  \onslide<+->
+  Given a model $\lambda$ and an observation sequence $Y_{1:T}$,
+  find the most likely state at the time the symbol is emitted.
+  \begin{equation*}
+    \begin{aligned}
+      p_t & = \argmax_{x_t \in \mathcal{H}} \Pr \left(x_t | Y_{1:T}, \lambda \right) \\
+          \onslide<+-> & = \argmax_{x_t \in \mathcal{H}} \alpha(x_t) \beta(x_t).
+    \end{aligned}
+  \end{equation*}
+  \onslide<+->
+  Problems in exploiting repetitions:
   \begin{itemize}
-    \tiny
-  \item Definition.
-  \item Definition of forward-backward algorithm (compare to Viterbi)
-  \item Exploiting repetitions similarly to Viterbi.
-  \item Backtracking.
+  \item<+-> No dependence between sequential states in posterior decoding.
+  \item<+-> Computation of full tables cannot be sped up.
   \end{itemize}
 \end{frame}
 
@@ -287,6 +324,10 @@
 
 \begin{frame}
   \frametitle{\insertsection}
+  \onslide<+->
+  Given a model $\lambda$ and an observation sequence $Y_{1:T}$, find the
+  posterior decoding $P_{i:j}$.
+
   \begin{itemize}
     \tiny
   \item Definition.
