@@ -17,8 +17,23 @@
 \usepackage{newpxmath}
 \usepackage{microtype}
 
+% Util package. Used for textsubscript.
+\usepackage{changes}
+
 % Captions
 \usepackage[small,hang,bf,margin=30pt]{caption}
+
+% Code listings
+\usepackage{minted}
+\usemintedstyle{bw}
+
+% Colors
+\usepackage{color}
+\definecolor{my-red}{HTML}{E41A1C}
+\definecolor{my-green}{HTML}{4DAF4A}
+\definecolor{my-blue}{HTML}{377EB8}
+\definecolor{my-purple}{HTML}{984EA3}
+\definecolor{my-orange}{HTML}{FF7F00}
 
 % Graphics
 \usepackage{graphicx}
@@ -26,6 +41,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usetikzlibrary{patterns}
 % \usetikzlibrary{external}
 % \tikzexternalize[prefix=tikz/,mode=list and make]
 % \pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}} % Makes
@@ -34,8 +50,8 @@
                                                                   % work
                                                                   % together.
 \pgfplotsset{%
-  invoke before crossref tikzpicture={\tikzexternaldisable},
-  invoke after crossref tikzpicture={\tikzexternalenable},
+  % invoke before crossref tikzpicture={\tikzexternaldisable},
+  % invoke after crossref tikzpicture={\tikzexternalenable},
   ylabel near ticks,
   legend columns=-1,
   legend style={at={(0.5, 1)},anchor=south,draw=none,fill=none,/tikz/every even
@@ -47,6 +63,25 @@
 }
 \usetikzlibrary{arrows}
 \usepgfplotslibrary{groupplots}
+
+\tikzset{%
+    viterbi-l/.style={%
+      only marks, mark=*, color=my-red
+    },
+    viterbi-p/.style={%
+      only marks, mark=square*, color=my-green
+    },
+    viterbi-pm/.style={%
+      only marks, mark=triangle*, color=my-blue
+    },
+    indexed-one/.style={%
+      only marks, mark=*, color=my-red
+    },
+    indexed-many/.style={%
+      only marks, mark=square*, color=my-green
+    },
+}
+
 
 % Fixme
 \usepackage[draft]{fixme}
@@ -185,7 +220,7 @@
     \input{figures/viterbi.tex}
   \end{center}
 
-  \onslide<+->{
+  \onslide<6->{
     Backtracking using argmax table to obtain $V_{1:T}$.
   }
 
@@ -328,32 +363,120 @@
   Given a model $\lambda$ and an observation sequence $Y_{1:T}$, find the
   posterior decoding $P_{i:j}$.
 
-  \begin{itemize}
-    \tiny
-  \item Definition.
-  \item Illustration using figure from thesis.
-  \end{itemize}
+  \begin{overlayarea}{\textwidth}{3cm}
+    \only<+>{
+      \begin{center}
+        \input{figures/indexed_posterior_decoding.tex}
+      \end{center}
+    }
+
+    \only<+->{
+      \begin{center}
+        \input{figures/indexed_posterior_decoding2.tex}
+      \end{center}
+    }
+  \end{overlayarea}
+
+  \onslide<+-> {
+    Running time: $O(M' N^3 + N^2 T' + N^2 (j - i + \log T))$.
+  }
 \end{frame}
 
 \section{Implementation}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{\insertsection}
-  \begin{itemize}
-    \tiny
-  \item Something about the implementation.
-  \end{itemize}
+\begin{minted}[fontsize=\tiny]{C++}
+void HMMSuite::read_seq(std::string &seq_filename, size_t alphabet_size,
+                        size_t no_states, size_t min_no_eval)
+
+double HMMSuite::forward(Matrix &pi, Matrix &A, Matrix &B)
+
+double HMMSuite::forward(Matrix &pi, Matrix &A, Matrix &B,
+                         std::vector<double> &scales,
+                         Matrix *forward_table)
+
+void HMMSuite::backward(Matrix &pi, Matrix &A, Matrix &B,
+                        std::vector<double> &scales,
+                        Matrix *backward_table)
+
+double HMMSuite::viterbi(Matrix &pi, Matrix &A, Matrix &B,
+                         bool memory_save,
+                         std::vector<unsigned> &viterbi_path)
+
+void HMMSuite::posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
+                                  std::vector<unsigned> &posterior_path)
+
+void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
+                                          size_t i, size_t j,
+                                          std::vector<unsigned> &posterior_path)
+\end{minted}
 \end{frame}
 
 \section{Experiments}
 
 \begin{frame}
   \frametitle{\insertsection}
+  Setup etc.
   \begin{itemize}
     \tiny
   \item Main experiments.
   \item Some kind of summary of experiments
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Viterbi Decoding}
+\begin{figure}
+  \centering\ref{legend:simple_random_vs_fib}
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}[trim axis left,trim axis right]
+      \begin{axis}[
+        xlabel=Sequence length $T$,
+        ylabel=$\frac{\text{Running time}}{T}$,
+        width=\textwidth,
+        height=0.9\textwidth,
+        xmode=log,
+        ymax=0.000025,
+        ymin=-0.000001,
+        legend entries={Original Viterbi\textsubscript{P}, Original Viterbi\textsubscript{L}},
+        legend to name=legend:simple_random_vs_fib,
+        ]
+        \addplot[viterbi-p, error bars, y dir=both, y explicit]
+        table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
+        {../plot_data/viterbi_sequence_transformed.data};
+
+        \addplot[viterbi-l, error bars, y dir=both, y explicit]
+        table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
+        {../plot_data/viterbi_sequence_transformed.data};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Random sequences.}
+  \end{subfigure}%
+  \begin{subfigure}{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}[trim axis left,trim axis right]
+      \begin{axis}[
+        xlabel=Sequence length $T$,
+        width=\textwidth,
+        height=0.9\textwidth,
+        xmode=log,
+        ymax=0.000025,
+        ymin=-0.000001,
+        ]
+        \addplot[viterbi-p, error bars, y dir=both, y explicit]
+        table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
+        {../plot_data/viterbi_fib_sequence_transformed.data};
+
+        \addplot[viterbi-l, error bars, y dir=both, y explicit]
+        table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
+        {../plot_data/viterbi_fib_sequence_transformed.data};
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Fibonacci words.}
+  \end{subfigure}
+\end{figure}
 \end{frame}
 
 \section{Other Types of Preprocessing}
@@ -368,5 +491,6 @@
 
 %%% Local Variables:
 %%% mode: latex
+%%% TeX-command-extra-options: "-shell-escape"
 %%% TeX-master: t
 %%% End:
