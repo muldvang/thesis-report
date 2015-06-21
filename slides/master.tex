@@ -416,19 +416,70 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
 \section{Experiments}
 
 \begin{frame}
-  \frametitle{\insertsection}
-  Setup etc.
+  \frametitle{Experimental Setup}
   \begin{itemize}
-    \tiny
-  \item Main experiments.
-  \item Some kind of summary of experiments
+  \item Random data.
+  \item Fibonacci words.
+  \item Multiple runs.
   \end{itemize}
+  \fxwarning{Mention more stuff? E.g. e value?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Viterbi: Running Time}
+  \begin{figure}
+    \centering\ref{legend:viterbi}\\
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[trim axis left,trim axis right]
+        \begin{axis}[
+          xlabel=Sequence length $T$,
+          ylabel=$\frac{\text{Running time}}{T}$,
+          xmode=log,
+          width=\textwidth,
+          height=0.9\textwidth,
+          legend entries={Viterbi\textsubscript{L}, Viterbi\textsubscript{P}},
+          legend to name=legend:viterbi,
+          ]
+          \addplot[viterbi-l, error bars, y dir=both, y explicit] table[x=T,
+          y=many_running_time/T, y error=many_running_time/T_std]
+          {plot_data/viterbi_sequence_transformed.data};
+
+          \addplot[viterbi-p, error bars, y dir=both, y explicit] table[x=T,
+          y=many_path_running_time/T, y error=many_path_running_time/T_std]
+          {plot_data/viterbi_sequence_transformed.data};
+        \end{axis}
+      \end{tikzpicture}
+    \end{subfigure}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[trim axis left,trim axis right]
+        \begin{axis}[
+          xlabel=Model size $N$,
+          ylabel=$\frac{\text{Running time}}{N^3}$,
+          xmode=log,
+          ymax=0.00005,
+          enlarge y limits=true,
+          width=\textwidth,
+          height=0.9\textwidth,
+          ]
+          \addplot[viterbi-l, error bars, y dir=both, y explicit] table[x=N,
+          y=many_running_time/N^3, y error=many_running_time/N^3_std]
+          {plot_data/viterbi_model_transformed.data};
+
+          \addplot[viterbi-p, error bars, y dir=both, y explicit] table[x=N,
+          y=many_path_running_time/N^3, y error=many_path_running_time/N^3_std]
+          {plot_data/viterbi_model_transformed.data};
+        \end{axis}
+      \end{tikzpicture}
+    \end{subfigure}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Before}
 \begin{figure}
-  \centering\ref{legend:before_simple_random_vs_fib}
+  \centering\ref{legend:original_viterbi}
   \begin{subfigure}{0.5\textwidth}
     \centering
     \begin{tikzpicture}[trim axis left,trim axis right]
@@ -438,22 +489,24 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
         width=\textwidth,
         height=0.9\textwidth,
         xmode=log,
+        ymode=log,
         ymax=0.000025,
-        ymin=-0.000001,
+        ymin=0,
+        enlarge y limits=false,
         legend entries={Original Viterbi\textsubscript{P}, Original Viterbi\textsubscript{L}},
-        legend to name=legend:before_simple_random_vs_fib,
+        legend to name=legend:original_viterbi,
         ]
         \addplot[viterbi-p, error bars, y dir=both, y explicit]
         table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
-        {../plot_data/viterbi_sequence_transformed.data};
+        {plot_data/viterbi_sequence_transformed.data};
 
         \addplot[viterbi-l, error bars, y dir=both, y explicit]
         table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
-        {../plot_data/viterbi_sequence_old_transformed.data};
+        {plot_data/viterbi_sequence_transformed.data};
       \end{axis}
     \end{tikzpicture}
     \caption{Random sequences.}
-  \end{subfigure}%
+  \end{subfigure}\hspace{-5mm}%
   \begin{subfigure}{0.5\textwidth}
     \centering
     \begin{tikzpicture}[trim axis left,trim axis right]
@@ -462,16 +515,18 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
         width=\textwidth,
         height=0.9\textwidth,
         xmode=log,
+        ymode=log,
         ymax=0.000025,
-        ymin=-0.000001,
+        ymin=0,
+        enlarge y limits=false,
         ]
         \addplot[viterbi-p, error bars, y dir=both, y explicit]
         table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
-        {../plot_data/viterbi_fib_sequence_transformed.data};
+        {plot_data/viterbi_fib_sequence_transformed.data};
 
         \addplot[viterbi-l, error bars, y dir=both, y explicit]
         table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
-        {../plot_data/viterbi_fib_sequence_transformed.data};
+        {plot_data/viterbi_fib_sequence_transformed.data};
       \end{axis}
     \end{tikzpicture}
     \caption{Fibonacci words.}
@@ -481,63 +536,182 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
 
 \begin{frame}
   \frametitle{After}
-\begin{figure}
-  \centering\ref{legend:simple_random_vs_fib}
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \begin{tikzpicture}[trim axis left,trim axis right]
-      \begin{axis}[
-        xlabel=Sequence length $T$,
-        ylabel=$\frac{\text{Running time}}{T}$,
-        width=\textwidth,
-        height=0.9\textwidth,
-        xmode=log,
-        ymax=0.000002,
-        ymin=0,
-        legend entries={Original Viterbi\textsubscript{P}, Original Viterbi\textsubscript{L}},
-        legend to name=legend:simple_random_vs_fib,
-        ]
-        \addplot[viterbi-p, error bars, y dir=both, y explicit]
-        table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
-        {../plot_data/viterbi_sequence_transformed.data};
+  \begin{figure}
+    \centering\ref{legend:simple_random_vs_fib}
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[trim axis left,trim axis right]
+        \begin{axis}[
+          xlabel=Sequence length $T$,
+          ylabel=$\frac{\text{Running time}}{T}$,
+          width=\textwidth,
+          height=0.9\textwidth,
+          xmode=log,
+          ymode=log,
+          ymax=0.000025,
+          ymin=0,
+          enlarge y limits=false,
+          legend entries={Original Viterbi\textsubscript{P},
+            Original Viterbi\textsubscript{L}},
+          legend to name=legend:simple_random_vs_fib,
+          ]
+          \addplot[viterbi-p, error bars, y dir=both, y explicit]
+          table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
+          {plot_data/viterbi_sequence_new_transformed.data};
 
-        \addplot[viterbi-l, error bars, y dir=both, y explicit]
-        table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
-        {../plot_data/viterbi_sequence_transformed.data};
-      \end{axis}
-    \end{tikzpicture}
-    \caption{Random sequences.}
-  \end{subfigure}%
-  \begin{subfigure}{0.5\textwidth}
-    \centering
-    \begin{tikzpicture}[trim axis left,trim axis right]
-      \begin{axis}[
-        xlabel=Sequence length $T$,
-        width=\textwidth,
-        height=0.9\textwidth,
-        xmode=log,
-        ymax=0.000002,
-        ymin=0,
-        ]
-        \addplot[viterbi-p, error bars, y dir=both, y explicit]
-        table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
-        {../plot_data/viterbi_fib_sequence_transformed.data};
+          \addplot[viterbi-l, error bars, y dir=both, y explicit]
+          table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
+          {plot_data/viterbi_sequence_new_transformed.data};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Random sequences.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering
+      \begin{tikzpicture}[trim axis left,trim axis right]
+        \begin{axis}[
+          xlabel=Sequence length $T$,
+          width=\textwidth,
+          height=0.9\textwidth,
+          xmode=log,
+          ymode=log,
+          ymax=0.000025,
+          ymin=0,
+          enlarge y limits=false,
+          ]
+          \addplot[viterbi-p, error bars, y dir=both, y explicit]
+          table[x=T, y=simple_path_total_time/T, y error=simple_path_total_time/T_std]
+          {plot_data/viterbi_fib_sequence_new_transformed.data};
 
-        \addplot[viterbi-l, error bars, y dir=both, y explicit]
-        table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
-        {../plot_data/viterbi_fib_sequence_transformed.data};
-      \end{axis}
-    \end{tikzpicture}
-    \caption{Fibonacci words.}
-  \end{subfigure}
-\end{figure}
+          \addplot[viterbi-l, error bars, y dir=both, y explicit]
+          table[x=T, y=simple_total_time/T, y error=simple_total_time/T_std]
+          {plot_data/viterbi_fib_sequence_new_transformed.data};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Fibonacci words.}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Viterbi: Comparison}
+  \begin{figure}
+    \centering\ref{legend:viterbi}\\
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/compressed_1_speedup_vs_sequence_length.tex}
+      \caption{$e = 1$.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/compressed_500_speedup_vs_sequence_length.tex}
+      \caption{$e = 500$.}
+    \end{subfigure}
+    \caption{5.8. New experiment.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Viterbi: Comparison}
+  \begin{figure}
+    \centering\ref{legend:viterbi}\\
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/speedup_vs_N.tex}
+      \caption{$e = 1$.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/speedup_vs_N2.tex}
+      \caption{$e=500$.}
+    \end{subfigure}
+    \caption{5.9.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Viterbi: Comparison}
+  \begin{figure}
+    \centering\ref{legend:viterbi}\\
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering \input{figures/fib_compressed_1_speedup_vs_sequence_length.tex}
+      \caption{$e = 1$.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}[b]{0.5\textwidth}
+      \centering
+      \input{figures/fib_compressed_500_speedup_vs_sequence_length.tex}
+      \caption{$e = 500$.}
+    \end{subfigure}
+    \caption{5.10}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Posterior Decoding: Comparison}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/posterior_speedup_vs_sequence_length.tex}
+      \caption{5.14.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.5\textwidth}
+      \centering \input{figures/posterior_speedup_vs_N.tex}
+      \caption{5.15.}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Indexed Posterior Decoding: Comparison}
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.33\textwidth}
+      \centering \input{figures/indexed_posterior_speedup_vs_subseq.tex}
+      \caption{5.17.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.33\textwidth}
+      \centering \input{figures/indexed_posterior_speedup_vs_T.tex}
+      \caption{5.18.}
+    \end{subfigure}\hspace{-5mm}%
+    \begin{subfigure}{0.33\textwidth}
+      \centering \input{figures/indexed_posterior_speedup_vs_N.tex}
+      \caption{5.19.}
+    \end{subfigure}
+  \end{figure}
 \end{frame}
 
 \section{Other Types of Preprocessing}
 
 \begin{frame}
   \frametitle{\insertsection}
+  \begin{block}{Lifshits el al.}
+    \begin{itemize}
+    \item Byte-pair encoding.
+    \item Four Russians.
+    \item LZ78.
+    \end{itemize}
+  \end{block}
+\end{frame}
 
+
+\begin{frame}
+  \frametitle{Generalized Byte-Pair Encoding Using Suffix Tree}
+  \begin{itemize}
+  \item Build a suffix tree from $Y_{1:T}$. Characters on edges are pointers
+    into a linked list, initially corresponding to $Y_{1:T}$.
+  \item Iterate\dots
+    \begin{itemize}
+    \item For each internal node, compute a score
+      $s = (d - 1)(\text{\#leaves} - 1)$. The path from to root to the node
+      $v$ with the highest score corresponds to the symbols that should be
+      compressed with a new symbol.
+    \item For each of the leaves below $v$ change the linked list according to
+      the compressed symbols. Delete all leaves corresponding to leaves not
+      pointed to in the linked list. The linked list and all edges to a leaf
+      are correct now.
+    \item Make a new edge from the root to $v$.
+    \item Follow oposite suffix links from $v$ recursively while correcting
+      the edge above the visited node. All internal edges are correct now.
+    \end{itemize}
+  \end{itemize}
+  One problem: Overlapping repeats. They can be found, but it is necessary to
+  traverse the entire subtree of each internal node.
 \end{frame}
 \end{document}
 

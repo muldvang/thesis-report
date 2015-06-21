@@ -1,0 +1,23 @@
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    width=\textwidth,
+    height=0.9\textwidth,
+    xlabel=Model size $N$,
+    xmode=log,
+    ]
+    \addplot[indexed-one, error bars, y dir=both, y explicit]
+    table[x=N, y=one_total_ratio, y error=one_total_ratio_std]
+    {plot_data/indexed_posterior_model_transformed.data};
+
+    \addplot[indexed-many, error bars, y dir=both, y explicit]
+    table[x=N, y=many_total_ratio, y error=many_total_ratio_std]
+    {plot_data/indexed_posterior_model_transformed.data};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
+
+%  LocalWords:  xlabel ylabel xmode colorbrewer1 dir colorbrewer2

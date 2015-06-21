@@ -1,0 +1,25 @@
+\begin{tikzpicture}[trim axis left,trim axis right]
+  \begin{axis}[
+    ylabel near ticks,
+    width=\textwidth,
+    height=0.9\textwidth,
+    xlabel=Number of states $N$,
+    ylabel=Speedup factor,
+    xmode=log,
+    ymax=2.5,
+    enlarge y limits=true,
+    ]
+    \addplot[viterbi-l, error bars, y dir=both, y explicit]
+    table[x=N, y=one_total_ratio, y error=one_total_ratio_std]
+    {plot_data/viterbi_model_transformed.data};
+
+    \addplot[viterbi-p, error bars, y dir=both, y explicit]
+    table[x=N, y=one_path_total_ratio, y error=one_path_total_ratio_std]
+    {plot_data/viterbi_model_transformed.data};
+  \end{axis}
+\end{tikzpicture}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../master"
+%%% End:
