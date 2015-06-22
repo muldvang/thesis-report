@@ -6,6 +6,9 @@
     xlabel=Sequence length $T$,
     xmode=log,
     ymode=log,
+    extra y ticks       = {0, 1},
+    extra y tick labels = ,
+    extra y tick style  = { black, grid = major},
     ]
     \addplot[viterbi-l, error bars, y dir=both, y explicit]
     table[x=T, y=many_total_ratio, y error=many_total_ratio_std]

@@ -8,6 +8,9 @@
     xmode=log,
     legend entries={$e = 1$, $e = 500$},
     legend to name=legend:indexed,
+    extra y ticks       = {0, 1},
+    extra y tick labels = ,
+    extra y tick style  = { black, grid = major},
     ]
     \addplot[indexed-one, error bars, y dir=both, y explicit]
     table[x=subseq_length, y=one_total_ratio, y error=one_total_ratio_std]

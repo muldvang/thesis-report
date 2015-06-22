@@ -5,6 +5,9 @@
     xlabel=Sequence length $T$,
     ylabel=Speedup factor,
     xmode=log,
+    extra y ticks       = {0, 1},
+    extra y tick labels = ,
+    extra y tick style  = { black, grid = major},
     ]
     \addplot[only marks, error bars, y dir=both, y explicit]
     table[x=T, y=zipHMMlib_ratio, y error=zipHMMlib_ratio_std]

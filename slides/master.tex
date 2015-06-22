@@ -35,6 +35,9 @@
 \definecolor{my-purple}{HTML}{984EA3}
 \definecolor{my-orange}{HTML}{FF7F00}
 
+% Tables
+\usepackage{booktabs}
+
 % Graphics
 \usepackage{graphicx}
 \usepackage{subcaption}
@@ -58,7 +61,7 @@
     column/.append style={column sep=10pt}},
   every y tick scale label/.style={at={(0,1)},anchor=east, font=\scriptsize,
     inner xsep=2pt, inner ysep=0pt},
-  ytick placement tolerance=-2mm,
+  % ytick placement tolerance=-2mm,
   max space between ticks=30pt,
 }
 \usetikzlibrary{arrows}
@@ -131,25 +134,6 @@
   \includegraphics[height=7mm, trim=0 0 40mm 0, clip]{../logo}
   \hfill
   \includegraphics[height=7mm]{../BiRC-logo}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Agenda}
-    Med udgangspunkt i specialerapporten ønskes et foredrag, hvor de
-    væsentligste resultater af specialeprojektet fremlægges.
-  \begin{itemize}
-  \item Du bedes presentere hvorledes skjulte Markov modeller anvendes til
-    Viterbi- og Posterior-decoding med fokus på hvorledes implementeringen af
-    disse decoding-methoder kan formuleres ved hjælp af lineær algebra samt
-    hvorledes en præprocessesing med henblik på en ``komprimering'' af input
-    kan forbedre deres kørselstid i praksis.
-  \item Du bedes også præsentere dine implementeringer af metoderne og
-    udvidelser til biblioteket zipHMMlib samt de eksperimenter som du har
-    gennemført for at undersøge deres kørselstider i praksis, herunder hvornår
-    præprocesseringen giver den ønskede forbedring af kørselstiden.
-  \item Endelig bedes du overveje hvorvidt andre former for præprocessering
-    (komprimering) kunne anvedes.
-  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -693,42 +677,144 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
   \end{figure}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Summary}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{table}
+        \centering
+        \begin{tabular}{ll}
+          \toprule
+          Algorithm & Speedup \\
+          \midrule
+          Viterbi & 0.5 -- 20\\
+          Indexed PD & 0.5 -- 60\\
+          PD & 0.5 -- 6\\
+          \bottomrule
+        \end{tabular}
+      \end{table}
+    \end{column}\pause%
+    \begin{column}{0.6\textwidth}
+      \begin{block}{Viterbi}
+        \begin{itemize}
+        \item Compression has a major impact.
+        \item Works best with small models.
+        \item Computing the path limits speedup.
+        \end{itemize}
+      \end{block}
+      \begin{block}{Indexed posterior decoding}
+        \begin{itemize}
+        \item Compression has a major impact.
+        \item Works best with small models.
+        \item Works best with small decodings.
+        \end{itemize}
+      \end{block}
+      \begin{block}{Posterior decoding}
+        \begin{itemize}
+        \item The larger models the better.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \section{Other Types of Preprocessing}
 
 \begin{frame}
   \frametitle{\insertsection}
-  \begin{block}{Lifshits el al.}
-    \begin{itemize}
-    \item Byte-pair encoding.
-    \item Four Russians.
-    \item LZ78.
-    \end{itemize}
-  \end{block}
+  Lifshits el al.
+  \begin{itemize}
+  \item Byte-pair encoding,
+  \item LZ78,
+  \item etc.
+  \end{itemize}
 \end{frame}
-
 
 \begin{frame}
   \frametitle{Generalized Byte-Pair Encoding Using Suffix Tree}
-  \begin{itemize}
-  \item Build a suffix tree from $Y_{1:T}$. Characters on edges are pointers
-    into a linked list, initially corresponding to $Y_{1:T}$.
-  \item Iterate\dots
-    \begin{itemize}
-    \item For each internal node, compute a score
-      $s = (d - 1)(\text{\#leaves} - 1)$. The path from to root to the node
-      $v$ with the highest score corresponds to the symbols that should be
-      compressed with a new symbol.
-    \item For each of the leaves below $v$ change the linked list according to
-      the compressed symbols. Delete all leaves corresponding to leaves not
-      pointed to in the linked list. The linked list and all edges to a leaf
-      are correct now.
-    \item Make a new edge from the root to $v$.
-    \item Follow oposite suffix links from $v$ recursively while correcting
-      the edge above the visited node. All internal edges are correct now.
-    \end{itemize}
-  \end{itemize}
-  One problem: Overlapping repeats. They can be found, but it is necessary to
-  traverse the entire subtree of each internal node.
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[
+      node distance = 8mm,
+      ->,
+      >=stealth',
+      ]
+      \onslide<+->
+      \node (1) {A};
+      \node[right of=1] (2) {B};
+      \node[right of=2] (3) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=3] (4) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=4] (5) {\textcolor<7->[gray]{0.5}{B}};
+      \node[right of=5] (6) {A};
+      \node[right of=6] (7) {B};
+      \node[right of=7] (8) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=8] (9) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=9] (10) {\textcolor<7->[gray]{0.5}{B}};
+      \node[right of=10] (11) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=11] (12) {\textcolor<7->[gray]{0.5}{A}};
+      \node[right of=12] (13) {\textcolor<7->[gray]{0.5}{B}};
+      \node[right of=13] (14) {\$};
+
+      \onslide<+->
+      \node[below of=1, node distance=4mm] {\scriptsize \structure{1}};
+      \node[below of=2, node distance=4mm] {\scriptsize \structure{2}};
+      \node[below of=3, node distance=4mm] {\scriptsize \structure{3}};
+      \node[below of=4, node distance=4mm] {\scriptsize \structure{4}};
+      \node[below of=5, node distance=4mm] {\scriptsize \structure{5}};
+      \node[below of=6, node distance=4mm] {\scriptsize \structure{6}};
+      \node[below of=7, node distance=4mm] {\scriptsize \structure{7}};
+      \node[below of=8, node distance=4mm] {\scriptsize \structure{8}};
+      \node[below of=9, node distance=4mm] {\scriptsize \structure{9}};
+      \node[below of=10, node distance=4mm] {\scriptsize \structure{10}};
+      \node[below of=11, node distance=4mm] {\scriptsize \structure{11}};
+      \node[below of=12, node distance=4mm] {\scriptsize \structure{12}};
+      \node[below of=13, node distance=4mm] {\scriptsize \structure{13}};
+      \node[below of=14, node distance=4mm] {\scriptsize \structure{14}};
+
+      \onslide<+->
+      \path
+      (1) edge (2)
+      (2) edge (3)
+      (3) edge (4)
+      (4) edge (5)
+      (5) edge (6)
+      (6) edge (7)
+      (7) edge (8)
+      (8) edge (9)
+      (9) edge (10)
+      (10) edge (11)
+      (11) edge (12)
+      (12) edge (13)
+      (13) edge (14);
+
+      \onslide<7->
+      \node[above of=3, node distance=4mm] {C};
+      \node[above of=8, node distance=4mm] {C};
+      \node[above of=11, node distance=4mm] {C};
+      \path
+      (3)  edge[bend left] (6)
+      (8)  edge[bend left] (11)
+      (11) edge[bend left] (14);
+    \end{tikzpicture}
+
+    \only<+>{\includegraphics[width=0.6\textwidth,angle=90,origin=c,trim=3mm 38mm 16mm 8mm, clip]{figures/s1}}
+
+    \only<+>{\includegraphics[width=0.6\textwidth,angle=90,origin=c,trim=3mm 38mm 16mm 8mm, clip]{figures/s2}}
+
+    \only<+>{\includegraphics[width=0.6\textwidth,angle=90,origin=c,trim=3mm 38mm 16mm 8mm, clip]{figures/s3}}
+
+    \only<+>{\includegraphics[width=0.6\textwidth,angle=90,origin=c,trim=3mm 38mm 16mm 8mm, clip]{figures/s4}}
+
+    \onslide<+>{\includegraphics[width=0.6\textwidth,angle=90,origin=c,trim=3mm 38mm 16mm 8mm, clip]{figures/s5}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \vfill
+    \Huge \structure{Questions}
+    \vfill
+  \end{center}
 \end{frame}
 \end{document}
 
