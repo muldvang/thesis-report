@@ -1,9 +1,11 @@
-\begin{tikzpicture}[trim axis left,trim axis right]
+\begin{tikzpicture}[trim axis left,trim axis right, baseline]
   \begin{axis}[
+    scale only axis,
     width=\textwidth,
     height=0.9\textwidth,
     xlabel=Sequence length $T$,
     xmode=log,
+    ymax=28,
     ]
     \addplot[indexed-one, error bars, y dir=both, y explicit]
     table[x=T, y=one_total_ratio, y error=one_total_ratio_std]
@@ -14,7 +16,6 @@
     {plot_data/indexed_posterior_sequence_transformed.data};
   \end{axis}
 \end{tikzpicture}
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../master"
