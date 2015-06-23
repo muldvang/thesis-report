@@ -87,7 +87,7 @@
 
 
 % Fixme
-\usepackage[draft]{fixme}
+\usepackage[final]{fixme}
 \fxsetup{inlineface=\bfseries\tiny,inline=true,nomargin}
 
 % Colors
@@ -211,9 +211,6 @@
   \onslide<8->{
     Running time: $O(N^2 T)$
   }
-
- \fxwarning{Forklar øverste notation.}
- \fxwarning{Forbered udledning af Viterbi.}
 \end{frame}
 
 \subsection{Linear Algebra}
@@ -260,13 +257,6 @@
 
   \onslide<+->
   Running time: $O(M N^3 + N^2 T)$
-
-  \vfill
-  \fxwarning{Reformulation. (Would be really cool if this could be made using an
-    illustration of the stuff multiplied in the original algorithm and the
-    table using the weather example.)}
-  \fxwarning{In the implementation the matrixmultiplications involving
-    $B_{o_i}$ takes time $O(N^2)$ since $B$ is stored as an array.}
 \end{frame}
 
 \subsection{Exploiting Repetitions}
@@ -406,7 +396,6 @@ void HMMSuite::indexed_posterior_decoding(Matrix &pi,  Matrix &A,  Matrix &B,
   \item Fibonacci words.
   \item Multiple runs.
   \end{itemize}
-  \fxwarning{Mention more stuff? E.g. e value?}
 \end{frame}
 
 \begin{frame}
